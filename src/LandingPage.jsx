@@ -5,6 +5,7 @@
 //  y redirige a APP_URL (proyecto "resto"), que retoma esa sesión.
 // ════════════════════════════════════════════════════════════════════════
 import React, { useState, useEffect, useCallback } from "react";
+import PaymentModal from "./PaymentModal";
 
 // URL del proyecto "resto" (la app/workspace). Ajustar al desplegar.
 const APP_URL = "/app";
@@ -214,18 +215,31 @@ const LANDING_EXTRAS = {
 
 const PACKS = {
   en: [
-    { id:'initial', eyebrow:'START HERE', name:'Starter Library', featured:false, currentUsd:'USD 15', oldUsd:'USD 25', currentArs:'$20,000', oldArs:'$40,000', cta:'pack', features:['Access to 15 base prompt blocks','Essential camera and materiality modifiers','Quick start PDF guide','Basic updates for 3 months'] },
-    { id:'pro', eyebrow:'RECOMMENDED', name:'Complete Library', featured:true, currentUsd:'USD 30', oldUsd:'USD 65', currentArs:'$42,500', oldArs:'$95,000', cta:'pack', features:['Full collection of 90+ prompt blocks','All premium lighting and style modifiers','PDF guide + video case studies','Rescue Manual for AI generation errors','Adapters for Midjourney, Flux, Stable Diffusion'] }
+    { id:'starter', slug:'starter', eyebrow:'START HERE', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+      features:['11 curated architectural prompts','Essential modifiers (camera, lighting, materiality)','User Manual PDF','Rescue Manual PDF','Permanent file access'] },
+    { id:'professional', slug:'professional', eyebrow:'RECOMMENDED', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
+      features:['Everything in Starter','Library of 45 professional prompts','LOCK Method PDF','Professional Client Kit','Permanent file access'] },
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MOST COMPLETE', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+      features:['Everything in Professional Library','App Constructor access (12 months)','Cloud projects and favorites','New modules for 12 months','Content updates for 12 months'] },
   ],
   es: [
-    { id:'initial', eyebrow:'EMPIEZA AQUÍ', name:'Biblioteca Inicial', featured:false, currentUsd:'USD 15', oldUsd:'USD 25', currentArs:'$20.000', oldArs:'$40.000', cta:'pack', features:['Acceso a 15 bloques base de prompts','Modificadores esenciales de cámara y materialidad','Guía de inicio rápido en PDF','Actualizaciones básicas por 3 meses'] },
-    { id:'pro', eyebrow:'RECOMENDADO', name:'Biblioteca Completa', featured:true, currentUsd:'USD 30', oldUsd:'USD 65', currentArs:'$42.500', oldArs:'$95.000', cta:'pack', features:['Colección completa de 90+ bloques de prompts','Todos los modificadores premium de iluminación y estilo','Guía PDF + Casos de estudio en video','Manual de rescate para errores de IA','Adaptadores por herramientas (Midjourney, Flux, Stable Diffusion)'] }
+    { id:'starter', slug:'starter', eyebrow:'EMPIEZA AQUÍ', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+      features:['11 prompts arquitectónicos curados','Modificadores esenciales (cámara, iluminación, materialidad)','Manual de usuario PDF','Manual de rescate PDF','Acceso permanente a archivos'] },
+    { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
+      features:['Todo el Starter','Biblioteca de 45 prompts profesionales','Método LOCK PDF','Kit Profesional de Cliente','Acceso permanente a archivos'] },
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MÁS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+      features:['Todo el Professional Library','Acceso al App Constructor (12 meses)','Proyectos y favoritos en la nube','Nuevos módulos por 12 meses','Actualizaciones de contenido por 12 meses'] },
   ],
   pt: [
-    { id:'initial', eyebrow:'COMECE AQUI', name:'Biblioteca Inicial', featured:false, currentUsd:'USD 15', oldUsd:'USD 25', currentArs:'$20.000', oldArs:'$40.000', cta:'pack', features:['Acesso a 15 blocos base de prompts','Modificadores essenciais de câmera e materialidade','Guia de início rápido em PDF','Atualizações básicas por 3 meses'] },
-    { id:'pro', eyebrow:'RECOMENDADO', name:'Biblioteca Completa', featured:true, currentUsd:'USD 30', oldUsd:'USD 65', currentArs:'$42.500', oldArs:'$95.000', cta:'pack', features:['Coleção completa de 90+ blocos de prompts','Todos os modificadores premium de iluminação e estilo','Guia PDF + Estudos de caso em vídeo','Manual de resgate para erros de IA','Adaptadores por ferramentas (Midjourney, Flux, Stable Diffusion)'] }
+    { id:'starter', slug:'starter', eyebrow:'COMECE AQUI', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+      features:['11 prompts arquitetônicos curados','Modificadores essenciais (câmera, iluminação, materialidade)','Manual do usuário PDF','Manual de resgate PDF','Acesso permanente a arquivos'] },
+    { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
+      features:['Tudo do Starter','Biblioteca de 45 prompts profissionais','Método LOCK PDF','Kit Profissional de Cliente','Acesso permanente a arquivos'] },
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MAIS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+      features:['Tudo do Professional Library','Acesso ao App Construtor (12 meses)','Projetos e favoritos na nuvem','Novos módulos por 12 meses','Atualizações de conteúdo por 12 meses'] },
   ],
 };
+
 
 function formatClock(total) {
   const hrs = String(Math.floor(total/3600)).padStart(2,'0');
@@ -531,8 +545,13 @@ export default function LandingPage(){
   const getDisplayedPrice = useCallback((pack)=>currency==="ars"?pack.currentArs:pack.currentUsd,[currency]);
   const getDisplayedOldPrice = useCallback((pack)=>currency==="ars"?(pack.oldArs||pack.oldUsd):pack.oldUsd,[currency]);
   const goToPacks = useCallback(()=>document.getElementById("vps-pricing")?.scrollIntoView({behavior:"smooth"}),[]);
+  const goToAccess = useCallback(()=> { window.location.pathname = "/app"; },[]);
+  const [payModal, setPayModal] = useState(null);
+  const openPayModal = useCallback((pack) => setPayModal(pack), []);
 
   return(
+    <>
+    {payModal && <PaymentModal pack={payModal} lang={lang} onClose={() => setPayModal(null)} />}
     <div style={S.page}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
@@ -587,7 +606,10 @@ export default function LandingPage(){
               <div style={S.heroGlow}></div>
               <div style={S.salesHeroTop}>
                 <div style={S.salesPill}><Icon name="spark" size={14} color="#ff9800"/>{landing.eyebrow}</div>
-                <button className="vps-btn" style={{...S.darkBtnGhost,...S.viewPacksBtn}} onClick={goToPacks}>{landing.viewPacks}</button>
+                <div style={{display: "flex", gap: "10px"}}>
+                  <button className="vps-btn" style={{...S.darkBtnGhost}} onClick={goToAccess}>{h.primary}</button>
+                  <button className="vps-btn" style={{...S.darkBtnGhost,...S.viewPacksBtn}} onClick={goToPacks}>{landing.viewPacks}</button>
+                </div>
               </div>
               <h2 style={S.salesTitle}>{landing.heroTitleA} <span style={S.salesTitleAccent}>{landing.heroTitleB}</span></h2>
               <div style={S.salesHeroBody}>{landing.heroBody}</div>
@@ -663,7 +685,30 @@ export default function LandingPage(){
                 <button className="vps-btn" style={{...S.currencyBtn,...(currency==="ars"?S.currencyBtnOn:{})}} onClick={()=>setCurrency("ars")}>{landing.currencyArs}</button>
               </div>
             </div>
-            <div style={{...S.pricingGrid,gridTemplateColumns:isMobile?"1fr":"repeat(2,minmax(0,1fr))"}}>
+            {/* ── BANNER PRECIO DE LANZAMIENTO ── */}
+            <div style={{
+              display:"flex", alignItems:"center", gap:"12px", flexWrap:"wrap",
+              background:"linear-gradient(90deg,rgba(255,60,60,.18) 0%,rgba(255,120,0,.18) 50%,rgba(255,60,60,.18) 100%)",
+              border:"1.5px solid rgba(255,90,0,.45)",
+              borderRadius:"14px", padding:"14px 20px", marginBottom:"18px",
+              boxShadow:"0 8px 32px rgba(255,80,0,.16)",
+              animation:"vpsPremiumGlow 3s ease-in-out infinite"
+            }}>
+              <span style={{fontSize:"20px"}}>🔥</span>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:MONO_FONT,fontSize:"9px",letterSpacing:"0.18em",fontWeight:900,color:"#ff7043",textTransform:"uppercase",marginBottom:"3px"}}>
+                  {lang==="en"?"LAUNCH PRICING — LIMITED TIME":lang==="pt"?"PREÇOS DE LANÇAMENTO — TEMPO LIMITADO":"PRECIO DE LANZAMIENTO — TIEMPO LIMITADO"}
+                </div>
+                <div style={{fontFamily:DISPLAY_FONT,fontSize:"15px",fontWeight:700,color:"#fff",lineHeight:1.2}}>
+                  {lang==="en"?"Introductory offer. Prices will increase after the initial launch period.":lang==="pt"?"Oferta introdutória. Os preços aumentarão após o período inicial de lançamento.":"Oferta introductoria. Los precios subirán al finalizar el período de lanzamiento."}
+                </div>
+              </div>
+              <div style={{textAlign:"right",flexShrink:0}}>
+                <div style={{fontFamily:MONO_FONT,fontSize:"9px",color:"#ff9b80",fontWeight:800,letterSpacing:"0.1em",marginBottom:"2px"}}>{lang==="en"?"SAVE UP TO":lang==="pt"?"ECONOMIZE ATÉ":"AHORRÁ HASTA"}</div>
+                <div style={{fontFamily:DISPLAY_FONT,fontSize:"26px",fontWeight:900,color:"#ff7043",lineHeight:1}}>USD 20</div>
+              </div>
+            </div>
+            <div style={{...S.pricingGrid,gridTemplateColumns:isMobile?"1fr":isTablet?"repeat(2,minmax(0,1fr))":"repeat(3,minmax(0,1fr))"}}>
               {packs.map((pack)=>(
                 <div key={pack.id} className={`vps-card-hover vps-pricing-card ${pack.featured?"vps-premium-card":""}`} style={{...S.pricingCardDark,...(pack.featured?S.pricingFeaturedDark:{})}}>
                   <div className="vps-pricing-card-inner-shine"></div>
@@ -681,7 +726,7 @@ export default function LandingPage(){
                       <li key={item} style={S.pricingListItem}><span style={S.pricingCheck}>✓</span><span>{item}</span></li>
                     ))}
                   </ul>
-                  <button className="vps-btn" style={pack.featured?{...S.btnPri,...S.pricingPremiumCta}:S.pricingButtonGhost} onClick={pack.cta==="access"?goToAccess:goToPacks}>
+                  <button className="vps-btn" style={pack.featured?{...S.btnPri,...S.pricingPremiumCta}:S.pricingButtonGhost} onClick={() => openPayModal(pack)}>
                     {pack.cta==="access"?landing.accessButton:landing.packButton}
                   </button>
                 </div>
@@ -700,6 +745,7 @@ export default function LandingPage(){
           </div>
         </div>
     </div>
+  </>
   );
 }
 
