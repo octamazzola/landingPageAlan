@@ -28,9 +28,8 @@ const DISPLAY_FONT = '"Archivo Expanded", "Archivo", Arial, sans-serif';
 // Para agregar/quitar códigos, editá este objeto.
 // El descuento es un porcentaje (ej: 20 = 20% off).
 const DISCOUNT_CODES = {
-  "LAUNCH20": { pct: 20, label: "Lanzamiento" },
-  "ARCHI15":  { pct: 15, label: "Arquitectos" },
-  "EARLY10":  { pct: 10, label: "Early bird" },
+  "COLR3":  { pct: 20, label: "Colaboradores" },
+  "PREM50": { pct: 50, label: "VIP" },
 };
 
 // ── LINKS DE PAGO ────────────────────────────────────────────────────────────
@@ -40,14 +39,26 @@ export const PAYMENT_LINKS = {
   starter: {
     lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/1e94d1e6-eac9-4f2c-be16-42a5c0c92cc7",
     mercadopago:  "https://mpago.la/2BbmUfj",
+    mercadopago_discounts: {
+      "COLR3":  "https://mpago.la/29Bw7Nn",
+      "PREM50": "https://mpago.la/1DZYruH",
+    },
   },
   professional: {
     lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/b121937b-9f08-441c-b61e-7b98adda7fec",
     mercadopago:  "https://mpago.la/28TYKdV",
+    mercadopago_discounts: {
+      "COLR3":  "https://mpago.la/2etASZ8",
+      "PREM50": "https://mpago.la/1hiXr4s",
+    },
   },
   studio_pro: {
     lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/d1aed8c0-7546-4fa5-82c3-a4b6935376bc",
     mercadopago:  "https://mpago.la/2pAoRAo",
+    mercadopago_discounts: {
+      "COLR3":  "https://mpago.la/1vhW85j",
+      "PREM50": "https://mpago.la/2sAivxW",
+    },
   },
 };
 
@@ -155,9 +166,10 @@ export default function PaymentModal({ pack, lang = "es", onClose }) {
   }
 
   function handleMP() {
-    if (links.mercadopago) {
-      window.open(links.mercadopago, "_blank", "noopener");
-    }
+    const code = coupon.trim().toUpperCase();
+    const discountedUrl = discount && links.mercadopago_discounts?.[code];
+    const url = discountedUrl || links.mercadopago;
+    if (url) window.open(url, "_blank", "noopener");
   }
 
   return (
