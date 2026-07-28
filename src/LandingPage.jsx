@@ -215,27 +215,27 @@ const LANDING_EXTRAS = {
 
 const PACKS = {
   en: [
-    { id:'starter', slug:'starter', eyebrow:'START HERE', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+    { id:'starter', slug:'starter', eyebrow:'START HERE', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
       features:['11 curated architectural prompts','Essential modifiers (camera, lighting, materiality)','User Manual PDF','Rescue Manual PDF','Permanent file access'] },
     { id:'professional', slug:'professional', eyebrow:'RECOMMENDED', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
       features:['Everything in Starter','Library of 45 professional prompts','LOCK Method PDF','Professional Client Kit','Permanent file access'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MOST COMPLETE', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MOST COMPLETE', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
       features:['Everything in Professional Library','App Constructor access (12 months)','Cloud projects and favorites','New modules for 12 months','Content updates for 12 months'] },
   ],
   es: [
-    { id:'starter', slug:'starter', eyebrow:'EMPIEZA AQUÍ', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+    { id:'starter', slug:'starter', eyebrow:'EMPIEZA AQUÍ', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
       features:['11 prompts arquitectónicos curados','Modificadores esenciales (cámara, iluminación, materialidad)','Manual de usuario PDF','Manual de rescate PDF','Acceso permanente a archivos'] },
     { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
       features:['Todo el Starter','Biblioteca de 45 prompts profesionales','Método LOCK PDF','Kit Profesional de Cliente','Acceso permanente a archivos'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MÁS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MÁS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
       features:['Todo el Professional Library','Acceso al App Constructor (12 meses)','Proyectos y favoritos en la nube','Nuevos módulos por 12 meses','Actualizaciones de contenido por 12 meses'] },
   ],
   pt: [
-    { id:'starter', slug:'starter', eyebrow:'COMECE AQUI', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$25.000', oldArs:'$35.000', cta:'pack',
+    { id:'starter', slug:'starter', eyebrow:'COMECE AQUI', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
       features:['11 prompts arquitetônicos curados','Modificadores essenciais (câmera, iluminação, materialidade)','Manual do usuário PDF','Manual de resgate PDF','Acesso permanente a arquivos'] },
     { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
       features:['Tudo do Starter','Biblioteca de 45 prompts profissionais','Método LOCK PDF','Kit Profissional de Cliente','Acesso permanente a arquivos'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MAIS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$100.000', oldArs:'$130.000', cta:'access',
+    { id:'studio_pro', slug:'studio_pro', eyebrow:'MAIS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
       features:['Tudo do Professional Library','Acesso ao App Construtor (12 meses)','Projetos e favoritos na nuvem','Novos módulos por 12 meses','Atualizações de conteúdo por 12 meses'] },
   ],
 };
