@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 
-// ── Íconos SVG inline ────────────────────────────────────────────────────────
-function IconStripe() {
+// ── Íconos SVG ───────────────────────────────────────────────────────────────
+function IconLS() {
   return (
-    <svg width="52" height="22" viewBox="0 0 52 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Stripe">
-      <path d="M4.76 8.97C4.76 7.96 5.6 7.56 7.01 7.56c1.77 0 4.01.53 5.78 1.47V4.55C11.15 3.85 9.43 3.6 7.7 3.6 3.43 3.6.8 5.79.8 9.13c0 5.3 7.3 4.45 7.3 6.74 0 1.19-.96 1.56-2.44 1.56-2.11 0-4.8-.87-6.93-2.03v4.53c2.36 1.02 4.74 1.45 6.93 1.45 4.38 0 7.39-2.16 7.39-5.55 0-5.72-7.29-4.7-7.29-6.86zM20.47 1.1l-5.04 1.06-.02 16.42 5.04-1.05V1.1zm6.48 5.12h-5.04v12.36h5.04V6.22zm-2.5-3.93c-1.61 0-2.92 1.3-2.92 2.92 0 1.61 1.3 2.91 2.92 2.91s2.92-1.3 2.92-2.91c0-1.62-1.3-2.92-2.92-2.92zm15.83 6.69l-.31-1.76h-4.34v12.36h5.04v-8.3c1.2-1.56 3.22-1.27 3.85-1.05V6.22c-.66-.24-3.07-.68-4.24 1.76zm7.36-4.24l-5.04 1.06v14.68h5.04V5.84zm-2.52-3.2c-1.61 0-2.92 1.3-2.92 2.92 0 1.61 1.31 2.91 2.92 2.91 1.62 0 2.93-1.3 2.93-2.91 0-1.62-1.31-2.92-2.93-2.92z" fill="currentColor"/>
+    <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="25" cy="25" r="25" fill="#FFC233"/>
+      <path d="M14 26c0-6.075 4.925-11 11-11s11 4.925 11 11" stroke="#222" strokeWidth="3.5" strokeLinecap="round"/>
+      <circle cx="25" cy="26" r="4" fill="#222"/>
     </svg>
   );
 }
-
 function IconMP() {
   return (
-    <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Mercado Pago">
+    <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="25" cy="25" r="25" fill="#00BCFF"/>
       <path d="M10 25c0-8.28 6.72-15 15-15s15 6.72 15 15" stroke="white" strokeWidth="4" strokeLinecap="round"/>
       <circle cx="25" cy="25" r="5" fill="white"/>
@@ -23,217 +24,244 @@ const BODY_FONT = '"IBM Plex Sans", Calibri, Arial, sans-serif';
 const MONO_FONT = '"IBM Plex Mono", "SFMono-Regular", Consolas, monospace';
 const DISPLAY_FONT = '"Archivo Expanded", "Archivo", Arial, sans-serif';
 
+// ── CÓDIGOS DE DESCUENTO ─────────────────────────────────────────────────────
+// Para agregar/quitar códigos, editá este objeto.
+// El descuento es un porcentaje (ej: 20 = 20% off).
+const DISCOUNT_CODES = {
+  "LAUNCH20": { pct: 20, label: "Lanzamiento" },
+  "ARCHI15":  { pct: 15, label: "Arquitectos" },
+  "EARLY10":  { pct: 10, label: "Early bird" },
+};
+
+// ── LINKS DE PAGO ────────────────────────────────────────────────────────────
+// Lemon Squeezy soporta códigos de descuento nativos via URL.
+// Mercado Pago: los links del cliente ya tienen el precio actualizado.
+export const PAYMENT_LINKS = {
+  starter: {
+    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/1e94d1e6-eac9-4f2c-be16-42a5c0c92cc7",
+    mercadopago:  "https://mpago.la/2BbmUfj",
+  },
+  professional: {
+    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/b121937b-9f08-441c-b61e-7b98adda7fec",
+    mercadopago:  "https://mpago.la/28TYKdV",
+  },
+  studio_pro: {
+    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/d1aed8c0-7546-4fa5-82c3-a4b6935376bc",
+    mercadopago:  "https://mpago.la/2pAoRAo",
+  },
+};
+
 // ── Textos por idioma ────────────────────────────────────────────────────────
 const COPY = {
   es: {
     title: "Elegí cómo pagar",
-    subtitle: "Seleccioná el método de pago que más te convenga.",
-    stripeLabel: "Tarjeta internacional · USD",
-    stripeDesc: "Visa, Mastercard, Amex. Procesado por Lemon Squeezy.",
-    mpLabel: "Mercado Pago · ARS",
-    mpDesc: "Tarjeta, transferencia o efectivo. Procesado por Mercado Pago.",
-    ctaStripe: "Pagar con Lemon Squeezy",
+    ctaLS: "Pagar con Lemon Squeezy",
     ctaMP: "Pagar con Mercado Pago",
+    lsDesc: "USD · Visa, Mastercard, Amex",
+    mpDesc: "ARS · Tarjeta, transferencia o efectivo",
     close: "Cancelar",
     secureNote: "Pago 100% seguro · No almacenamos datos de tu tarjeta",
     includes: "Incluye:",
     appNote: "Recibirás el enlace de acceso a la app por email al completar el pago.",
     filesNote: "Recibirás los archivos PDF por email al completar el pago.",
+    couponLabel: "¿Tenés un código de descuento?",
+    couponPlaceholder: "Ej: LAUNCH20",
+    couponApply: "Aplicar",
+    couponValid: "✓ Código válido",
+    couponInvalid: "Código no válido",
+    discountApplied: "off aplicado",
   },
   en: {
     title: "Choose how to pay",
-    subtitle: "Select the payment method that suits you best.",
-    stripeLabel: "International card · USD",
-    stripeDesc: "Visa, Mastercard, Amex. Processed by Lemon Squeezy.",
-    mpLabel: "Mercado Pago · ARS",
-    mpDesc: "Card, transfer or cash. Processed by Mercado Pago.",
-    ctaStripe: "Pay with Lemon Squeezy",
+    ctaLS: "Pay with Lemon Squeezy",
     ctaMP: "Pay with Mercado Pago",
+    lsDesc: "USD · Visa, Mastercard, Amex",
+    mpDesc: "ARS · Card, transfer or cash",
     close: "Cancel",
     secureNote: "100% secure payment · We don't store your card data",
     includes: "Includes:",
     appNote: "You will receive the app access link by email upon completing payment.",
     filesNote: "You will receive the PDF files by email upon completing payment.",
+    couponLabel: "Have a discount code?",
+    couponPlaceholder: "E.g: LAUNCH20",
+    couponApply: "Apply",
+    couponValid: "✓ Valid code",
+    couponInvalid: "Invalid code",
+    discountApplied: "off applied",
   },
   pt: {
     title: "Escolha como pagar",
-    subtitle: "Selecione o método de pagamento que mais lhe convém.",
-    stripeLabel: "Cartão internacional · USD",
-    stripeDesc: "Visa, Mastercard, Amex. Processado pelo Lemon Squeezy.",
-    mpLabel: "Mercado Pago · ARS",
-    mpDesc: "Cartão, transferência ou dinheiro. Processado pelo Mercado Pago.",
-    ctaStripe: "Pagar com Lemon Squeezy",
+    ctaLS: "Pagar com Lemon Squeezy",
     ctaMP: "Pagar com Mercado Pago",
+    lsDesc: "USD · Visa, Mastercard, Amex",
+    mpDesc: "ARS · Cartão, transferência ou dinheiro",
     close: "Cancelar",
     secureNote: "Pagamento 100% seguro · Não armazenamos dados do cartão",
     includes: "Inclui:",
     appNote: "Você receberá o link de acesso à app por e-mail ao concluir o pagamento.",
     filesNote: "Você receberá os arquivos PDF por e-mail ao concluir o pagamento.",
+    couponLabel: "Tem um código de desconto?",
+    couponPlaceholder: "Ex: LAUNCH20",
+    couponApply: "Aplicar",
+    couponValid: "✓ Código válido",
+    couponInvalid: "Código inválido",
+    discountApplied: "off aplicado",
   },
 };
 
-// ── Links de pago (reemplazá con los reales de Stripe y MP) ─────────────────
-// IMPORTANTE: Reemplazá estas URLs con las de tus productos reales.
-// Stripe → stripe.com/dashboard → Payment Links
-// Mercado Pago → mercadopago.com.ar → Cobrar → Link de pago
-export const PAYMENT_LINKS = {
-  starter: {
-    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/1e94d1e6-eac9-4f2c-be16-42a5c0c92cc7",
-    mercadopago: "https://mpago.la/237ZSfP",
-  },
-  professional: {
-    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/b121937b-9f08-441c-b61e-7b98adda7fec",
-    mercadopago: "https://mpago.la/32YnMte",
-  },
-  studio_pro: {
-    lemonsqueezy: "https://visualpromptstudio.lemonsqueezy.com/checkout/buy/d1aed8c0-7546-4fa5-82c3-a4b6935376bc",
-    mercadopago: "https://mpago.la/2FsD9XH",
-  },
-};
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function applyDiscount(price, pct) {
+  const num = parseFloat(price.replace(/[^0-9.]/g, ""));
+  const prefix = price.replace(/[0-9.,]+/, "").trim();
+  const discounted = Math.round(num * (1 - pct / 100));
+  return `${prefix}${discounted}`;
+}
 
 // ── Componente principal ─────────────────────────────────────────────────────
 export default function PaymentModal({ pack, lang = "es", onClose }) {
-  const [hoveredMethod, setHoveredMethod] = useState(null);
+  const [coupon, setCoupon] = useState("");
+  const [couponStatus, setCouponStatus] = useState("idle"); // idle | valid | invalid
+  const [discount, setDiscount] = useState(null); // { pct, label } | null
+
   const t = COPY[lang] || COPY.es;
   const links = PAYMENT_LINKS[pack?.slug] || {};
   const isAppPlan = pack?.slug === "studio_pro";
 
   if (!pack) return null;
 
-  function handleStripe() {
-    if (links.lemonsqueezy && !links.lemonsqueezy.includes("PENDIENTE")) {
-      window.open(links.lemonsqueezy, "_blank", "noopener");
+  // Precio mostrado (con o sin descuento)
+  const displayUsd = discount ? applyDiscount(pack.currentUsd, discount.pct) : pack.currentUsd;
+  const displayArs = discount ? applyDiscount(pack.currentArs, discount.pct) : pack.currentArs;
+
+  function applyCoupon() {
+    const code = coupon.trim().toUpperCase();
+    if (DISCOUNT_CODES[code]) {
+      setDiscount(DISCOUNT_CODES[code]);
+      setCouponStatus("valid");
     } else {
-      alert("El link de Lemon Squeezy todavía no está configurado.");
+      setDiscount(null);
+      setCouponStatus("invalid");
     }
+  }
+
+  function handleLS() {
+    let url = links.lemonsqueezy;
+    if (!url) return;
+    // Si hay código válido, lo pasamos nativamente a Lemon Squeezy
+    if (discount && coupon) {
+      url += `?checkout[discount_code]=${coupon.trim().toUpperCase()}`;
+    }
+    window.open(url, "_blank", "noopener");
   }
 
   function handleMP() {
-    if (links.mercadopago && !links.mercadopago.includes("PENDIENTE")) {
+    if (links.mercadopago) {
       window.open(links.mercadopago, "_blank", "noopener");
-    } else {
-      alert("El link de Mercado Pago todavía no está configurado. Contactá al administrador.");
     }
   }
 
-  const price = pack.currentUsd;
-  const priceArs = pack.currentArs;
-
   return (
     <div
-      style={{
-        position: "fixed", inset: 0, zIndex: 9999,
-        background: "rgba(0,0,0,0.72)", backdropFilter: "blur(6px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "16px",
-      }}
+      style={{ position:"fixed", inset:0, zIndex:9999, background:"rgba(0,0,0,0.72)", backdropFilter:"blur(6px)", display:"flex", alignItems:"center", justifyContent:"center", padding:"16px" }}
       onClick={onClose}
     >
       <style>{`
-        @keyframes pmSlideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+        @keyframes pmSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
         .pm-card { animation: pmSlideUp .35s cubic-bezier(.2,.8,.2,1) both; }
-        .pm-method:hover { border-color: rgba(255,152,0,0.7) !important; background: rgba(255,152,0,0.06) !important; }
-        .pm-btn-stripe:hover { background: #635bff !important; color: white !important; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(99,91,255,0.32) !important; }
-        .pm-btn-mp:hover { background: #00bcff !important; color: white !important; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,188,255,0.32) !important; }
+        .pm-btn-ls:hover  { background:#e6a800 !important; transform:translateY(-2px); box-shadow:0 12px 28px rgba(255,194,51,0.3) !important; }
+        .pm-btn-mp:hover  { background:#00bcff !important; color:white !important; transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,188,255,0.32) !important; }
+        .pm-coupon-input:focus { outline:none; border-color:rgba(255,152,0,0.6) !important; }
       `}</style>
 
-      <div
-        className="pm-card"
-        onClick={e => e.stopPropagation()}
-        style={{
-          background: "linear-gradient(180deg,#17191f 0%,#0f1115 100%)",
-          border: "1px solid rgba(255,255,255,0.12)",
-          borderRadius: "20px",
-          padding: "32px",
-          maxWidth: "480px",
-          width: "100%",
-          boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
-          position: "relative",
-        }}
-      >
+      <div className="pm-card" onClick={e => e.stopPropagation()} style={{ background:"linear-gradient(180deg,#17191f 0%,#0f1115 100%)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:"20px", padding:"28px", maxWidth:"480px", width:"100%", boxShadow:"0 32px 80px rgba(0,0,0,0.6)" }}>
+
         {/* Header */}
-        <div style={{ marginBottom: "20px" }}>
-          <div style={{ fontFamily: MONO_FONT, fontSize: "10px", letterSpacing: "0.16em", color: "#ff9800", marginBottom: "6px", textTransform: "uppercase" }}>
-            {pack.eyebrow}
+        <div style={{ marginBottom:"18px" }}>
+          <div style={{ fontFamily:MONO_FONT, fontSize:"10px", letterSpacing:"0.16em", color:"#ff9800", marginBottom:"5px", textTransform:"uppercase" }}>{pack.eyebrow}</div>
+          <div style={{ fontFamily:DISPLAY_FONT, fontSize:"21px", color:"#fff", fontWeight:700, marginBottom:"8px" }}>{pack.name}</div>
+
+          {/* Precio con/sin descuento */}
+          <div style={{ display:"flex", alignItems:"baseline", gap:"10px", flexWrap:"wrap" }}>
+            {discount && (
+              <span style={{ fontFamily:DISPLAY_FONT, fontSize:"22px", color:"#9ca2ad", textDecoration:"line-through", letterSpacing:"-0.04em" }}>{pack.currentUsd}</span>
+            )}
+            <span style={{ fontFamily:DISPLAY_FONT, fontSize:"38px", color: discount ? "#4ade80" : "#fff", fontWeight:900, letterSpacing:"-0.04em" }}>{displayUsd}</span>
+            <span style={{ fontFamily:MONO_FONT, fontSize:"11px", color:"#9ca2ad", textDecoration:"line-through" }}>{pack.oldUsd}</span>
+            <span style={{ fontFamily:MONO_FONT, fontSize:"11px", color:"#8a8f99" }}>· {displayArs} ARS</span>
           </div>
-          <div style={{ fontFamily: DISPLAY_FONT, fontSize: "22px", color: "#fff", fontWeight: 700, marginBottom: "4px" }}>
-            {pack.name}
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "10px" }}>
-            <span style={{ fontFamily: DISPLAY_FONT, fontSize: "36px", color: "#fff", fontWeight: 900, letterSpacing: "-0.04em" }}>{price}</span>
-            <span style={{ fontFamily: MONO_FONT, fontSize: "11px", color: "#9ca2ad", textDecoration: "line-through" }}>{pack.oldUsd}</span>
-            <span style={{ fontFamily: MONO_FONT, fontSize: "11px", color: "#8a8f99" }}>· {priceArs} ARS</span>
-          </div>
+
+          {discount && (
+            <div style={{ display:"inline-flex", alignItems:"center", gap:"6px", background:"rgba(74,222,128,0.12)", border:"1px solid rgba(74,222,128,0.3)", borderRadius:"999px", padding:"4px 10px", marginTop:"6px" }}>
+              <span style={{ fontSize:"11px", fontWeight:800, color:"#4ade80", fontFamily:MONO_FONT }}>🎉 {discount.pct}% {t.discountApplied} — {t.couponValid}</span>
+            </div>
+          )}
         </div>
 
-        {/* Incluye */}
-        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", padding: "14px", marginBottom: "20px" }}>
-          <div style={{ fontFamily: MONO_FONT, fontSize: "9px", letterSpacing: "0.14em", color: "#ff9800", marginBottom: "10px", textTransform: "uppercase" }}>{t.includes}</div>
+        {/* Features */}
+        <div style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.08)", borderRadius:"12px", padding:"12px", marginBottom:"16px" }}>
+          <div style={{ fontFamily:MONO_FONT, fontSize:"9px", letterSpacing:"0.14em", color:"#ff9800", marginBottom:"8px", textTransform:"uppercase" }}>{t.includes}</div>
           {pack.features.map(f => (
-            <div key={f} style={{ display: "flex", gap: "8px", alignItems: "flex-start", fontSize: "12.5px", color: "#d7dbe2", marginBottom: "6px", lineHeight: 1.4 }}>
-              <span style={{ color: "#ff9800", fontWeight: 900, flexShrink: 0 }}>✓</span>
-              <span>{f}</span>
+            <div key={f} style={{ display:"flex", gap:"8px", alignItems:"flex-start", fontSize:"12px", color:"#d7dbe2", marginBottom:"5px", lineHeight:1.4 }}>
+              <span style={{ color:"#ff9800", fontWeight:900, flexShrink:0 }}>✓</span><span>{f}</span>
             </div>
           ))}
         </div>
 
         {/* Nota entrega */}
-        <div style={{ fontFamily: MONO_FONT, fontSize: "10.5px", color: "#8a8f99", marginBottom: "20px", background: "rgba(255,152,0,0.06)", border: "1px solid rgba(255,152,0,0.16)", borderRadius: "10px", padding: "10px 12px" }}>
+        <div style={{ fontFamily:MONO_FONT, fontSize:"10.5px", color:"#8a8f99", marginBottom:"16px", background:"rgba(255,152,0,0.06)", border:"1px solid rgba(255,152,0,0.16)", borderRadius:"10px", padding:"9px 12px" }}>
           📧 {isAppPlan ? t.appNote : t.filesNote}
         </div>
 
-        {/* Métodos de pago */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px" }}>
-          {/* Stripe */}
-          <button
-            className="pm-btn-stripe"
-            onClick={handleStripe}
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              background: "rgba(99,91,255,0.10)", border: "1.5px solid rgba(99,91,255,0.35)",
-              borderRadius: "14px", padding: "16px 18px", cursor: "pointer",
-              fontFamily: BODY_FONT, transition: "all .22s ease", color: "#c5c1ff",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px" }}>
-              <span style={{ fontWeight: 800, fontSize: "13.5px" }}>{t.ctaStripe}</span>
-              <span style={{ fontSize: "11px", opacity: 0.75 }}>USD · Visa, Mastercard, Amex</span>
+        {/* ── Código de descuento ── */}
+        <div style={{ marginBottom:"16px" }}>
+          <div style={{ fontFamily:MONO_FONT, fontSize:"10px", color:"#8a8f99", letterSpacing:"0.08em", marginBottom:"7px" }}>{t.couponLabel}</div>
+          <div style={{ display:"flex", gap:"8px" }}>
+            <input
+              className="pm-coupon-input"
+              type="text"
+              value={coupon}
+              onChange={e => { setCoupon(e.target.value.toUpperCase()); setCouponStatus("idle"); setDiscount(null); }}
+              onKeyDown={e => e.key === "Enter" && applyCoupon()}
+              placeholder={t.couponPlaceholder}
+              style={{ flex:1, background:"rgba(255,255,255,0.06)", border:`1.5px solid ${couponStatus === "valid" ? "rgba(74,222,128,0.5)" : couponStatus === "invalid" ? "rgba(248,113,113,0.5)" : "rgba(255,255,255,0.14)"}`, borderRadius:"10px", padding:"10px 12px", fontFamily:MONO_FONT, fontSize:"12px", color:"#fff", letterSpacing:"0.1em" }}
+            />
+            <button
+              onClick={applyCoupon}
+              style={{ background:"rgba(255,152,0,0.15)", border:"1.5px solid rgba(255,152,0,0.35)", borderRadius:"10px", padding:"10px 14px", cursor:"pointer", fontFamily:MONO_FONT, fontSize:"11px", fontWeight:800, color:"#ff9800", whiteSpace:"nowrap" }}
+            >
+              {t.couponApply}
+            </button>
+          </div>
+          {couponStatus === "invalid" && (
+            <div style={{ fontFamily:MONO_FONT, fontSize:"10px", color:"#f87171", marginTop:"5px" }}>{t.couponInvalid}</div>
+          )}
+        </div>
+
+        {/* Botones de pago */}
+        <div style={{ display:"flex", flexDirection:"column", gap:"10px", marginBottom:"18px" }}>
+          {/* Lemon Squeezy */}
+          <button className="pm-btn-ls" onClick={handleLS} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", background:"rgba(255,194,51,0.13)", border:"1.5px solid rgba(255,194,51,0.4)", borderRadius:"14px", padding:"15px 18px", cursor:"pointer", fontFamily:BODY_FONT, transition:"all .22s ease", color:"#ffd966" }}>
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap:"2px" }}>
+              <span style={{ fontWeight:800, fontSize:"13.5px" }}>{t.ctaLS}</span>
+              <span style={{ fontSize:"11px", opacity:0.75 }}>{t.lsDesc}</span>
             </div>
-            <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="25" cy="25" r="25" fill="#FFC233"/>
-              <path d="M14 26c0-6.075 4.925-11 11-11s11 4.925 11 11" stroke="#222" strokeWidth="3.5" strokeLinecap="round"/>
-              <circle cx="25" cy="26" r="4" fill="#222"/>
-            </svg>
+            <IconLS />
           </button>
 
           {/* Mercado Pago */}
-          <button
-            className="pm-btn-mp"
-            onClick={handleMP}
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              background: "rgba(0,188,255,0.08)", border: "1.5px solid rgba(0,188,255,0.28)",
-              borderRadius: "14px", padding: "16px 18px", cursor: "pointer",
-              fontFamily: BODY_FONT, transition: "all .22s ease", color: "#7ce8ff",
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px" }}>
-              <span style={{ fontWeight: 800, fontSize: "13.5px" }}>{t.ctaMP}</span>
-              <span style={{ fontSize: "11px", opacity: 0.75 }}>{t.mpDesc}</span>
+          <button className="pm-btn-mp" onClick={handleMP} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", background:"rgba(0,188,255,0.08)", border:"1.5px solid rgba(0,188,255,0.28)", borderRadius:"14px", padding:"15px 18px", cursor:"pointer", fontFamily:BODY_FONT, transition:"all .22s ease", color:"#7ce8ff" }}>
+            <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-start", gap:"2px" }}>
+              <span style={{ fontWeight:800, fontSize:"13.5px" }}>{t.ctaMP}</span>
+              <span style={{ fontSize:"11px", opacity:0.75 }}>{t.mpDesc}</span>
             </div>
             <IconMP />
           </button>
         </div>
 
         {/* Footer */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontFamily: MONO_FONT, fontSize: "9.5px", color: "#5a5f6a", letterSpacing: "0.06em" }}>🔒 {t.secureNote}</span>
-          <button
-            onClick={onClose}
-            style={{ background: "transparent", border: "none", color: "#5a5f6a", cursor: "pointer", fontFamily: BODY_FONT, fontSize: "12px", padding: "4px 8px", borderRadius: "6px" }}
-          >
-            {t.close}
-          </button>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <span style={{ fontFamily:MONO_FONT, fontSize:"9.5px", color:"#5a5f6a", letterSpacing:"0.06em" }}>🔒 {t.secureNote}</span>
+          <button onClick={onClose} style={{ background:"transparent", border:"none", color:"#5a5f6a", cursor:"pointer", fontFamily:BODY_FONT, fontSize:"12px", padding:"4px 8px" }}>{t.close}</button>
         </div>
       </div>
     </div>
