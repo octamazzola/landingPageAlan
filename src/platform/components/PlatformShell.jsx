@@ -10,10 +10,8 @@ function label(object, lang, fallback = '') {
 export default function PlatformShell({ profile, content, activeSlug, setActiveSlug, lang, setLang, children, onRefresh }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const modules = useMemo(() => {
-    const regular = [...(content.modules || [])].filter((module) => module.published !== false)
-    if (profile?.role === 'admin') {
-      regular.push({ id: 'admin', slug: 'admin', module_type: 'admin', titles: { es: 'Administración', en: 'Admin', pt: 'Administração' }, icon: '⚙', sort_order: 999 })
-    }
+    const regular = [...(content.modules || [])]
+      .filter((module) => module.published !== false && module.module_type !== 'changelog')
     return regular.sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
   }, [content.modules, profile?.role])
 

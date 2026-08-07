@@ -1,0 +1,31 @@
+# CORE-06 · Blue-Hour Exterior Facade
+
+VPS 1.0.0 · EN MASTER · Copy/paste the prompt body below.
+
+```text
+Transform the provided SketchUp facade screenshot or 3D exterior viewport into an ultra-photorealistic blue-hour architectural photograph.
+
+Strictly preserve 100% of the original architecture, including geometry, proportions, massing, facade composition, rooflines, openings, doors, windows, structural elements, landscaping, terrain, camera angle, perspective, framing, and overall composition. Do not add, remove, relocate, resize, or redesign any architectural element.
+
+Maintain the original architectural style, materials, finishes, colors, and textures in their exact locations. Improve only their realism using physically accurate PBR materials, correct texture scale, natural roughness, subtle imperfections, detailed joints, realistic reflections, and believable material depth.
+
+Create a subtle and coherent real-world context with realistic pavement, natural vegetation, discreet background elements, and a consistent horizon. The environment must remain secondary and must not obstruct the main facade.
+
+Use a realistic blue-hour atmosphere just after sunset, with a deep blue twilight sky, soft cool ambient light, balanced exposure, gentle shadows, realistic reflections, and subtle atmospheric depth.
+
+Create a refined contrast between the cool exterior light and warm interior illumination. Where appropriate, include subtle architectural and landscape lighting only in existing fixtures or logical locations, without altering the original design. Avoid excessive brightness, neon tones, or theatrical lighting.
+
+Where visible, add proportionally accurate interior furniture and a soft warm glow without modifying the architecture.
+
+Use a professional architectural photography style with a full-frame camera, realistic 24-35 mm lens, corrected vertical lines, controlled perspective, sharp details, and natural color grading.
+
+Preserve the original viewpoint, framing, and composition.
+
+The final image must look like a real high-end architectural photograph, not a CGI render, illustration, or digital painting.
+
+Ultra-photorealistic architectural visualization, premium archviz quality, realistic materials, ray-traced global illumination, refined twilight lighting, high detail, sharp focus, and 8K quality.
+
+NEGATIVE INSTRUCTIONS / RESTRICTIONS
+
+do not alter the architecture, proportions, materials, landscaping, or camera position; avoid exaggerated artificial lighting, overexposure, crushed shadows, neon colors, heavy fog, distorted lines, plastic-looking materials, fake reflections, low-detail textures, cartoon effects, painterly style, or visible CGI appearance.
+```

@@ -1,0 +1,26 @@
+# VEH-05 · Delivery motorcycle in motion
+
+VPS 1.0.0 · EN MASTER · Copy/paste the prompt body below.
+
+```text
+PURPOSE
+Perform a strictly localized motorcycle-insertion edit using the uploaded architectural image as the immutable visual reference. Add only the requested delivery motorcycle and the minimum physically necessary motion effects described below.
+
+ANALYSIS + GATE
+Before editing, identify the visible traffic lanes, roadway geometry, pavement condition, travel direction, lane markings, curb edges, intersections, support planes and available vehicle clearance. Analyze horizon, vanishing points, camera height, focal perspective, depth of field, scale references, light direction, shadow softness, exposure, white balance, reflections, atmosphere, sharpness, noise and grain. Apply the scenario gate exactly. If the visible space cannot support a motorcycle traveling legally, safely and credibly, do not force the insertion; return the architecture unchanged. Use only where a continuous, unobstructed traffic lane and a clearly readable travel direction are visible.
+
+REQUESTED EDIT
+Add one contemporary unbranded delivery motorcycle traveling naturally through the existing traffic lane at low urban speed. The rider should wear a modern full-face helmet, neutral riding apparel and a discreet insulated rear delivery box without logos, branding or advertising. Position the motorcycle following the lane geometry with a realistic riding posture, both hands on the handlebars and natural body balance. Apply only a restrained sense of motion through subtle wheel rotation blur and minimal background-relative motion cues while keeping the motorcycle itself predominantly sharp. Place the motorcycle as a secondary compositional element that reinforces urban activity without competing with the architecture.
+
+PHYSICAL / OPTICAL INTEGRATION
+Maintain physically accurate scale relative to lane width, curbs, vehicles, street furniture, pedestrians and architectural elements. Ensure realistic tire contact, suspension compression, steering angle, rider anatomy and center of gravity. Match the existing lighting, reflections, ambient occlusion, contact shadows, indirect illumination, color temperature, atmospheric perspective, depth of field, sharpness, motion behavior and grain. Motion blur must follow the exact travel direction and remain coherent with the camera shutter characteristics already implied by the source image.
+
+PRESERVATION LOCK
+Preserve exactly the original architecture, geometry, proportions, openings, materials, textures, furniture, landscape, vegetation, signage, artwork, lighting, sky, reflections, camera position, perspective, framing, crop, aspect ratio, resolution and color grading. Do not redesign, regenerate, replace, relocate, remove or reinterpret any existing element. Modify only the smallest localized area required for the motorcycle insertion.
+
+NEGATIVE CONSTRAINTS
+No architectural changes; no new roads, lane markings, infrastructure, vegetation or street furniture. No racing posture, excessive speed, wheelies, unrealistic lean angle, floating tires, malformed motorcycle geometry, duplicated wheels, distorted spokes, incorrect rider anatomy, visible logos, exaggerated motion blur, wrong shadow direction, inconsistent reflections, halo artifacts, mismatched focus, inconsistent grain or visible AI/compositing traces. Do not place the motorcycle on sidewalks, pedestrian-only areas, bicycle lanes, steps or unsupported surfaces.
+
+FINAL RESULT
+Deliver a seamless high-end architectural photograph in which the moving delivery motorcycle appears naturally integrated into the existing urban scene, communicating everyday activity and scale while preserving complete fidelity to the original architectural project.
+```

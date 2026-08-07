@@ -1,0 +1,29 @@
+# CORE-04 · Rainy Exterior Facade
+
+VPS 1.0.0 · EN MASTER · Copy/paste the prompt body below.
+
+```text
+Transform the provided SketchUp facade screenshot or 3D exterior viewport into an ultra-photorealistic rainy-day architectural photograph.
+
+Strictly preserve 100% of the original architecture, including geometry, proportions, massing, facade composition, rooflines, openings, doors, windows, structural elements, landscaping layout, terrain, camera angle, perspective, framing, and overall composition. Do not add, remove, redesign, relocate, or resize any architectural element.
+
+Maintain the original architectural style, materials, finishes, colors, and textures exactly as shown, improving only their realism through physically accurate PBR materials, correct texture scale, natural roughness, subtle imperfections, realistic reflections, detailed joints, and believable depth.
+
+Create a subtle and coherent real-world context with realistic pavement, soft vegetation, discreet background elements, wet surfaces, slight puddles, and rain-darkened materials, without competing with the main facade.
+
+Use a realistic rainy atmosphere with an overcast sky, soft diffuse daylight, balanced exposure, minimal harsh shadows, subtle ambient occlusion, accurate wet reflections, and natural atmospheric depth. Include light rain or a recent-rain effect only if it enhances realism without obscuring the architecture.
+
+Where visible, add elegant interior furnishing and subtle warm interior lighting to create a refined contrast with the cool rainy exterior, without modifying the original design.
+
+Use a professional architectural photography style with a full-frame camera, a realistic 24-35 mm lens, corrected vertical lines, controlled perspective, sharp details, and natural color grading.
+
+Preserve the original viewpoint and composition.
+
+The final image must look like a real high-end architectural photograph, not a CGI render, illustration, or digital painting.
+
+Ultra-photorealistic architectural visualization, premium archviz quality, extremely high detail, sharp focus, realistic wet materials, refined lighting, natural rainy atmosphere, and 8K quality.
+
+NEGATIVE INSTRUCTIONS / RESTRICTIONS
+
+do not alter the architecture, proportions, materials layout, landscaping, or camera position; do not obstruct the facade; avoid exaggerated rain, storm effects, heavy fog, distorted lines, oversaturated colors, fake reflections, plastic materials, low-detail textures, cartoon effects, painterly style, or visible CGI appearance.
+```

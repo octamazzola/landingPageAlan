@@ -1,0 +1,25 @@
+Transform the provided SketchUp facade screenshot or 3D exterior viewport into an ultra-photorealistic nighttime architectural photograph.
+
+Strictly preserve 100% of the original architecture, including geometry, proportions, massing, facade composition, rooflines, openings, doors, windows, structural elements, landscaping layout, terrain, camera angle, perspective, framing, and overall composition. Do not add, remove, redesign, relocate, resize, or reinterpret any architectural element.
+
+Maintain the original architectural style, materials, finishes, colors, and textures exactly as shown, improving only their realism through physically accurate PBR materials, correct texture scale, natural roughness, subtle imperfections, realistic reflections, detailed joints, and believable material depth.
+
+Create a subtle and coherent real-world context with realistic pavement, natural vegetation, discreet background elements, and a balanced environment that does not compete with the main facade.
+
+Use a realistic nighttime atmosphere with a dark natural sky, balanced exposure, subtle ambient darkness, controlled contrast, realistic reflections, and soft atmospheric depth. Keep the architecture clearly visible while preserving the authentic mood of a professional night photograph.
+
+Use refined warm interior lighting and subtle exterior architectural lighting in logical locations only, such as soffits, pathways, or facade accents. Ensure realistic light falloff, soft shadow transitions, and a premium, elegant night ambiance. Avoid excessive brightness, blown highlights, neon effects, or theatrical lighting.
+
+Where visible, add elegant interior furnishing and warm interior glow without modifying the original design.
+
+Use a professional architectural photography style with a full-frame camera, realistic 24-35 mm lens, corrected vertical lines, controlled perspective, sharp details, and natural color grading.
+
+Preserve the original viewpoint and composition.
+
+The final image must look like a real high-end architectural photograph, not a CGI render, illustration, or digital painting.
+
+Ultra-photorealistic architectural visualization, premium archviz quality, extremely high detail, sharp focus, realistic artificial lighting, refined materiality, natural night atmosphere, and 8K quality.
+
+NEGATIVE INSTRUCTIONS / RESTRICTIONS
+
+do not alter the architecture, proportions, materials layout, landscaping, or camera position; do not obstruct the facade; avoid exaggerated lighting, neon colors, fake reflections, distorted lines, plastic materials, low-detail textures, cartoon effects, painterly style, or visible CGI appearance.

@@ -1,0 +1,29 @@
+# CORE-02 · Daytime Exterior Facade
+
+VPS 1.0.0 · EN MASTER · Copy/paste the prompt body below.
+
+```text
+Transform the provided SketchUp facade screenshot or 3D exterior viewport into an ultra-photorealistic daytime architectural photograph.
+
+Strictly preserve 100% of the original architecture, including geometry, proportions, massing, facade composition, rooflines, openings, doors, windows, structural elements, landscaping layout, terrain, camera angle, perspective, framing, and overall composition. Do not add, remove, redesign, relocate, or resize any architectural element.
+
+Maintain the original architectural style, materials, finishes, colors, and textures exactly as shown, improving only their realism through physically accurate PBR materials, correct texture scale, natural roughness, subtle imperfections, realistic reflections, detailed joints, and believable depth.
+
+Create a subtle and coherent real-world context with realistic pavement, soft surrounding vegetation, discreet background elements, and a balanced environment that does not compete with the main facade.
+
+Use realistic daytime lighting with a clear natural sky, accurate sunlight direction, balanced global illumination, soft shadows, ambient occlusion, realistic reflections, and subtle atmospheric depth. Avoid overexposure, excessive contrast, or artificial HDR effects.
+
+Where visible, add elegant interior furnishing and subtle warm interior lighting without modifying the original design.
+
+Use a professional architectural photography style with a full-frame camera, a realistic 24-35 mm lens, corrected vertical lines, controlled perspective, sharp details, and natural color grading.
+
+Preserve the original viewpoint and composition.
+
+The final image must look like a real high-end architectural photograph, not a CGI render, illustration, or digital painting.
+
+Ultra-photorealistic architectural visualization, premium archviz quality, extremely high detail, sharp focus, realistic materials, natural vegetation, refined lighting, and 8K quality.
+
+NEGATIVE INSTRUCTIONS / RESTRICTIONS
+
+do not alter the architecture, proportions, materials layout, or camera position; do not obstruct the facade; avoid exaggerated vegetation, distorted lines, oversaturated colors, fake reflections, plastic materials, low-detail textures, cartoon effects, painterly style, or visible CGI appearance.
+```

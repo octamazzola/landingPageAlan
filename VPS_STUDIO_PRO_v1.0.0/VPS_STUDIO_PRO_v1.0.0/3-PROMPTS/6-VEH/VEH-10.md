@@ -1,0 +1,21 @@
+# VEH-10 · Single moving car with restrained motion cue
+
+VPS 1.0.0 · EN MASTER · Copy/paste the prompt body below.
+
+```text
+PURPOSE  Perform a strictly localized vehicle-insertion edit using the uploaded architectural image as the immutable visual reference. Add only the requested vehicle and the minimum physically necessary contact effects described below.
+
+ANALYSIS + GATE  Before editing, identify the drivable and support planes, curb and lane geometry, parking or stopping logic, horizon, vanishing points, camera height, focal perspective, depth of field, scale cues, light direction, shadow softness, exposure, white balance, reflections, atmosphere, sharpness, noise and grain. Apply the scenario gate exactly. If the visible space cannot support the vehicle legally, physically and credibly, do not force the insertion; return the architecture unchanged. A continuous lane, travel direction and unobstructed path through the visible frame must be unambiguous; otherwise do not insert motion.
+
+REQUESTED EDIT  Add one unbranded contemporary passenger car traveling naturally within the existing active lane. Select a position that does not conceal the principal building, entrance, crosswalk or road marking. Orient the wheels and body precisely with the lane direction. Apply only a subtle physically directional motion cue to the vehicle, consistent with an ordinary urban speed and the source exposure; keep all original architecture, road surface and static context perfectly sharp. Use restrained neutral paint and no visible occupants.
+
+PHYSICAL / OPTICAL INTEGRATION  Match the original image exactly. Maintain accurate vehicle scale relative to lanes, bays, curbs, doors, ramps, columns, furniture, paving modules and people already present. Align every tire with one coherent support plane; preserve believable suspension load, ground clearance, steering angle and wheel perspective. Match light direction, shadow softness, contact shadow, ambient occlusion, reflections, exposure, color temperature, depth of field, atmospheric perspective, sharpness, noise and grain. Respect all occlusions and reflected surfaces already visible.
+
+TRAVEL PATH LOCK  At the shown instant, every tire must lie exclusively on the existing active asphalt lane, and the visible travel trajectory must remain within that lane. No wheel or body projection may cross a curb, sidewalk, cycle lane, crosswalk, plaza, accessible ramp, landscape edge or forecourt. Do not invent a lane, shoulder, curb cut or marking. If lane width, direction or unobstructed path is ambiguous or insufficient, do not insert the moving car.
+
+ARCHITECTURE LOCK  Preserve every existing architectural and landscape element, geometry, proportion, opening, joint, material, texture, curb, paving mark, road marking, sign, furniture item, plant, person, existing vehicle, sky, viewpoint, crop, aspect ratio, camera position, focal behavior, light direction and color identity. Do not add, remove, move, redesign, extend, repaint, repair, clean or reconstruct architecture, landscape, infrastructure or context. Use the source as the single source of truth.
+
+NEGATIVE CONSTRAINTS  No invented road, driveway, parking bay, curb cut, charger, bus stop, loading area, ramp, sign, bollard, barrier, marking, lane, building opening or hidden surface. No blocked pedestrian route, accessible path, entrance, fire access or traffic lane. No readable license plate, brand logo, advertising, duplicate vehicle, warped wheel, floating tire, melted bodywork, inconsistent reflection, false transparency, halo, edge contamination, excessive motion blur or visible AI artifact. No light trails, racing posture, tire smoke, dramatic speed blur, panning blur on the source, traffic duplication or invented headlights.
+
+FINAL OUTPUT  Deliver one professional architectural visualization in which the vehicle is secondary to the project, physically credible and optically inseparable from the original image, while the visible architecture remains unchanged.
+```

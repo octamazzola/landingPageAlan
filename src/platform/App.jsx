@@ -100,7 +100,6 @@ export default function App() {
   }
 
   const activeModule = useMemo(() => {
-    if (activeSlug === 'admin') return { slug: 'admin', module_type: 'admin', titles: { es: 'Administración' } }
     return content?.modules?.find((module) => module.slug === activeSlug) || content?.modules?.[0]
   }, [content?.modules, activeSlug])
 
@@ -115,9 +114,8 @@ export default function App() {
   if (activeModule?.module_type === 'prompt_bank') moduleView = <PromptBank content={content} lang={lang} onSaveFavorite={addFavorite} favorites={workspaceData.favorites} onDeleteFavorite={removeFavorite} />
   if (activeModule?.module_type === 'favorites') moduleView = <Favorites favorites={workspaceData.favorites} lang={lang} onDelete={removeFavorite} onCopy={copy} />
   if (activeModule?.module_type === 'projects') moduleView = <Projects projects={workspaceData.projects} lang={lang} onDelete={removeProject} onOpen={setSelectedProject} />
-  if (activeModule?.module_type === 'changelog') moduleView = <Changelog content={content} lang={lang} />
   if (activeModule?.module_type === 'content') moduleView = <ContentPage module={activeModule} lang={lang} />
-  if (activeModule?.module_type === 'admin' && profile.role === 'admin') moduleView = <AdminPanel content={content} onRefresh={async () => { await refreshContent(); await refreshWorkspace() }} />
+  // changelog and admin are intentionally hidden from the nav and not rendered
 
   return <>
     <PlatformShell profile={profile} content={content} activeSlug={activeModule?.slug || activeSlug} setActiveSlug={navigate} lang={lang} setLang={setLang} onRefresh={refreshContent}>
