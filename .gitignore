@@ -17,3 +17,9 @@ logs/
 .DS_Store
 .vscode/
 .idea/
+
+# Product delivery files (never commit to public repo)
+VPS_STARTER_v*/
+VPS_PROFESSIONAL_LIBRARY_v*/
+VPS_STUDIO_PRO_v*/
+*.zip
