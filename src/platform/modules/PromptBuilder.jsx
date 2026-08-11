@@ -113,7 +113,10 @@ export default function PromptBuilder({ content, lang, onSaveFavorite, onSavePro
 
   function toggleBlock(category, block) {
     setSelections((current) => {
-      if (!category.multi_select) return { ...current, [category.key]: block }
+      if (!category.multi_select) {
+        const currentSingle = current[category.key]
+        return { ...current, [category.key]: currentSingle?.id === block.id ? null : block }
+      }
       const list = Array.isArray(current[category.key]) ? current[category.key] : []
       const exists = list.some((item) => item.id === block.id)
       return { ...current, [category.key]: exists ? list.filter((item) => item.id !== block.id) : [...list, block] }
@@ -194,14 +197,14 @@ export default function PromptBuilder({ content, lang, onSaveFavorite, onSavePro
         <section className="card">
           <div className="section-head"><div><span className="section-code">AC</span><h3>{c.action}</h3></div></div>
           <div className="choice-grid">
-            {content.actions.map((item) => <button key={item.id} className={`choice ${actionCode === item.code ? 'active' : ''}`} onClick={() => { setActionCode(item.code); if (!item.needs_image) setPreservationCode('') }}><small>{item.code}</small><strong>{text(item.labels, lang, item.code)}</strong></button>)}
+            {content.actions.map((item) => <button key={item.id} className={`choice ${actionCode === item.code ? 'active' : ''}`} onClick={() => { const next = actionCode === item.code ? '' : item.code; setActionCode(next); if (!item.needs_image) setPreservationCode('') }}><small>{item.code}</small><strong>{text(item.labels, lang, item.code)}</strong></button>)}
           </div>
         </section>
 
         {needsPreservation && <section className="card">
           <div className="section-head"><div><span className="section-code neutral">PR</span><h3>{c.preservation}</h3></div></div>
           <div className="choice-grid three">
-            {content.preservations.map((item) => <button key={item.id} className={`choice ${preservationCode === item.code ? 'active' : ''}`} onClick={() => setPreservationCode(item.code)}><small>{item.code}</small><strong>{text(item.labels, lang, item.code)}</strong><span>{text(item.descriptions, lang)}</span></button>)}
+            {content.preservations.map((item) => <button key={item.id} className={`choice ${preservationCode === item.code ? 'active' : ''}`} onClick={() => setPreservationCode(preservationCode === item.code ? '' : item.code)}><small>{item.code}</small><strong>{text(item.labels, lang, item.code)}</strong><span>{text(item.descriptions, lang)}</span></button>)}
           </div>
         </section>}
 
