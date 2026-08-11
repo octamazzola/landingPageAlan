@@ -213,6 +213,123 @@ const LANDING_EXTRAS = {
   },
 };
 
+const NEW_COPY = {
+  en: {
+    compareHumanTitle:'Humanization + vehicle · controlled insertion',
+    compareHumanSubtitle:'Drag to compare source model and directed result',
+    compareCameraTitle:'Camera effect · framing and depth',
+    compareCameraSubtitle:'Drag to compare source model and directed result',
+    compareLabel1:'BEFORE', compareLabel2:'AFTER',
+    faqEyebrow:'BEFORE YOU CHOOSE',
+    faqTitle:'Clear answers, no fine print.',
+    faqs:[
+      ['What is Visual Prompt Studio?','A professional system of prompts and methods for creating architectural images with AI.'],
+      ['Do I need AI experience?','No. The packs include a clear, progressive usage path.'],
+      ['Does VPS generate the images?','No. VPS provides prompts, methods and tools for working with AI platforms.'],
+      ['Which tools does it work with?','Designed for ChatGPT Images, Midjourney, Krea and text-prompt compatible models. Responses may vary by platform and version.'],
+      ['Do I need another paid platform?','Yes, you need your own account with the AI tool you use. VPS does not include third-party subscriptions.'],
+      ['What happens after 12 months of Studio Pro?','Downloaded files remain yours. You need to renew access to keep using the builder and receive new updates.'],
+      ['How do I receive the product?','After payment you receive the relevant access by email. Packs include downloadable files; Studio Pro adds builder access.'],
+      ['Can I use it for client work?','Yes. VPS files and texts may not be resold, shared or redistributed.'],
+    ],
+    tableEyebrow:'QUICK COMPARISON',
+    tableTitle:'What does each pack include?',
+    tableHeaders:['Feature','Starter','Professional','Studio Pro'],
+    tableRows:[
+      ['CORE Library — 11 essential prompts','✓','✓','✓'],
+      ['Professional Prompts — 45 advanced workflows','—','✓','✓'],
+      ['Humanization Library — 30 prompts','—','✓','✓'],
+      ['Humanization Extension — 10 additional prompts','—','—','✓'],
+      ['Vehicle Insertion — 15 prompts','—','—','✓'],
+      ['Architectural Camera Effects — 10 prompts','—','—','✓'],
+      ['Start manual and usage route','✓','✓','✓'],
+      ['LOCK Method + complete RESCUE Manual','—','✓','✓'],
+      ['Professional Client Kit + editable forms','—','✓','✓'],
+      ['12-month Prompt Builder App access','—','—','✓'],
+      ['Professional-use license','✓','✓','✓'],
+      ['Total operational prompts','11','72','127'],
+    ],
+    confEyebrow:'BUY WITH CONFIDENCE',
+    confidence:[['DELIVERY','Digital access by email'],['LICENSE','Use in your projects and client work'],['FILES','Permanent access to downloads'],['PAYMENT','Processed by external providers']],
+  },
+  es: {
+    compareHumanTitle:'Humanización + vehículo · inserción controlada',
+    compareHumanSubtitle:'Arrastrá para comparar el modelo base con el resultado dirigido',
+    compareCameraTitle:'Efecto de cámara · encuadre y profundidad',
+    compareCameraSubtitle:'Arrastrá para comparar el modelo base con el resultado dirigido',
+    compareLabel1:'ANTES', compareLabel2:'DESPUÉS',
+    faqEyebrow:'ANTES DE ELEGIR',
+    faqTitle:'Respuestas claras, sin letra chica.',
+    faqs:[
+      ['¿Qué es Visual Prompt Studio?','Un sistema profesional de prompts y métodos para crear imágenes arquitectónicas con IA.'],
+      ['¿Necesito experiencia con IA?','No. Los packs incluyen una ruta de uso clara y progresiva.'],
+      ['¿VPS genera las imágenes?','No. VPS proporciona prompts, métodos y herramientas para trabajar con plataformas de IA.'],
+      ['¿Con qué herramientas funciona?','Pensado para ChatGPT Images, Midjourney, Krea y modelos compatibles con prompts de texto. La respuesta puede variar según la plataforma y versión.'],
+      ['¿Necesito pagar otra plataforma?','Sí, necesitás tu propia cuenta en la herramienta de IA que uses. VPS no incluye suscripciones de terceros.'],
+      ['¿Qué pasa después de los 12 meses de Studio Pro?','Los archivos que descargaste siguen siendo tuyos. Para continuar usando el constructor y recibir nuevas actualizaciones necesitás renovar el acceso.'],
+      ['¿Cómo recibo el producto?','Después del pago recibís por email el acceso correspondiente. Los packs incluyen archivos descargables; Studio Pro suma el acceso al constructor.'],
+      ['¿Puedo usarlo con trabajos para clientes?','Sí. Los archivos y textos de VPS no pueden revenderse, compartirse ni redistribuirse.'],
+    ],
+    tableEyebrow:'COMPARACIÓN RÁPIDA',
+    tableTitle:'¿Qué incluye cada pack?',
+    tableHeaders:['Característica','Starter','Professional','Studio Pro'],
+    tableRows:[
+      ['Biblioteca CORE — 11 prompts esenciales','✓','✓','✓'],
+      ['Professional Prompts — 45 flujos avanzados','—','✓','✓'],
+      ['Humanization Library — 30 prompts','—','✓','✓'],
+      ['Humanization Extension — 10 prompts adicionales','—','—','✓'],
+      ['Vehicle Insertion — 15 prompts','—','—','✓'],
+      ['Camera Effects — 10 prompts de efectos ópticos','—','—','✓'],
+      ['Manual de inicio y ruta de uso','✓','✓','✓'],
+      ['Método LOCK + Manual RESCUE completo','—','✓','✓'],
+      ['Client Kit profesional + formularios editables','—','✓','✓'],
+      ['Acceso al App Constructor por 12 meses','—','—','✓'],
+      ['Licencia de uso profesional','✓','✓','✓'],
+      ['Total de prompts operativos','11','72','127'],
+    ],
+    confEyebrow:'COMPRÁ CON CONFIANZA',
+    confidence:[['ENTREGA','Acceso digital por email'],['LICENCIA','Uso en tus proyectos y trabajos para clientes'],['ARCHIVOS','Acceso permanente a las descargas'],['PAGO','Procesado por proveedores externos']],
+  },
+  pt: {
+    compareHumanTitle:'Humanização + veículo · inserção controlada',
+    compareHumanSubtitle:'Arraste para comparar o modelo base com o resultado dirigido',
+    compareCameraTitle:'Efeito de câmera · enquadramento e profundidade',
+    compareCameraSubtitle:'Arraste para comparar o modelo base com o resultado dirigido',
+    compareLabel1:'ANTES', compareLabel2:'DEPOIS',
+    faqEyebrow:'ANTES DE ESCOLHER',
+    faqTitle:'Respostas claras, sem letras pequenas.',
+    faqs:[
+      ['O que é o Visual Prompt Studio?','Um sistema profissional de prompts e métodos para criar imagens arquitetônicas com IA.'],
+      ['Preciso ter experiência com IA?','Não. Os pacotes incluem uma rota de uso clara e progressiva.'],
+      ['O VPS gera as imagens?','Não. O VPS fornece prompts, métodos e ferramentas para trabalhar com plataformas de IA.'],
+      ['Com quais ferramentas funciona?','Pensado para ChatGPT Images, Midjourney, Krea e modelos compatíveis com prompts de texto.'],
+      ['Preciso pagar outra plataforma?','Sim, você precisa de sua própria conta na ferramenta de IA utilizada. O VPS não inclui assinaturas de terceiros.'],
+      ['O que acontece após 12 meses de Studio Pro?','Os arquivos baixados continuam seus. Para continuar usando o construtor é necessário renovar o acesso.'],
+      ['Como recebo o produto?','Após o pagamento você recebe o acesso correspondente por e-mail. Os pacotes incluem arquivos para download; o Studio Pro adiciona acesso ao construtor.'],
+      ['Posso usar em trabalhos para clientes?','Sim. Os arquivos e textos do VPS não podem ser revendidos, compartilhados ou redistribuídos.'],
+    ],
+    tableEyebrow:'COMPARAÇÃO RÁPIDA',
+    tableTitle:'O que inclui cada pacote?',
+    tableHeaders:['Característica','Starter','Professional','Studio Pro'],
+    tableRows:[
+      ['Biblioteca CORE — 11 prompts essenciais','✓','✓','✓'],
+      ['Professional Prompts — 45 fluxos avançados','—','✓','✓'],
+      ['Humanization Library — 30 prompts','—','✓','✓'],
+      ['Humanization Extension — 10 prompts adicionais','—','—','✓'],
+      ['Vehicle Insertion — 15 prompts','—','—','✓'],
+      ['Camera Effects — 10 prompts de efeitos ópticos','—','—','✓'],
+      ['Manual de início e rota de uso','✓','✓','✓'],
+      ['Método LOCK + Manual RESCUE completo','—','✓','✓'],
+      ['Client Kit profissional + formulários editáveis','—','✓','✓'],
+      ['Acesso ao App Construtor por 12 meses','—','—','✓'],
+      ['Licença de uso profissional','✓','✓','✓'],
+      ['Total de prompts operacionais','11','72','127'],
+    ],
+    confEyebrow:'COMPRE COM CONFIANÇA',
+    confidence:[['ENTREGA','Acesso digital por e-mail'],['LICENÇA','Uso em seus projetos e trabalhos para clientes'],['ARQUIVOS','Acesso permanente aos downloads'],['PAGAMENTO','Processado por provedores externos']],
+  },
+};
+
 const PACKS = {
   en: [
     { id:'starter', slug:'starter', eyebrow:'START HERE', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
@@ -278,7 +395,7 @@ const Icon = React.memo(function Icon({name,size=16,color="currentColor",stroke=
 
 
 
-const ImageCompareCard = React.memo(function ImageCompareCard({beforeSrc,afterSrc,title,subtitle}){
+const ImageCompareCard = React.memo(function ImageCompareCard({beforeSrc,afterSrc,title,subtitle,leftLabel="SKETCH",rightLabel="RENDER"}){
   const [sliderPos, setSliderPos] = useState(50);
   const containerRef = React.useRef(null);
 
@@ -331,8 +448,8 @@ const ImageCompareCard = React.memo(function ImageCompareCard({beforeSrc,afterSr
         >
           <span style={S.compareKnob}>↔</span>
         </div>
-        <div style={{...S.compareLabel,left:12}}>SKETCH</div>
-        <div style={{...S.compareLabel,right:12,background:"rgba(255,152,0,0.92)",borderColor:"rgba(255,186,80,0.95)",color:"#111"}}>RENDER</div>
+        <div style={{...S.compareLabel,left:12}}>{leftLabel}</div>
+        <div style={{...S.compareLabel,right:12,background:"rgba(255,152,0,0.92)",borderColor:"rgba(255,186,80,0.95)",color:"#111"}}>{rightLabel}</div>
       </div>
       <div style={S.compareCopy}>
         <div style={S.compareTitle}>{title}</div>
@@ -522,7 +639,9 @@ export default function LandingPage(){
   const h=HOME[lang]||HOME.es;
   const landing=LANDING_COPY[lang]||LANDING_COPY.es;
   const extras=LANDING_EXTRAS[lang]||LANDING_EXTRAS.es;
+  const newCopy=NEW_COPY[lang]||NEW_COPY.es;
   const packs=PACKS[lang]||PACKS.es;
+  const [openFaq,setOpenFaq]=useState(null);
   const [currency,setCurrency]=useState("ars");
   const [offerTime,setOfferTime]=useState(COUNTDOWN_START);
   const [viewportWidth,setViewportWidth]=useState(typeof window!=="undefined"?window.innerWidth:1440);
@@ -639,8 +758,10 @@ export default function LandingPage(){
             <div style={S.sectionEyebrow}>{extras.compareEyebrow}</div>
           </div>
           <div style={{...S.compareGrid,gridTemplateColumns:isMobile?"1fr":"repeat(2,minmax(0,1fr))"}}>
-            <ImageCompareCard beforeSrc={DEMO_IMAGES.houseSketch} afterSrc={DEMO_IMAGES.houseRender} title={landing.compareHouseTitle} subtitle={landing.compareHouseSubtitle}/>
-            <ImageCompareCard beforeSrc={DEMO_IMAGES.bedSketch} afterSrc={DEMO_IMAGES.bedRender} title={landing.compareRoomTitle} subtitle={landing.compareRoomSubtitle}/>
+            <ImageCompareCard beforeSrc={DEMO_IMAGES.houseSketch} afterSrc={DEMO_IMAGES.houseRender} title={landing.compareHouseTitle} subtitle={landing.compareHouseSubtitle} leftLabel="SKETCH" rightLabel="RENDER"/>
+            <ImageCompareCard beforeSrc={DEMO_IMAGES.bedSketch} afterSrc={DEMO_IMAGES.bedRender} title={landing.compareRoomTitle} subtitle={landing.compareRoomSubtitle} leftLabel="SKETCH" rightLabel="RENDER"/>
+            <ImageCompareCard beforeSrc="/assets/human-vehicle-before.webp" afterSrc="/assets/human-vehicle-after.webp" title={newCopy.compareHumanTitle} subtitle={newCopy.compareHumanSubtitle} leftLabel={newCopy.compareLabel1} rightLabel={newCopy.compareLabel2}/>
+            <ImageCompareCard beforeSrc="/assets/camera-before.webp" afterSrc="/assets/camera-after.webp" title={newCopy.compareCameraTitle} subtitle={newCopy.compareCameraSubtitle} leftLabel={newCopy.compareLabel1} rightLabel={newCopy.compareLabel2}/>
           </div>
 
           <div className="vps-landing-card" style={S.processSection}>
@@ -729,6 +850,61 @@ export default function LandingPage(){
                   <button className="vps-btn" style={pack.featured?{...S.btnPri,...S.pricingPremiumCta}:S.pricingButtonGhost} onClick={() => openPayModal(pack)}>
                     {pack.cta==="access"?landing.accessButton:landing.packButton}
                   </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── CONFIDENCE BAR ── */}
+          <div style={{display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(4,1fr)',gap:'14px'}}>
+            {newCopy.confidence.map(([label,text])=>(
+              <div key={label} style={S.confItem}>
+                <div style={S.confLabel}>{label}</div>
+                <div style={S.confText}>{text}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── COMPARISON TABLE ── */}
+          <div className="vps-landing-card" style={S.tableSection}>
+            <div style={S.sectionEyebrow}>{newCopy.tableEyebrow}</div>
+            <div style={S.sectionTitle}>{newCopy.tableTitle}</div>
+            <div style={{overflowX:'auto',marginTop:'18px'}}>
+              <table style={S.compareTable}>
+                <thead>
+                  <tr>
+                    {newCopy.tableHeaders.map((h,i)=>(
+                      <th key={h} style={{...S.tableHead,...(i===0?S.tableHeadFirst:{}),...(i===2?{color:'#ff9800'}:{})}}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {newCopy.tableRows.map((row,rIdx)=>(
+                    <tr key={rIdx} style={rIdx===newCopy.tableRows.length-1?S.tableRowLast:{}}>
+                      <td style={S.tableCellFeature}>{row[0]}</td>
+                      {[1,2,3].map(cIdx=>(
+                        <td key={cIdx} style={{...S.tableCell,...(cIdx===2?S.tableCellFeatured:{}),...(row[cIdx]==='✓'?S.tableCellCheck:row[cIdx]==='—'?S.tableCellDash:S.tableCellNum)}}>{row[cIdx]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* ── FAQ ── */}
+          <div className="vps-landing-card" style={S.faqSection}>
+            <div style={S.sectionEyebrow}>{newCopy.faqEyebrow}</div>
+            <div style={S.sectionTitle}>{newCopy.faqTitle}</div>
+            <div style={{marginTop:'22px',display:'flex',flexDirection:'column',gap:'10px'}}>
+              {newCopy.faqs.map(([question,answer],idx)=>(
+                <div key={idx} style={{...S.faqItem,...(openFaq===idx?S.faqItemOpen:{})}}>
+                  <button style={S.faqQ} onClick={()=>setOpenFaq(openFaq===idx?null:idx)}>
+                    <span style={S.faqNum}>{String(idx+1).padStart(2,'0')}</span>
+                    <span style={S.faqQText}>{question}</span>
+                    <span style={{...S.faqIcon,...(openFaq===idx?S.faqIconOpen:{})}}>{openFaq===idx?'−':'+'}</span>
+                  </button>
+                  {openFaq===idx && <div style={S.faqA}>{answer}</div>}
                 </div>
               ))}
             </div>
@@ -990,5 +1166,31 @@ const S={
   catalogCardTitle: {fontFamily:DISPLAY_FONT,fontSize:"18.5px",lineHeight:1.1,color:"#ffffff",marginTop:"4px"},
   catalogCardDesc: {fontSize:"12.5px",lineHeight:1.55,color:"#bfc3cb",margin:"8px 0 14px"},
   catalogCopyBtn: {background:"rgba(255,152,0,0.08)",color:"#ffb65e",border:"1px solid rgba(255,152,0,0.22)",padding:"8px 12px",fontSize:"11px",fontWeight:800,borderRadius:"8px",cursor:"pointer",fontFamily:BODY_FONT,display:"flex",alignItems:"center",gap:"6px",width:"fit-content",transition:"all 0.25s ease"},
-  catalogCopyBtnOn: {background:"#ff9800",borderColor:"#ff9800",color:"#111111"}
+  catalogCopyBtnOn: {background:"#ff9800",borderColor:"#ff9800",color:"#111111"},
+
+  confItem:{background:"linear-gradient(180deg,#13151c 0%,#0d0f13 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"14px",padding:"20px 16px",textAlign:"center",boxShadow:"0 14px 32px rgba(0,0,0,0.22)"},
+  confLabel:{fontFamily:MONO_FONT,fontSize:"9px",fontWeight:900,letterSpacing:"0.18em",textTransform:"uppercase",color:"#ff9800",marginBottom:"8px"},
+  confText:{fontSize:"12px",lineHeight:1.45,color:"#c8cdd6"},
+
+  tableSection:{background:"linear-gradient(180deg,#0f1117 0%,#0b0d12 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"26px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
+  compareTable:{width:"100%",borderCollapse:"collapse",minWidth:"560px"},
+  tableHead:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,letterSpacing:"0.10em",textTransform:"uppercase",color:"#9ca2ae",padding:"12px 14px",textAlign:"center",borderBottom:"1px solid rgba(255,255,255,0.10)"},
+  tableHeadFirst:{textAlign:"left",minWidth:"200px",color:"#c8cdd6"},
+  tableCell:{padding:"13px 14px",textAlign:"center",fontSize:"15px",fontWeight:900,borderBottom:"1px solid rgba(255,255,255,0.05)",color:"#bfc3cc"},
+  tableCellFeatured:{color:"#ff9800"},
+  tableCellFeature:{padding:"13px 14px",fontSize:"12.5px",lineHeight:1.35,color:"#d2d6e0",borderBottom:"1px solid rgba(255,255,255,0.05)"},
+  tableCellCheck:{color:"#5dd87a",fontSize:"17px"},
+  tableCellDash:{color:"rgba(255,255,255,0.18)"},
+  tableCellNum:{fontFamily:DISPLAY_FONT,fontSize:"18px",fontWeight:800,color:"#ffffff"},
+  tableRowLast:{background:"rgba(255,152,0,0.06)"},
+
+  faqSection:{background:"linear-gradient(180deg,#0f1117 0%,#0b0d12 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"26px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
+  faqItem:{border:"1px solid rgba(255,255,255,0.08)",borderRadius:"13px",overflow:"hidden",background:"rgba(255,255,255,0.02)",transition:"border-color 0.2s ease"},
+  faqItemOpen:{borderColor:"rgba(255,152,0,0.38)",background:"rgba(255,152,0,0.03)"},
+  faqQ:{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"17px 18px",background:"transparent",border:"none",color:"#edf0f4",cursor:"pointer",textAlign:"left",fontFamily:BODY_FONT,fontSize:"14px",fontWeight:700,lineHeight:1.3},
+  faqNum:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,color:"#ff9800",minWidth:"22px",flexShrink:0},
+  faqQText:{flex:1},
+  faqIcon:{fontSize:"22px",fontWeight:300,color:"#ff9800",lineHeight:1,transition:"transform 0.25s ease",flexShrink:0},
+  faqIconOpen:{transform:"rotate(45deg)"},
+  faqA:{padding:"2px 18px 18px 54px",fontSize:"13.5px",lineHeight:1.68,color:"#b4b9c5"}
 };
