@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-
-// ── Íconos SVG ───────────────────────────────────────────────────────────────
+import { supabase } from "./platform/lib/supabase";// ── Íconos SVG ───────────────────────────────────────────────────────────────
 function IconLS() {
   return (
     <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,6 +74,8 @@ const COPY = {
     includes: "Incluye:",
     appNote: "Recibirás el enlace de acceso a la app por email al completar el pago.",
     filesNote: "Recibirás los archivos PDF por email al completar el pago.",
+    emailLabel: "Ingresá tu email para recibir los archivos:",
+    emailPlaceholder: "tu@email.com",
     couponLabel: "¿Tenés un código de descuento?",
     couponPlaceholder: "Ej: LAUNCH20",
     couponApply: "Aplicar",
@@ -93,6 +94,8 @@ const COPY = {
     includes: "Includes:",
     appNote: "You will receive the app access link by email upon completing payment.",
     filesNote: "You will receive the PDF files by email upon completing payment.",
+    emailLabel: "Enter your email to receive the files:",
+    emailPlaceholder: "your@email.com",
     couponLabel: "Have a discount code?",
     couponPlaceholder: "E.g: LAUNCH20",
     couponApply: "Apply",
@@ -111,6 +114,8 @@ const COPY = {
     includes: "Inclui:",
     appNote: "Você receberá o link de acesso à app por e-mail ao concluir o pagamento.",
     filesNote: "Você receberá os arquivos PDF por e-mail ao concluir o pagamento.",
+    emailLabel: "Insira seu e-mail para receber os arquivos:",
+    emailPlaceholder: "seu@email.com",
     couponLabel: "Tem um código de desconto?",
     couponPlaceholder: "Ex: LAUNCH20",
     couponApply: "Aplicar",
@@ -130,6 +135,7 @@ function applyDiscount(price, pct) {
 
 // ── Componente principal ─────────────────────────────────────────────────────
 export default function PaymentModal({ pack, lang = "es", onClose }) {
+  const [email, setEmail] = useState("");
   const [coupon, setCoupon] = useState("");
   const [couponStatus, setCouponStatus] = useState("idle"); // idle | valid | invalid
   const [discount, setDiscount] = useState(null); // { pct, label } | null
@@ -158,18 +164,41 @@ export default function PaymentModal({ pack, lang = "es", onClose }) {
   function handleLS() {
     let url = links.lemonsqueezy;
     if (!url) return;
-    // Si hay código válido, lo pasamos nativamente a Lemon Squeezy
     if (discount && coupon) {
       url += `?checkout[discount_code]=${coupon.trim().toUpperCase()}`;
+    }
+    // Lemon Squeezy accepts buyer_email optionally, but asks for it natively anyway. We can pass it.
+    if (email && email.includes('@')) {
+      url += (url.includes('?') ? '&' : '?') + `checkout[email]=${encodeURIComponent(email.trim())}`;
     }
     window.open(url, "_blank", "noopener");
   }
 
-  function handleMP() {
+  async function handleMP() {
     const code = coupon.trim().toUpperCase();
     const discountedUrl = discount && links.mercadopago_discounts?.[code];
     const url = discountedUrl || links.mercadopago;
-    if (url) window.open(url, "_blank", "noopener");
+    if (!url) return;
+
+    if (!email || !email.includes('@')) {
+       alert("Por favor ingresá un email válido antes de pagar.");
+       return;
+    }
+
+    try {
+      if (supabase) {
+        await supabase.from('pending_orders').insert({
+          email: email.trim(),
+          pack: pack?.slug || 'unknown',
+          gateway: 'mercadopago',
+          coupon: code || null
+        });
+      }
+    } catch (e) {
+      console.error("Error saving pending order:", e);
+    }
+
+    window.open(url, "_blank", "noopener");
   }
 
   return (
@@ -222,6 +251,20 @@ export default function PaymentModal({ pack, lang = "es", onClose }) {
         {/* Nota entrega */}
         <div style={{ fontFamily:MONO_FONT, fontSize:"10.5px", color:"#8a8f99", marginBottom:"16px", background:"rgba(255,152,0,0.06)", border:"1px solid rgba(255,152,0,0.16)", borderRadius:"10px", padding:"9px 12px" }}>
           📧 {isAppPlan ? t.appNote : t.filesNote}
+        </div>
+
+        {/* ── Email ── */}
+        <div style={{ marginBottom:"16px" }}>
+          <div style={{ fontFamily:MONO_FONT, fontSize:"10px", color:"#8a8f99", letterSpacing:"0.08em", marginBottom:"7px" }}>{t.emailLabel}</div>
+          <input
+            className="pm-coupon-input"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder={t.emailPlaceholder}
+            required
+            style={{ width:"100%", background:"rgba(255,255,255,0.06)", border:"1.5px solid rgba(255,255,255,0.14)", borderRadius:"10px", padding:"10px 12px", fontFamily:BODY_FONT, fontSize:"13px", color:"#fff" }}
+          />
         </div>
 
         {/* ── Código de descuento ── */}

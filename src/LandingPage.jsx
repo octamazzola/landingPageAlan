@@ -1,1196 +1,816 @@
-// ════════════════════════════════════════════════════════════════════════
-//  VISUAL PROMPT STUDIO — INICIO (landing / marketing)
-//  Proyecto 1/2: página de ventas trilingüe (ES/EN/PT) + formulario de acceso.
-//  Al enviar el acceso, guarda el email en localStorage("vps_active_user")
-//  y redirige a APP_URL (proyecto "resto"), que retoma esa sesión.
-// ════════════════════════════════════════════════════════════════════════
-import React, { useState, useEffect, useCallback } from "react";
+
+import { useEffect, useState } from "react";
+
+
+const promptBuilderUrl = "https://fanciful-duckanoo-21065b.netlify.app/app#/prompt-builder";
+
+
+const prices = {
+  starter: { USD: ["USD 17", "USD 24"], ARS: ["$33.000", "$46.000"] },
+  professional: { USD: ["USD 39", "USD 55"], ARS: ["$57.000", "$80.000"] },
+  studio: { USD: ["USD 69", "USD 89"], ARS: ["$93.000", "$130.000"] },
+} ;
+
+const copy = {
+  es: {
+    nav: ["Resultados", "El sistema", "Qué recibís", "Packs", "Preguntas"],
+    login: "Acceso clientes",
+    topbar: ["Producto digital", "Guías ES / EN / PT", "Uso profesional"],
+    eyebrow: "PROMPTS PROFESIONALES PARA ARQUITECTURA",
+    h1a: "La IA puede mejorar tu render.",
+    h1b: "No debería rediseñar tu proyecto.",
+    lead: "Visual Prompt Studio convierte decisiones de arquitectura en prompts precisos para lograr imágenes más consistentes, proteger la geometría y reducir la prueba y error.",
+    heroCta: "Ver packs",
+    heroProof: "Ver resultados",
+    heroNote: "Pago único · Entrega digital · Archivos de acceso permanente",
+    source: "MODELO ORIGINAL",
+    result: "RESULTADO DIRIGIDO",
+    hoverHint: "Mantené el cursor para ver el modelo original",
+    locked: "Geometría protegida",
+    camera: "Cámara bloqueada",
+    prompt: "Prompt estructurado",
+    proofLabels: [["56", "prompts arquitectónicos"], ["40", "prompts de humanización adicionales"], ["15", "prompts de vehículos con lógica de ubicación"], ["10", "prompts de efectos ópticos y de cámara"]],
+    problemKicker: "EL COSTO OCULTO DE UN PROMPT GENÉRICO",
+    problemTitle: "Cuando la instrucción es ambigua, la IA completa el proyecto por su cuenta.",
+    problemText: "El problema no es escribir más. Es separar con claridad qué puede cambiar, qué debe conservarse y cómo querés dirigir el resultado.",
+    generic: "PROMPT GENÉRICO",
+    vps: "MÉTODO VPS",
+    genericItems: ["Resultados impredecibles", "Pueden modificar la arquitectura", "Requieren prueba y error", "Instrucciones poco estructuradas", "Difíciles de corregir", "Resultados aislados"],
+    vpsItems: ["Mayor control y consistencia", "Preserva geometría, cámara y diseño", "Flujos optimizados que ahorran tiempo", "Sistemas CORE, LOCK y RESCUE", "Protocolos para detectar y resolver errores", "Metodología profesional y repetible"],
+    resultsKicker: "LA DIFERENCIA SE VE",
+    resultsTitle: "Más realismo, sin perder la lectura del proyecto.",
+    resultsText: "Deslizá para comparar el modelo de partida con el resultado dirigido.",
+    exterior: "Exterior residencial · preservación de geometría",
+    interior: "Interior · luz, materialidad y atmósfera",
+    detailExterior: "Humanización + vehículo · inserción controlada",
+    detailInterior: "Efecto de cámara · encuadre y profundidad",
+    before: "ANTES",
+    after: "DESPUÉS",
+    systemKicker: "UN SISTEMA, NO UN PROMPT SUELTO",
+    systemTitle: "Cada resultado empieza con una secuencia de decisiones controlables.",
+    systemText: "VPS organiza el trabajo en capas para que puedas adaptar un prompt sin reconstruirlo desde cero.",
+    layers: [
+      ["01", "Objetivo", "Definí qué transformación necesitás y para qué tipo de imagen."],
+      ["02", "Preservación", "Bloqueá geometría, cámara, composición y elementos críticos."],
+      ["03", "Dirección visual", "Elegí materiales, luz, clima, atmósfera y lenguaje fotográfico."],
+      ["04", "Salida", "Copiá un prompt maestro en inglés, ordenado y listo para generar."],
+    ],
+    demoKicker: "PROBÁ LA LÓGICA DEL CONSTRUCTOR",
+    demoTitle: "No empezás desde una página en blanco.",
+    demoText: "Conocé la nueva interfaz del Prompt Builder. Studio Pro convierte decisiones visuales en un flujo más rápido, organizado y repetible.",
+    demoLabel: "Objetivo de visualización",
+    demoOptions: ["Fotorrealismo", "Preservación total", "Atmósfera editorial"],
+    demoCopy: "Copiar fragmento",
+    demoCopied: "Fragmento copiado",
+    demoDisclaimer: "Vista de la nueva versión. El constructor completo incluye variables, proyectos y favoritos.",
+    includesKicker: "MIRÁ EXACTAMENTE QUÉ COMPRÁS",
+    includesTitle: "Archivos y herramientas pensados para trabajar, consultar y volver a usar.",
+    deliverables: [
+      ["CORE", "Biblioteca esencial con 11 prompts arquitectónicos para iniciar el flujo.", "11"],
+      ["PROFESSIONAL PROMPTS", "45 flujos avanzados clasificados por objetivo y tipología.", "45"],
+      ["HUMANIZATION", "Biblioteca principal con 30 prompts de humanización controlada.", "30"],
+      ["HUMANIZATION_EXTENSION", "10 prompts adicionales para ampliar escenas y usos.", "+10"],
+      ["VEHICULE", "15 prompts de inserción vehicular con lógica de ubicación y contacto.", "15"],
+      ["CAMERA_EFFECT", "Efectos ópticos y de cámara para ampliar la narrativa visual.", "FX"],
+      ["LOCK + RESCUE", "Método de preservación y protocolo para detectar y corregir errores.", "PDF"],
+      ["CLIENT KIT + FORMS", "Kit profesional y formularios editables de control y entrega.", "KIT"],
+      ["PROMPT BUILDER APP", "Constructor visual con proyectos, favoritos y 12 meses de acceso.", "APP"],
+    ],
+    categoriesLabel: "Categorías incluidas",
+    categories: ["Fotorrealismo", "Interiores", "Fachadas", "Paisajismo", "Plantas", "Axonométricas", "Cortes", "Masterplans", "Urbanismo", "Humanización"],
+    audienceKicker: "DISEÑADO PARA FLUJOS REALES",
+    audienceTitle: "Una biblioteca que acompaña en el diseño de un proyecto.",
+    audiences: [
+      ["Arquitectos", "Para preservar decisiones de diseño mientras mejora la comunicación visual."],
+      ["Visualizadores", "Para estandarizar prompts, variantes y criterios entre imágenes."],
+      ["Estudios", "Para construir un lenguaje común y reducir resultados inconsistentes."],
+    ],
+    tools: "Pensado para flujos con ChatGPT Images, Midjourney, Krea y modelos compatibles con prompts de texto. La respuesta puede variar según cada plataforma y versión.",
+    packsKicker: "ELEGÍ TU NIVEL DE CONTROL",
+    packsTitle: "Empezá con una base o incorporá el sistema completo.",
+    save: "Hasta 29% de ahorro",
+    currency: { USD: "Pago internacional en USD", ARS: "Pago local en pesos argentinos" },
+    labels: { starter: "BASE ESENCIAL", professional: "RECOMENDADO", studio: "EXPERIENCIA COMPLETA" },
+    descriptions: {
+      starter: "Para comenzar a estructurar prompts sin improvisar.",
+      professional: "La biblioteca completa para uso profesional frecuente.",
+      studio: "La biblioteca profesional más el constructor visual.",
+    },
+    features: {
+      starter: ["CORE — 11 prompts esenciales", "Manual de inicio y ruta de uso", "RESCUE — versión rápida", "Licencia de uso profesional"],
+      professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "Método LOCK + RESCUE completo", "Client Kit, formularios, manual y matriz", "Licencia de uso profesional"],
+      studio: ["Todo Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 meses"],
+    },
+    choose: { starter: "Comprar Starter", professional: "Elegir Professional Library", studio: "Acceder a Studio Pro" },
+    oneTime: "Pago único",
+    studioTerm: "Pago único · 12 meses de app",
+    confidence: [["ENTREGA", "Acceso digital por email"], ["LICENCIA", "Uso en tus proyectos y trabajos para clientes"], ["ARCHIVOS", "Acceso permanente a las descargas"], ["PAGO", "Procesado por proveedores externos"]],
+    matrixTitle: "Comparación rápida",
+    rescueLevels: ["Versión rápida", "Versión completa", "Versión completa"],
+    matrixRows: ["Biblioteca CORE — 11 prompts esenciales", "Professional Prompts — 45 flujos avanzados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionales", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de inicio y ruta de uso", "Manual de usuario profesional", "Matriz de selección de prompts", "Método LOCK para preservar la arquitectura", "Manual RESCUE para corregir resultados", "Professional Client Kit", "Formularios editables de control y entrega", "Acceso a Prompt Builder App durante 12 meses", "Licencia de uso profesional", "Total de prompts operativos"],
+    authorKicker: "CREADO DESDE LA PRÁCTICA",
+    authorTitle: "Hecho por un arquitecto para resolver un problema de arquitectura.",
+    authorText: "Visual Prompt Studio fue desarrollado desde la práctica profesional para aprovechar la potencia visual de la IA sin ceder el control del proyecto. El sistema traduce decisiones arquitectónicas —preservación, materialidad, luz, cámara y atmósfera— en una estructura que la IA puede interpretar mejor.",
+    authorRole: "SISTEMA PROFESIONAL PARA ARQUITECTURA",
+    faqKicker: "ANTES DE ELEGIR",
+    faqTitle: "Respuestas claras, sin letra chica.",
+    faqs: [
+      ["¿Qué es Visual Prompt Studio?", "Un sistema profesional de prompts y métodos para crear imágenes arquitectónicas con IA."],
+      ["¿Necesito experiencia con IA?", "No. Los packs incluyen una ruta de uso clara y progresiva."],
+      ["¿VPS genera las imágenes?", "No. VPS proporciona prompts, métodos y herramientas para trabajar con plataformas de IA."],
+      ["¿Con qué herramientas funciona?", "La estructura está pensada para ChatGPT Images, Midjourney, Krea y modelos compatibles con prompts de texto. Cada plataforma puede interpretar la misma instrucción de forma diferente según su versión."],
+      ["¿Necesito pagar otra plataforma?", "Sí, necesitás tu propia cuenta en la herramienta de IA que uses. VPS no incluye suscripciones de terceros."],
+      ["¿Qué pasa después de los 12 meses de Studio Pro?", "Los archivos que descargaste siguen siendo tuyos. Para continuar usando el constructor y recibir nuevas actualizaciones necesitás renovar el acceso."],
+      ["¿Cómo recibo el producto?", "Después del pago recibís por email el acceso correspondiente. Los packs incluyen archivos descargables; Studio Pro suma el acceso al constructor."],
+      ["¿Puedo usarlo con trabajos para clientes?", "Sí. Podés aplicar los prompts en tus propios proyectos profesionales. Los archivos y textos de VPS no pueden revenderse, compartirse ni redistribuirse."],
+    ],
+    closingKicker: "MENOS PRUEBA Y ERROR. MÁS DIRECCIÓN.",
+    closingTitle: "Tu arquitectura ya está decidida. Ahora decidí cómo querés que la IA la comunique.",
+    closingText: "Elegí el pack que mejor se adapta a tu flujo y empezá a construir prompts con un criterio profesional.",
+    closingCta: "Comprar packs",
+    footer: "Sistema profesional de prompts para visualización arquitectónica con IA.",
+    footerPrivacy: "Los pagos son procesados por proveedores externos. VPS no almacena los datos de tu tarjeta.",
+    footerTerms: "Producto digital · Licencia de uso profesional · No permite redistribución",
+    mobileCta: "Ver packs",
+  },
+  en: {
+    nav: ["Results", "The system", "What you get", "Packs", "Questions"],
+    login: "Client access",
+    topbar: ["Digital product", "ES / EN / PT guides", "Professional use"],
+    eyebrow: "PROFESSIONAL PROMPTS FOR ARCHITECTURE",
+    h1a: "AI can improve your render.",
+    h1b: "It should not redesign your project.",
+    lead: "Visual Prompt Studio turns architectural decisions into precise prompts to create more consistent images, protect geometry and reduce trial and error.",
+    heroCta: "See packs",
+    heroProof: "See results",
+    heroNote: "One-time payment · Digital delivery · Permanent file access",
+    source: "ORIGINAL MODEL",
+    result: "DIRECTED RESULT",
+    hoverHint: "Keep the pointer over the image to see the original model",
+    locked: "Protected geometry",
+    camera: "Locked camera",
+    prompt: "Structured prompt",
+    proofLabels: [["56", "architectural prompts"], ["40", "additional humanization prompts"], ["15", "vehicle prompts with placement logic"], ["10", "optical and camera-effect prompts"]],
+    problemKicker: "THE HIDDEN COST OF A GENERIC PROMPT",
+    problemTitle: "When instructions are ambiguous, AI completes the project on its own.",
+    problemText: "The answer is not writing more. It is clearly separating what may change, what must remain and how the result should be directed.",
+    generic: "GENERIC PROMPT",
+    vps: "VPS METHOD",
+    genericItems: ["Unpredictable results", "May alter the architecture", "Require trial and error", "Poorly structured instructions", "Difficult to correct", "Isolated results"],
+    vpsItems: ["Greater control and consistency", "Preserves geometry, camera and design", "Optimized workflows that save time", "CORE, LOCK and RESCUE systems", "Protocols to detect and resolve errors", "Professional, repeatable methodology"],
+    resultsKicker: "THE DIFFERENCE IS VISIBLE",
+    resultsTitle: "More realism without losing the project.",
+    resultsText: "Slide to compare the starting model with the directed result.",
+    exterior: "Residential exterior · geometry preservation",
+    interior: "Interior · light, materials and atmosphere",
+    detailExterior: "Humanization + vehicle · controlled insertion",
+    detailInterior: "Camera effect · framing and depth",
+    before: "BEFORE",
+    after: "AFTER",
+    systemKicker: "A SYSTEM, NOT A LOOSE PROMPT",
+    systemTitle: "Every result starts with a sequence of controllable decisions.",
+    systemText: "VPS organizes work in layers so you can adapt a prompt without rebuilding it from scratch.",
+    layers: [
+      ["01", "Goal", "Define the transformation and the type of image you need."],
+      ["02", "Preservation", "Lock geometry, camera, composition and critical elements."],
+      ["03", "Visual direction", "Choose materials, light, weather, atmosphere and photographic language."],
+      ["04", "Output", "Copy a structured English master prompt ready to generate."],
+    ],
+    demoKicker: "TRY THE BUILDER LOGIC",
+    demoTitle: "You never start from a blank page.",
+    demoText: "Explore the new Prompt Builder interface. Studio Pro turns visual decisions into a faster, organized and repeatable workflow.",
+    demoLabel: "Visualization goal",
+    demoOptions: ["Photorealism", "Total preservation", "Editorial atmosphere"],
+    demoCopy: "Copy excerpt",
+    demoCopied: "Excerpt copied",
+    demoDisclaimer: "New-version preview. The complete builder includes variables, projects and favorites.",
+    includesKicker: "SEE EXACTLY WHAT YOU BUY",
+    includesTitle: "Files and tools designed to work, consult and reuse.",
+    deliverables: [
+      ["CORE", "Essential library with 11 architectural prompts to start the workflow.", "11"],
+      ["PROFESSIONAL PROMPTS", "45 advanced workflows classified by goal and typology.", "45"],
+      ["HUMANIZATION", "Main library with 30 controlled humanization prompts.", "30"],
+      ["HUMANIZATION_EXTENSION", "10 additional prompts to expand scenes and use cases.", "+10"],
+      ["VEHICULE", "15 vehicle-insertion prompts with placement and contact logic.", "15"],
+      ["CAMERA_EFFECT", "Optical and camera effects that expand visual storytelling.", "FX"],
+      ["LOCK + RESCUE", "Preservation method and protocol to detect and correct errors.", "PDF"],
+      ["CLIENT KIT + FORMS", "Professional kit and editable control and delivery forms.", "KIT"],
+      ["PROMPT BUILDER APP", "Visual builder with projects, favorites and 12 months of access.", "APP"],
+    ],
+    categoriesLabel: "Included categories",
+    categories: ["Photorealism", "Interiors", "Facades", "Landscape", "Plans", "Axonometrics", "Sections", "Masterplans", "Urbanism", "Humanization"],
+    audienceKicker: "DESIGNED FOR REAL WORKFLOWS",
+    audienceTitle: "A library that supports the design of a project.",
+    audiences: [
+      ["Architects", "Preserve design decisions while improving visual communication."],
+      ["Visualizers", "Standardize prompts, variants and criteria across images."],
+      ["Studios", "Build a shared language and reduce inconsistent results."],
+    ],
+    tools: "Designed for workflows with ChatGPT Images, Midjourney, Krea and text-prompt compatible models. Responses may vary by platform and version.",
+    packsKicker: "CHOOSE YOUR LEVEL OF CONTROL",
+    packsTitle: "Start with the essentials or add the complete system.",
+    save: "Save up to 29%",
+    currency: { USD: "International payment in USD", ARS: "Local payment in Argentine pesos" },
+    labels: { starter: "ESSENTIAL BASE", professional: "RECOMMENDED", studio: "COMPLETE EXPERIENCE" },
+    descriptions: {
+      starter: "Start structuring prompts without improvising.",
+      professional: "The complete library for frequent professional use.",
+      studio: "The professional library plus the visual builder.",
+    },
+    features: {
+      starter: ["CORE — 11 essential prompts", "Start manual and usage route", "RESCUE — quick version", "Professional-use license"],
+      professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "LOCK Method + complete RESCUE", "Client Kit, forms, manual and matrix", "Professional-use license"],
+      studio: ["Everything in Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 months"],
+    },
+    choose: { starter: "Buy Starter", professional: "Choose Professional Library", studio: "Access Studio Pro" },
+    oneTime: "One-time payment",
+    studioTerm: "One-time payment · 12 months of app",
+    confidence: [["DELIVERY", "Digital access by email"], ["LICENSE", "Use in your projects and client work"], ["FILES", "Permanent access to downloads"], ["PAYMENT", "Processed by external providers"]],
+    matrixTitle: "Quick comparison",
+    rescueLevels: ["Quick version", "Complete version", "Complete version"],
+    matrixRows: ["CORE Library — 11 essential prompts", "Professional Prompts — 45 advanced workflows", "Humanization Library — 30 prompts", "Humanization Extension — 10 additional prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Start manual and usage route", "Professional user manual", "Prompt-selection matrix", "LOCK Method for architecture preservation", "RESCUE Manual for correcting results", "Professional Client Kit", "Editable control and delivery forms", "12-month Prompt Builder App access", "Professional-use license", "Total operational prompts"],
+    authorKicker: "BUILT FROM PRACTICE",
+    authorTitle: "Made by an architect to solve an architectural problem.",
+    authorText: "Visual Prompt Studio was developed through professional practice to use AI's visual power without giving up project control. The system translates architectural decisions — preservation, materials, light, camera and atmosphere — into a structure AI can interpret more clearly.",
+    authorRole: "PROFESSIONAL SYSTEM FOR ARCHITECTURE",
+    faqKicker: "BEFORE YOU CHOOSE",
+    faqTitle: "Clear answers, no fine print.",
+    faqs: [
+      ["What is Visual Prompt Studio?", "A professional system of prompts and methods for creating architectural images with AI."],
+      ["Do I need AI experience?", "No. The packs include a clear, progressive usage path."],
+      ["Does VPS generate the images?", "No. VPS provides prompts, methods and tools for working with AI platforms."],
+      ["Which tools does it work with?", "The structure is designed for ChatGPT Images, Midjourney, Krea and text-prompt compatible models. Each platform may interpret the same instruction differently depending on its version."],
+      ["Do I need another paid platform?", "Yes, you need your own account with the AI tool you use. VPS does not include third-party subscriptions."],
+      ["What happens after 12 months of Studio Pro?", "Downloaded files remain yours. You need to renew access to keep using the builder and receive new updates."],
+      ["How do I receive the product?", "After payment, you receive the relevant access by email. Packs include downloadable files; Studio Pro adds builder access."],
+      ["Can I use it for client work?", "Yes. You may apply the prompts to your own professional projects. VPS files and texts may not be resold, shared or redistributed."],
+    ],
+    closingKicker: "LESS TRIAL AND ERROR. MORE DIRECTION.",
+    closingTitle: "Your architecture is already decided. Now decide how AI should communicate it.",
+    closingText: "Choose the pack that fits your workflow and start building prompts with professional criteria.",
+    closingCta: "Buy packs",
+    footer: "Professional prompt system for AI architectural visualization.",
+    footerPrivacy: "Payments are processed by external providers. VPS does not store your card details.",
+    footerTerms: "Digital product · Professional-use license · Redistribution prohibited",
+    mobileCta: "See packs",
+  },
+  pt: {
+    nav: ["Resultados", "O sistema", "O que inclui", "Pacotes", "Perguntas"],
+    login: "Acesso clientes",
+    topbar: ["Produto digital", "Guias ES / EN / PT", "Uso profissional"],
+    eyebrow: "PROMPTS PROFISSIONAIS PARA ARQUITETURA",
+    h1a: "A IA pode melhorar seu render.",
+    h1b: "Ela não deveria redesenhar seu projeto.",
+    lead: "O Visual Prompt Studio transforma decisões de arquitetura em prompts precisos para criar imagens mais consistentes, proteger a geometria e reduzir tentativas e erros.",
+    heroCta: "Ver pacotes",
+    heroProof: "Ver resultados",
+    heroNote: "Pagamento único · Entrega digital · Acesso permanente aos arquivos",
+    source: "MODELO ORIGINAL",
+    result: "RESULTADO DIRIGIDO",
+    hoverHint: "Mantenha o cursor sobre a imagem para ver o modelo original",
+    locked: "Geometria protegida",
+    camera: "Câmera bloqueada",
+    prompt: "Prompt estruturado",
+    proofLabels: [["56", "prompts arquitetônicos"], ["40", "prompts adicionais de humanização"], ["15", "prompts de veículos com lógica de posicionamento"], ["10", "prompts de efeitos ópticos e de câmera"]],
+    problemKicker: "O CUSTO OCULTO DE UM PROMPT GENÉRICO",
+    problemTitle: "Quando a instrução é ambígua, a IA completa o projeto por conta própria.",
+    problemText: "A solução não é escrever mais. É separar com clareza o que pode mudar, o que deve permanecer e como o resultado deve ser dirigido.",
+    generic: "PROMPT GENÉRICO",
+    vps: "MÉTODO VPS",
+    genericItems: ["Resultados imprevisíveis", "Podem modificar a arquitetura", "Exigem tentativa e erro", "Instruções pouco estruturadas", "Difíceis de corrigir", "Resultados isolados"],
+    vpsItems: ["Maior controle e consistência", "Preserva geometria, câmera e design", "Fluxos otimizados que economizam tempo", "Sistemas CORE, LOCK e RESCUE", "Protocolos para detectar e resolver erros", "Metodologia profissional e repetível"],
+    resultsKicker: "A DIFERENÇA É VISÍVEL",
+    resultsTitle: "Mais realismo sem perder a leitura do projeto.",
+    resultsText: "Deslize para comparar o modelo inicial com o resultado dirigido.",
+    exterior: "Exterior residencial · preservação da geometria",
+    interior: "Interior · luz, materiais e atmosfera",
+    detailExterior: "Humanização + veículo · inserção controlada",
+    detailInterior: "Efeito de câmera · enquadramento e profundidade",
+    before: "ANTES",
+    after: "DEPOIS",
+    systemKicker: "UM SISTEMA, NÃO UM PROMPT SOLTO",
+    systemTitle: "Cada resultado começa com uma sequência de decisões controláveis.",
+    systemText: "O VPS organiza o trabalho em camadas para adaptar um prompt sem reconstruí-lo do zero.",
+    layers: [
+      ["01", "Objetivo", "Defina a transformação e o tipo de imagem que precisa."],
+      ["02", "Preservação", "Bloqueie geometria, câmera, composição e elementos críticos."],
+      ["03", "Direção visual", "Escolha materiais, luz, clima, atmosfera e linguagem fotográfica."],
+      ["04", "Saída", "Copie um prompt mestre em inglês, estruturado e pronto para gerar."],
+    ],
+    demoKicker: "TESTE A LÓGICA DO CONSTRUTOR",
+    demoTitle: "Você nunca começa de uma página em branco.",
+    demoText: "Conheça a nova interface do Prompt Builder. O Studio Pro transforma decisões visuais em um fluxo mais rápido, organizado e repetível.",
+    demoLabel: "Objetivo da visualização",
+    demoOptions: ["Fotorrealismo", "Preservação total", "Atmosfera editorial"],
+    demoCopy: "Copiar trecho",
+    demoCopied: "Trecho copiado",
+    demoDisclaimer: "Vista da nova versão. O construtor completo inclui variáveis, projetos e favoritos.",
+    includesKicker: "VEJA EXATAMENTE O QUE VOCÊ COMPRA",
+    includesTitle: "Arquivos e ferramentas pensados para trabalhar, consultar e reutilizar.",
+    deliverables: [
+      ["CORE", "Biblioteca essencial com 11 prompts arquitetônicos para iniciar o fluxo.", "11"],
+      ["PROFESSIONAL PROMPTS", "45 fluxos avançados classificados por objetivo e tipologia.", "45"],
+      ["HUMANIZATION", "Biblioteca principal com 30 prompts de humanização controlada.", "30"],
+      ["HUMANIZATION_EXTENSION", "10 prompts adicionais para ampliar cenas e usos.", "+10"],
+      ["VEHICULE", "15 prompts de inserção veicular com lógica de posição e contato.", "15"],
+      ["CAMERA_EFFECT", "Efeitos ópticos e de câmera para ampliar a narrativa visual.", "FX"],
+      ["LOCK + RESCUE", "Método de preservação e protocolo para detectar e corrigir erros.", "PDF"],
+      ["CLIENT KIT + FORMS", "Kit profissional e formulários editáveis de controle e entrega.", "KIT"],
+      ["PROMPT BUILDER APP", "Construtor visual com projetos, favoritos e 12 meses de acesso.", "APP"],
+    ],
+    categoriesLabel: "Categorias incluídas",
+    categories: ["Fotorrealismo", "Interiores", "Fachadas", "Paisagismo", "Plantas", "Axonométricas", "Cortes", "Masterplans", "Urbanismo", "Humanização"],
+    audienceKicker: "DESENHADO PARA FLUXOS REAIS",
+    audienceTitle: "Uma biblioteca que acompanha o design de um projeto.",
+    audiences: [
+      ["Arquitetos", "Preserve decisões de projeto enquanto melhora a comunicação visual."],
+      ["Visualizadores", "Padronize prompts, variações e critérios entre imagens."],
+      ["Estúdios", "Construa uma linguagem comum e reduza resultados inconsistentes."],
+    ],
+    tools: "Pensado para fluxos com ChatGPT Images, Midjourney, Krea e modelos compatíveis com prompts de texto. A resposta pode variar conforme a plataforma e a versão.",
+    packsKicker: "ESCOLHA SEU NÍVEL DE CONTROLE",
+    packsTitle: "Comece com a base ou incorpore o sistema completo.",
+    save: "Economize até 29%",
+    currency: { USD: "Pagamento internacional em USD", ARS: "Pagamento local em pesos argentinos" },
+    labels: { starter: "BASE ESSENCIAL", professional: "RECOMENDADO", studio: "EXPERIÊNCIA COMPLETA" },
+    descriptions: {
+      starter: "Comece a estruturar prompts sem improvisar.",
+      professional: "A biblioteca completa para uso profissional frequente.",
+      studio: "A biblioteca profissional mais o construtor visual.",
+    },
+    features: {
+      starter: ["CORE — 11 prompts essenciais", "Manual de início e rota de uso", "RESCUE — versão rápida", "Licença de uso profissional"],
+      professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "Método LOCK + RESCUE completo", "Client Kit, formulários, manual e matriz", "Licença de uso profissional"],
+      studio: ["Tudo da Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 meses"],
+    },
+    choose: { starter: "Comprar Starter", professional: "Escolher Professional Library", studio: "Acessar Studio Pro" },
+    oneTime: "Pagamento único",
+    studioTerm: "Pagamento único · 12 meses de app",
+    confidence: [["ENTREGA", "Acesso digital por e-mail"], ["LICENÇA", "Uso em seus projetos e trabalhos para clientes"], ["ARQUIVOS", "Acesso permanente aos downloads"], ["PAGAMENTO", "Processado por provedores externos"]],
+    matrixTitle: "Comparação rápida",
+    rescueLevels: ["Versão rápida", "Versão completa", "Versão completa"],
+    matrixRows: ["Biblioteca CORE — 11 prompts essenciais", "Professional Prompts — 45 fluxos avançados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionais", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de início e rota de uso", "Manual profissional do usuário", "Matriz de seleção de prompts", "Método LOCK para preservar a arquitetura", "Manual RESCUE para corrigir resultados", "Professional Client Kit", "Formulários editáveis de controle e entrega", "Acesso ao Prompt Builder App por 12 meses", "Licença de uso profissional", "Total de prompts operacionais"],
+    authorKicker: "CRIADO A PARTIR DA PRÁTICA",
+    authorTitle: "Feito por um arquiteto para resolver um problema de arquitetura.",
+    authorText: "O Visual Prompt Studio foi desenvolvido a partir da prática profissional para usar o poder visual da IA sem abrir mão do controle do projeto. O sistema traduz decisões arquitetônicas — preservação, materiais, luz, câmera e atmosfera — em uma estrutura que a IA pode interpretar melhor.",
+    authorRole: "SISTEMA PROFISSIONAL PARA ARQUITETURA",
+    faqKicker: "ANTES DE ESCOLHER",
+    faqTitle: "Respostas claras, sem letras pequenas.",
+    faqs: [
+      ["O que é o Visual Prompt Studio?", "Um sistema profissional de prompts e métodos para criar imagens arquitetônicas com IA."],
+      ["Preciso ter experiência com IA?", "Não. Os pacotes incluem uma rota de uso clara e progressiva."],
+      ["O VPS gera as imagens?", "Não. O VPS fornece prompts, métodos e ferramentas para trabalhar com plataformas de IA."],
+      ["Com quais ferramentas funciona?", "A estrutura foi pensada para ChatGPT Images, Midjourney, Krea e modelos compatíveis com prompts de texto. Cada plataforma pode interpretar a mesma instrução de forma diferente conforme sua versão."],
+      ["Preciso pagar outra plataforma?", "Sim, você precisa de sua própria conta na ferramenta de IA utilizada. O VPS não inclui assinaturas de terceiros."],
+      ["O que acontece após 12 meses de Studio Pro?", "Os arquivos baixados continuam seus. Para continuar usando o construtor e receber novas atualizações é necessário renovar o acesso."],
+      ["Como recebo o produto?", "Após o pagamento, você recebe o acesso correspondente por e-mail. Os pacotes incluem arquivos para download; o Studio Pro adiciona acesso ao construtor."],
+      ["Posso usar em trabalhos para clientes?", "Sim. Você pode aplicar os prompts em seus próprios projetos profissionais. Os arquivos e textos do VPS não podem ser revendidos, compartilhados ou redistribuídos."],
+    ],
+    closingKicker: "MENOS TENTATIVA E ERRO. MAIS DIREÇÃO.",
+    closingTitle: "Sua arquitetura já está decidida. Agora decida como a IA deve comunicá-la.",
+    closingText: "Escolha o pacote ideal para seu fluxo e comece a construir prompts com critério profissional.",
+    closingCta: "Comprar pacotes",
+    footer: "Sistema profissional de prompts para visualização arquitetônica com IA.",
+    footerPrivacy: "Os pagamentos são processados por provedores externos. O VPS não armazena os dados do seu cartão.",
+    footerTerms: "Produto digital · Licença de uso profissional · Redistribuição proibida",
+    mobileCta: "Ver pacotes",
+  },
+} ;
+
+const matrix = [
+  ["✓", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["—", "—", "✓"],
+  ["—", "—", "✓"],
+  ["—", "—", "✓"],
+  ["✓", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["", "", ""],
+  ["—", "✓", "✓"],
+  ["—", "✓", "✓"],
+  ["—", "—", "✓"],
+  ["✓", "✓", "✓"],
+  ["11", "72", "127"],
+];
+
+const highlightedMatrixRows = new Set([0, 1, 2, 3, 4, 5, 13, 15]);
+
+function track(event, data = {}) {
+  if (typeof window === "undefined") return;
+  const browserWindow = window;
+  browserWindow.dataLayer ||= [];
+  browserWindow.dataLayer.push({ event, ...data });
+}
+
+function Logo() {
+  return (
+    <a className="logo" href="#top" aria-label="Visual Prompt Studio">
+      <img className="logoMark" src="/assets/isotipo.png" alt="" width={320} height={216}  aria-hidden="true" />
+      <span>VISUAL<br/>PROMPT <b>STUDIO</b></span>
+    </a>
+  );
+}
+
+function Compare({
+  before,
+  after,
+  label,
+  beforeLabel,
+  afterLabel,
+}) {
+  const [value, setValue] = useState(50);
+  return (
+    <figure className="compareCard">
+      <div className="compareMedia">
+        <img src={after} alt={`${label}: ${afterLabel.toLowerCase()}`} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
+        <div className="beforeLayer" style={{ clipPath: `inset(0 ${100 - value}% 0 0)` }}>
+          <img src={before} alt={`${label}: ${beforeLabel.toLowerCase()}`} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
+        </div>
+        <span className="compareTag left">{beforeLabel}</span>
+        <span className="compareTag right">{afterLabel}</span>
+        <span className="compareLine" style={{ left: `${value}%` }} aria-hidden="true"><i>↔</i></span>
+        <input
+          aria-label={`${label}: ${beforeLabel} / ${afterLabel}`}
+          type="range"
+          min="0"
+          max="100"
+          value={value}
+          onChange={(event) => setValue(Number(event.target.value))}
+        />
+      </div>
+      <figcaption><span>{label}</span><b>DRAG / TOUCH</b></figcaption>
+    </figure>
+  );
+}
+
+function PackCard({
+  onBuyPack,
+  id,
+  currency,
+  t
+}) {
+  const price = prices[id][currency];
+  const featured = id === "professional";
+  const title = id === "professional" ? "Professional Library" : id === "studio" ? "Studio Pro" : "Starter";
+
+  return (
+    <article className={`packCard ${featured ? "featured" : ""}`}>
+      <div className="packHead">
+        <span>{t.labels[id]}</span>
+        {featured && <i aria-label={t.labels.professional}>●</i>}
+      </div>
+      <h3>{title}</h3>
+      <p className="packDescription">{t.descriptions[id]}</p>
+      <div className="price"><strong>{price[0]}</strong><del>{price[1]}</del></div>
+      <small>{id === "studio" ? t.studioTerm : t.oneTime}</small>
+      <ul>{t.features[id].map((feature) => <li key={feature}><span>✓</span>{feature}</li>)}</ul>
+      <a
+        className={`button ${featured ? "primary" : "secondary"}`}
+        onClick={(e) => {
+        e.preventDefault();
+        onBuyPack(id);
+        track("select_pack", { pack: id, currency });
+        track("begin_checkout", { pack: id, currency });
+      }}
+        target="_blank"
+        rel="noreferrer"
+        
+      >
+        {t.choose[id]} <span>↗</span>
+      </a>
+    </article>
+  );
+}
+
+import "./landing.css";
 import PaymentModal from "./PaymentModal";
 
-// URL del proyecto "resto" (la app/workspace). Ajustar al desplegar.
-const APP_URL = "/app";
+export default function LandingPage() {
+  const [activePack, setActivePack] = useState(null);
+  const handleBuyPack = (packId) => {
+    // Map internal id to the object format expected by PaymentModal
+    const pricesObj = prices[packId];
+    const packObj = {
+      slug: packId === "studio" ? "studio_pro" : packId,
+      name: packId === "studio" ? "Studio Pro" : packId === "professional" ? "Professional Library" : "Starter",
+      eyebrow: copy[lang].labels[packId],
+      currentUsd: pricesObj.USD[0],
+      oldUsd: pricesObj.USD[1],
+      currentArs: pricesObj.ARS[0],
+      oldArs: pricesObj.ARS[1],
+      features: copy[lang].features[packId]
+    };
+    setActivePack(packObj);
+  };
 
-const COUNTDOWN_START = 12*3600 + 50*60 + 50;
-const COUNTDOWN_RESET = 2*3600 + 50*60 + 50;
+  const [lang, setLang] = useState("es");
+  const [currency, setCurrency] = useState("USD");
+  const [menu, setMenu] = useState(false);
+  const t = copy[lang] ;
 
-const DISPLAY_FONT = '"Archivo Expanded", "Archivo", Arial, sans-serif';
-const BODY_FONT = '"IBM Plex Sans", Calibri, Arial, sans-serif';
-const MONO_FONT = '"IBM Plex Mono", "SFMono-Regular", Consolas, monospace';
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
-import { DEMO_IMAGES } from "./DemoImages";
+  const navIds = ["results", "system", "includes", "packs", "faq"];
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: t.faqs.map(([question, answer]) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
+  };
 
-const HOME = {
-  en: {
-    eyebrow:"Premium Pack · Manual access · 12-month updates",
-    title:"Visual Prompt Studio for architectural AI visualization.",
-    text:"A professional prompt constructor designed for architects, students, studios, visualizers and real estate teams who need controlled AI render prompts without losing project identity.",
-    primary:"Open the constructor",
-    secondary:"View packs",
-    loginTitle:"Client workspace",
-    loginText:"Manual access for verified clients. Each user keeps their own projects, favorites and custom blocks in a private browser workspace until the production login is connected.",
-    email:"client@email.com",
-    password:"Access code",
-    loginBtn:"Enter workspace",
-    accessFoot:"Manual access · User-scoped workspace",
-    features:[
-      ["Geometry lock","Preservation modes for image-to-image workflows, client presentations and design fidelity."],
-      ["Prompt in English","The final prompt is always generated in English, with a translated reading version below."],
-      ["Premium recipes","Few, curated workflows for SketchUp, style reference, physical model, collage, section and real estate hero images."],
-      ["Tool adapters","Universal, GPT Image, Midjourney, Flux/Stable Diffusion and Krea/Magnific output modes."],
-      ["Prompt check","Readable validation for geometry, materiality, camera, lighting and overload risk."],
-      ["Per-user storage","Favorites, quality presets, custom blocks and projects are scoped by user for the future login version."]
-    ],
-    pricingTitle:"Offer structure",
-    pricing:[
-      ["Pack INICIAL","USD 15","Before USD 25 · ARS $20,000","11-prompt library + camera, lighting and materiality modifiers + PDF guide + mini course + PRO upgrade discount."],
-      ["Pack PRO","USD 30","Before USD 65 · ARS $42,500","Complete 45-prompt library + 11 modifiers + PDF guide + course + LOCK Method + case studies + Rescue Manual + tool adapters + professional kit."],
-      ["Pack PREMIUM","USD 45","Before USD 95 · ARS $65,000","Everything in PRO + 20 image humanization prompts + Web app with login + constructor + 12-month updates."],
-      ["APP Access","USD 25","Before USD 45 · ARS $35,000","Web app access for 12 months + constructor + updates for 12 months."]
-    ],
-    launchTitle:"Built as the Premium Pack differentiator",
-    launchText:"The home screen works as a sales landing and the app is positioned as the exclusive tool included in the PREMIUM pack, with a separate APP-only access option."
-  },
-  es: {
-    eyebrow:"Pack Premium · Acceso manual · Actualizaciones 12 meses",
-    title:"Visual Prompt Studio para visualizaciones arquitectónicas con IA.",
-    text:"Un constructor profesional de prompts pensado para arquitectos, estudiantes, estudios, renderistas e inmobiliarias que necesitan prompts controlados sin perder la identidad del proyecto.",
-    primary:"Abrir el constructor",
-    secondary:"Ver packs",
-    loginTitle:"Workspace para clientes",
-    loginText:"Acceso manual para clientes verificados. Cada usuario conserva sus proyectos, favoritos y bloques personalizados en un espacio propio del navegador hasta conectar el login productivo.",
-    email:"cliente@email.com",
-    password:"Código de acceso",
-    loginBtn:"Entrar al workspace",
-    accessFoot:"Acceso manual · Guardado por usuario",
-    features:[
-      ["Bloqueo geométrico","Modos de preservación para image-to-image, presentaciones a cliente y fidelidad de proyecto."],
-      ["Prompt en inglés","El prompt final se genera siempre en inglés, con traducción de lectura debajo en el idioma seleccionado."],
-      ["Recetas premium","Pocos workflows curados para SketchUp, referencia de estilo, maqueta física, collage, corte e imagen hero inmobiliaria."],
-      ["Adaptadores por herramienta","Modos Universal, GPT Image, Midjourney, Flux/Stable Diffusion y Krea/Magnific."],
-      ["Chequeo de prompt","Validación legible de geometría, materialidad, cámara, iluminación y riesgo de sobrecarga."],
-      ["Guardado por usuario","Favoritos, presets de calidad, bloques personalizados y proyectos quedan separados por usuario para la versión con login."]
-    ],
-    pricingTitle:"Estructura de oferta",
-    pricing:[
-      ["Pack INICIAL","USD 15","Antes USD 25 · ARS $20.000","Biblioteca de 11 prompts + modificadores de cámara, iluminación y materialidad + guía PDF + mini curso + descuento para ingresar al Pack PRO."],
-      ["Pack PRO","USD 30","Antes USD 65 · ARS $42.500","Biblioteca completa de 45 prompts + 11 modificadores + guía PDF + curso + Método LOCK + casos de estudio + Manual de rescate + adaptadores por herramienta + kit profesional."],
-      ["Pack PREMIUM","USD 45","Antes USD 95 · ARS $65.000","Todo el Pack PRO + 20 prompts de humanización de imágenes + web app con login + constructor + actualizaciones por 12 meses."],
-      ["Acceso a APP","USD 25","Antes USD 45 · ARS $35.000","Web app con login por 12 meses + constructor + actualizaciones por 12 meses."]
-    ],
-    launchTitle:"Pensada como diferencial del Pack Premium",
-    launchText:"El Inicio funciona como landing de venta y la app queda posicionada como la herramienta exclusiva del Pack PREMIUM, con una opción separada de acceso solo a la APP."
-  },
-  pt: {
-    eyebrow:"Pack Premium · Acesso manual · Atualizações 12 meses",
-    title:"Visual Prompt Studio para visualizações arquitetônicas com IA.",
-    text:"Um construtor profissional de prompts para arquitetos, estudantes, estúdios, visualizadores e imobiliárias que precisam de prompts controlados sem perder a identidade do projeto.",
-    primary:"Abrir o construtor",
-    secondary:"Ver pacotes",
-    loginTitle:"Workspace para clientes",
-    loginText:"Acesso manual para clientes verificados. Cada usuário mantém seus projetos, favoritos e blocos personalizados em um espaço próprio do navegador até conectar o login produtivo.",
-    email:"cliente@email.com",
-    password:"Código de acesso",
-    loginBtn:"Entrar no workspace",
-    accessFoot:"Acesso manual · Guardado por usuário",
-    features:[
-      ["Bloqueio geométrico","Modos de preservação para image-to-image, apresentações a cliente e fidelidade do projeto."],
-      ["Prompt em inglês","O prompt final é sempre gerado em inglês, com tradução de leitura abaixo no idioma selecionado."],
-      ["Receitas premium","Poucos workflows curados para SketchUp, referência de estilo, maquete física, collage, corte e imagem hero imobiliária."],
-      ["Adaptadores por ferramenta","Modos Universal, GPT Image, Midjourney, Flux/Stable Diffusion e Krea/Magnific."],
-      ["Verificação de prompt","Validação legível de geometria, materialidade, câmera, iluminação e risco de sobrecarga."],
-      ["Guardado por usuário","Favoritos, presets de qualidade, blocos personalizados e projetos ficam separados por usuário para a versão com login."]
-    ],
-    pricingTitle:"Estrutura da oferta",
-    pricing:[
-      ["Pack INICIAL","USD 15","Antes USD 25 · ARS $20.000","Biblioteca de 11 prompts + modificadores de câmera, iluminação e materialidade + guia PDF + mini curso + desconto para entrar no Pack PRO."],
-      ["Pack PRO","USD 30","Antes USD 65 · ARS $42.500","Biblioteca completa de 45 prompts + 11 modificadores + guia PDF + curso + Método LOCK + estudos de caso + Manual de resgate + adaptadores por ferramenta + kit profissional."],
-      ["Pack PREMIUM","USD 45","Antes USD 95 · ARS $65.000","Todo o Pack PRO + 20 prompts de humanização de imagens + web app com login + construtor + atualizações por 12 meses."]
-    ],
-    launchTitle:"Pensada como diferencial do Pack Premium",
-    launchText:"O Início funciona como landing de venda e a app fica posicionada como ferramenta exclusiva do Pack PREMIUM, com uma opção separada de acesso apenas à APP."
-  }
-};
+  return (
+    <main id="top">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
-const LANDING_COPY = {
-  en: {
-    offer: 'LIMITED TIME OFFER', eyebrow: 'AI ARCHITECTURAL VISUALIZATION', benefits: 'CONTROL  •  SPEED  •  QUALITY', viewPacks: 'VIEW PACKS',
-    heroTitleA: 'Direct AI the same way you direct your', heroTitleB: 'studio.', heroBody: 'Turn any render into a professional-level image with AI',
-    subtitle: 'The definitive system for creating photorealistic architectural visualizations with Artificial Intelligence',
-    heroPrimary: 'I WANT MY PACK', heroSecondary: 'APP ACCESS', accessTitle: 'App Access',
-    accessText: 'Manual access for verified clients. Enter your email to open the app workspace and access your prompt constructor.',
-    compareHouseTitle: 'From SketchUp massing to premium exterior render', compareHouseSubtitle: 'Hover to reveal the final render',
-    compareRoomTitle: 'From interior sketch to editorial bedroom atmosphere', compareRoomSubtitle: 'Hover to reveal the final render',
-    pricingEyebrow: 'PACKS & ACCESS', pricingTitle: 'Choose the option that fits your workflow', currencyUsd: 'USD', currencyArs: 'ARS',
-    packButton: 'I WANT MY PACK', accessButton: 'I WANT MY ACCESS', footerTitleA: 'Stop fighting with AI.', footerTitleB: 'Start directing it.',
-    footerSubtitle: 'Join the professionals already creating architectural visualizations with control, speed and quality.'
-  },
-  es: {
-    offer: 'OFERTA POR TIEMPO LIMITADO', eyebrow: 'VISUALIZACIÓN ARQUITECTÓNICA CON IA', benefits: 'CONTROL  •  VELOCIDAD  •  CALIDAD', viewPacks: 'VER PACKS',
-    heroTitleA: 'Dirige la IA como diriges tu', heroTitleB: 'estudio.', heroBody: 'Convertí cualquier render en una imagen de nivel profesional con IA',
-    subtitle: 'El sistema definitivo para crear visualizaciones arquitectónicas fotorrealistas con Inteligencia Artificial',
-    heroPrimary: 'QUIERO MI PACK', heroSecondary: 'ACCESO A APP', accessTitle: 'Acceso a App',
-    accessText: 'Acceso manual para clientes verificados. Ingresá tu email para abrir el workspace de la app y entrar al constructor de prompts.',
-    compareHouseTitle: 'De SketchUp a render exterior premium', compareHouseSubtitle: 'Pasá el cursor para revelar el render final',
-    compareRoomTitle: 'De sketch interior a atmósfera editorial de dormitorio', compareRoomSubtitle: 'Pasá el cursor para revelar el render final',
-    pricingEyebrow: 'PACKS Y ACCESOS', pricingTitle: 'Elegí la opción que mejor se adapta a tu flujo', currencyUsd: 'USD', currencyArs: 'ARS',
-    packButton: 'QUIERO MI PACK', accessButton: 'QUIERO MI ACCESO', footerTitleA: 'Deja de pelear con la IA.', footerTitleB: 'Empieza a dirigirla.',
-    footerSubtitle: 'Únete a los profesionales que ya generan visualizaciones arquitectónicas con control, velocidad y calidad.'
-  },
-  pt: {
-    offer: 'OFERTA POR TEMPO LIMITADO', eyebrow: 'VISUALIZAÇÃO ARQUITETÔNICA COM IA', benefits: 'CONTROLE  •  VELOCIDADE  •  QUALIDADE', viewPacks: 'VER PACOTES',
-    heroTitleA: 'Diriga a IA como você dirige seu', heroTitleB: 'estúdio.', heroBody: 'Transforme qualquer render em uma imagem de nível profissional com IA',
-    subtitle: 'O sistema definitivo para criar visualizações arquitetônicas fotorrealistas com Inteligência Artificial',
-    heroPrimary: 'QUERO MEU PACK', heroSecondary: 'ACESSO À APP', accessTitle: 'Acesso à App',
-    accessText: 'Acesso manual para clientes verificados. Digite seu email para abrir o workspace da app e entrar no construtor de prompts.',
-    compareHouseTitle: 'De SketchUp para render externo premium', compareHouseSubtitle: 'Passe o cursor para revelar o render final',
-    compareRoomTitle: 'De sketch interno para atmosfera editorial de quarto', compareRoomSubtitle: 'Passe o cursor para revelar o render final',
-    pricingEyebrow: 'PACKS E ACESSOS', pricingTitle: 'Escolha a opção que melhor se adapta ao seu fluxo', currencyUsd: 'USD', currencyArs: 'ARS',
-    packButton: 'QUERO MEU PACK', accessButton: 'QUERO MEU ACESSO', footerTitleA: 'Pare de brigar com a IA.', footerTitleB: 'Comece a dirigi-la.',
-    footerSubtitle: 'Junte-se aos profissionais que já criam visualizações arquitetônicas com controle, velocidade e qualidade.'
-  },
-};
-
-const LANDING_EXTRAS = {
-  en: {
-    stats:[['+45','tested prompts'],['6','professional modifiers'],['30','humanization prompts']],
-    audienceTitle:'Designed for architectural workflows that need consistency, speed and visual control.',
-    audience:['Independent architects','Architecture students','Design studios','Render artists','Real estate teams'],
-    processEyebrow:'HOW IT WORKS',
-    processTitle:'From idea to controlled AI prompt in three steps',
-    steps:[['01','Choose the objective','Select the visualization type and preservation level.','target'],['02','Direct the style','Combine materials, lighting, camera and atmosphere.','sliders'],['03','Copy and generate','Export the English prompt with its translated reading version.','copy']],
-    compareEyebrow:'BEFORE / AFTER',
-    benefitTitle:'4 benefits of getting the packs',
-    benefits:[['spark','Professional prompt system','Prompt structures designed specifically for architectural visualization workflows.'],['builder','Fast prompt construction','Build more solid prompts in less time, without starting from scratch every time.'],['shield','More control over the result','Guide geometry, style and quality with clearer creative direction.'],['globe','English prompt + local reading','Generate in English and review the translated reading below in your chosen language.']],
-    oldPrefix:'Before',
-    premiumNote:'Premium visual system for AI architectural rendering.',
-    accessIncludedTitle:'App access includes',
-    accessBullets:['Private workspace','Prompt constructor','12 months of updates'],
-    closeKicker:'READY TO WORK WITH AI LIKE A STUDIO DIRECTOR',
-    closeTitleA:'Stop improvising prompts.',
-    closeTitleB:'Start selling better images.',
-    closeSub:'A complete system to create, control and present AI architectural visualizations with a professional workflow.',
-    closeBullets:['Less trial and error','More consistent visual direction','A product ready to use in real projects'],
-  },
-  es: {
-    stats:[['+45','prompts probados'],['6','modificadores profesionales'],['30','prompts de humanización']],
-    audienceTitle:'Diseñado para flujos de arquitectura que necesitan consistencia, velocidad y control visual.',
-    audience:['Arquitectos independientes','Estudiantes de arquitectura','Estudios de arquitectura','Renderistas','Inmobiliarias'],
-    processEyebrow:'CÓMO FUNCIONA',
-    processTitle:'De la idea al prompt controlado en tres pasos',
-    steps:[['01','Elegí el objetivo','Seleccioná el tipo de visualización y el nivel de preservación.','target'],['02','Dirigí el estilo','Combiná materiales, iluminación, cámara y atmósfera.','sliders'],['03','Copiá y generá','Exportá el prompt en inglés con su traducción de lectura.','copy']],
-    compareEyebrow:'ANTES / DESPUÉS',
-    benefitTitle:'4 beneficios de obtener los packs',
-    benefits:[['spark','Sistema profesional de prompts','Estructuras de prompt pensadas específicamente para visualización arquitectónica.'],['builder','Construcción rápida de prompts','Armá prompts sólidos en menos tiempo, sin empezar desde cero en cada imagen.'],['shield','Más control sobre el resultado','Guiá geometría, estilo y calidad con una dirección creativa mucho más clara.'],['globe','Prompt en inglés + lectura local','Generá en inglés y revisá abajo la traducción de lectura en tu idioma seleccionado.']],
-    oldPrefix:'Antes',
-    premiumNote:'Sistema visual premium para renders arquitectónicos con IA.',
-    accessIncludedTitle:'El acceso a la app incluye',
-    accessBullets:['Workspace privado','Constructor de prompts','12 meses de actualizaciones'],
-    closeKicker:'LISTO PARA TRABAJAR CON IA COMO DIRECTOR DE ESTUDIO',
-    closeTitleA:'Dejá de improvisar prompts.',
-    closeTitleB:'Empezá a vender mejores imágenes.',
-    closeSub:'Un sistema completo para crear, controlar y presentar visualizaciones arquitectónicas con IA usando un flujo profesional.',
-    closeBullets:['Menos prueba y error','Más consistencia visual','Un producto listo para proyectos reales'],
-  },
-  pt: {
-    stats:[['+45','prompts testados'],['6','modificadores profissionais'],['30','prompts de humanização']],
-    audienceTitle:'Projetado para fluxos de arquitetura que precisam de consistência, velocidade e controle visual.',
-    audience:['Arquitetos independientes','Estudantes de arquitetura','Escritórios de arquitetura','Renderistas','Imobiliárias'],
-    processEyebrow:'COMO FUNCIONA',
-    processTitle:'Da ideia ao prompt controlado em três passos',
-    steps:[['01','Escolha o objetivo','Selecione o tipo de visualização e o nível de preservação.','target'],['02','Dirija o estilo','Combine materiais, iluminação, câmera e atmosfera.','sliders'],['03','Copie e gere','Exporte o prompt em inglês com sua tradução de leitura.','copy']],
-    compareEyebrow:'ANTES / DEPOIS',
-    benefitTitle:'4 benefícios de obter os pacotes',
-    benefits:[['spark','Sistema profissional de prompts','Estruturas de prompt pensadas especificamente para visualização arquitectônica.'],['builder','Construção rápida de prompts','Monte prompts sólidos em menos tempo, sem começar do zero em cada imagem.'],['shield','Mais controle sobre o resultado','Guie geometria, estilo e qualidade com uma direção criativa muito mais clara.'],['globe','Prompt em inglês + leitura local','Gere em inglês e revise abaixo a tradução de leitura no idioma selecionado.']],
-    oldPrefix:'Antes',
-    premiumNote:'Sistema visual premium para renders arquitectónicos com IA.',
-    accessIncludedTitle:'O acesso à app inclui',
-    accessBullets:['Workspace privado','Construtor de prompts','12 meses de atualizações'],
-    closeKicker:'PRONTO PARA TRABALHAR COM IA COMO DIRETOR DE ESTÚDIO',
-    closeTitleA:'Pare de improvisar prompts.',
-    closeTitleB:'Comece a vender imagens melhores.',
-    closeSub:'Um sistema completo para criar, controlar e apresentar visualizações arquitetônicas com IA usando um fluxo profissional.',
-    closeBullets:['Menos tentativa e erro','Mais consistência visual','Um produto pronto para projetos reais'],
-  },
-};
-
-const NEW_COPY = {
-  en: {
-    compareHumanTitle:'Humanization + vehicle · controlled insertion',
-    compareHumanSubtitle:'Drag to compare source model and directed result',
-    compareCameraTitle:'Camera effect · framing and depth',
-    compareCameraSubtitle:'Drag to compare source model and directed result',
-    compareLabel1:'BEFORE', compareLabel2:'AFTER',
-    faqEyebrow:'BEFORE YOU CHOOSE',
-    faqTitle:'Clear answers, no fine print.',
-    faqs:[
-      ['What is Visual Prompt Studio?','A professional system of prompts and methods for creating architectural images with AI.'],
-      ['Do I need AI experience?','No. The packs include a clear, progressive usage path.'],
-      ['Does VPS generate the images?','No. VPS provides prompts, methods and tools for working with AI platforms.'],
-      ['Which tools does it work with?','Designed for ChatGPT Images, Midjourney, Krea and text-prompt compatible models. Responses may vary by platform and version.'],
-      ['Do I need another paid platform?','Yes, you need your own account with the AI tool you use. VPS does not include third-party subscriptions.'],
-      ['What happens after 12 months of Studio Pro?','Downloaded files remain yours. You need to renew access to keep using the builder and receive new updates.'],
-      ['How do I receive the product?','After payment you receive the relevant access by email. Packs include downloadable files; Studio Pro adds builder access.'],
-      ['Can I use it for client work?','Yes. VPS files and texts may not be resold, shared or redistributed.'],
-    ],
-    tableEyebrow:'QUICK COMPARISON',
-    tableTitle:'What does each pack include?',
-    tableHeaders:['Feature','Starter','Professional','Studio Pro'],
-    tableRows:[
-      ['CORE Library — 11 essential prompts','✓','✓','✓'],
-      ['Professional Prompts — 45 advanced workflows','—','✓','✓'],
-      ['Humanization Library — 30 prompts','—','✓','✓'],
-      ['Humanization Extension — 10 additional prompts','—','—','✓'],
-      ['Vehicle Insertion — 15 prompts','—','—','✓'],
-      ['Architectural Camera Effects — 10 prompts','—','—','✓'],
-      ['Start manual and usage route','✓','✓','✓'],
-      ['LOCK Method + complete RESCUE Manual','—','✓','✓'],
-      ['Professional Client Kit + editable forms','—','✓','✓'],
-      ['12-month Prompt Builder App access','—','—','✓'],
-      ['Professional-use license','✓','✓','✓'],
-      ['Total operational prompts','11','72','127'],
-    ],
-    confEyebrow:'BUY WITH CONFIDENCE',
-    confidence:[['DELIVERY','Digital access by email'],['LICENSE','Use in your projects and client work'],['FILES','Permanent access to downloads'],['PAYMENT','Processed by external providers']],
-  },
-  es: {
-    compareHumanTitle:'Humanización + vehículo · inserción controlada',
-    compareHumanSubtitle:'Arrastrá para comparar el modelo base con el resultado dirigido',
-    compareCameraTitle:'Efecto de cámara · encuadre y profundidad',
-    compareCameraSubtitle:'Arrastrá para comparar el modelo base con el resultado dirigido',
-    compareLabel1:'ANTES', compareLabel2:'DESPUÉS',
-    faqEyebrow:'ANTES DE ELEGIR',
-    faqTitle:'Respuestas claras, sin letra chica.',
-    faqs:[
-      ['¿Qué es Visual Prompt Studio?','Un sistema profesional de prompts y métodos para crear imágenes arquitectónicas con IA.'],
-      ['¿Necesito experiencia con IA?','No. Los packs incluyen una ruta de uso clara y progresiva.'],
-      ['¿VPS genera las imágenes?','No. VPS proporciona prompts, métodos y herramientas para trabajar con plataformas de IA.'],
-      ['¿Con qué herramientas funciona?','Pensado para ChatGPT Images, Midjourney, Krea y modelos compatibles con prompts de texto. La respuesta puede variar según la plataforma y versión.'],
-      ['¿Necesito pagar otra plataforma?','Sí, necesitás tu propia cuenta en la herramienta de IA que uses. VPS no incluye suscripciones de terceros.'],
-      ['¿Qué pasa después de los 12 meses de Studio Pro?','Los archivos que descargaste siguen siendo tuyos. Para continuar usando el constructor y recibir nuevas actualizaciones necesitás renovar el acceso.'],
-      ['¿Cómo recibo el producto?','Después del pago recibís por email el acceso correspondiente. Los packs incluyen archivos descargables; Studio Pro suma el acceso al constructor.'],
-      ['¿Puedo usarlo con trabajos para clientes?','Sí. Los archivos y textos de VPS no pueden revenderse, compartirse ni redistribuirse.'],
-    ],
-    tableEyebrow:'COMPARACIÓN RÁPIDA',
-    tableTitle:'¿Qué incluye cada pack?',
-    tableHeaders:['Característica','Starter','Professional','Studio Pro'],
-    tableRows:[
-      ['Biblioteca CORE — 11 prompts esenciales','✓','✓','✓'],
-      ['Professional Prompts — 45 flujos avanzados','—','✓','✓'],
-      ['Humanization Library — 30 prompts','—','✓','✓'],
-      ['Humanization Extension — 10 prompts adicionales','—','—','✓'],
-      ['Vehicle Insertion — 15 prompts','—','—','✓'],
-      ['Camera Effects — 10 prompts de efectos ópticos','—','—','✓'],
-      ['Manual de inicio y ruta de uso','✓','✓','✓'],
-      ['Método LOCK + Manual RESCUE completo','—','✓','✓'],
-      ['Client Kit profesional + formularios editables','—','✓','✓'],
-      ['Acceso al App Constructor por 12 meses','—','—','✓'],
-      ['Licencia de uso profesional','✓','✓','✓'],
-      ['Total de prompts operativos','11','72','127'],
-    ],
-    confEyebrow:'COMPRÁ CON CONFIANZA',
-    confidence:[['ENTREGA','Acceso digital por email'],['LICENCIA','Uso en tus proyectos y trabajos para clientes'],['ARCHIVOS','Acceso permanente a las descargas'],['PAGO','Procesado por proveedores externos']],
-  },
-  pt: {
-    compareHumanTitle:'Humanização + veículo · inserção controlada',
-    compareHumanSubtitle:'Arraste para comparar o modelo base com o resultado dirigido',
-    compareCameraTitle:'Efeito de câmera · enquadramento e profundidade',
-    compareCameraSubtitle:'Arraste para comparar o modelo base com o resultado dirigido',
-    compareLabel1:'ANTES', compareLabel2:'DEPOIS',
-    faqEyebrow:'ANTES DE ESCOLHER',
-    faqTitle:'Respostas claras, sem letras pequenas.',
-    faqs:[
-      ['O que é o Visual Prompt Studio?','Um sistema profissional de prompts e métodos para criar imagens arquitetônicas com IA.'],
-      ['Preciso ter experiência com IA?','Não. Os pacotes incluem uma rota de uso clara e progressiva.'],
-      ['O VPS gera as imagens?','Não. O VPS fornece prompts, métodos e ferramentas para trabalhar com plataformas de IA.'],
-      ['Com quais ferramentas funciona?','Pensado para ChatGPT Images, Midjourney, Krea e modelos compatíveis com prompts de texto.'],
-      ['Preciso pagar outra plataforma?','Sim, você precisa de sua própria conta na ferramenta de IA utilizada. O VPS não inclui assinaturas de terceiros.'],
-      ['O que acontece após 12 meses de Studio Pro?','Os arquivos baixados continuam seus. Para continuar usando o construtor é necessário renovar o acesso.'],
-      ['Como recebo o produto?','Após o pagamento você recebe o acesso correspondente por e-mail. Os pacotes incluem arquivos para download; o Studio Pro adiciona acesso ao construtor.'],
-      ['Posso usar em trabalhos para clientes?','Sim. Os arquivos e textos do VPS não podem ser revendidos, compartilhados ou redistribuídos.'],
-    ],
-    tableEyebrow:'COMPARAÇÃO RÁPIDA',
-    tableTitle:'O que inclui cada pacote?',
-    tableHeaders:['Característica','Starter','Professional','Studio Pro'],
-    tableRows:[
-      ['Biblioteca CORE — 11 prompts essenciais','✓','✓','✓'],
-      ['Professional Prompts — 45 fluxos avançados','—','✓','✓'],
-      ['Humanization Library — 30 prompts','—','✓','✓'],
-      ['Humanization Extension — 10 prompts adicionais','—','—','✓'],
-      ['Vehicle Insertion — 15 prompts','—','—','✓'],
-      ['Camera Effects — 10 prompts de efeitos ópticos','—','—','✓'],
-      ['Manual de início e rota de uso','✓','✓','✓'],
-      ['Método LOCK + Manual RESCUE completo','—','✓','✓'],
-      ['Client Kit profissional + formulários editáveis','—','✓','✓'],
-      ['Acesso ao App Construtor por 12 meses','—','—','✓'],
-      ['Licença de uso profissional','✓','✓','✓'],
-      ['Total de prompts operacionais','11','72','127'],
-    ],
-    confEyebrow:'COMPRE COM CONFIANÇA',
-    confidence:[['ENTREGA','Acesso digital por e-mail'],['LICENÇA','Uso em seus projetos e trabalhos para clientes'],['ARQUIVOS','Acesso permanente aos downloads'],['PAGAMENTO','Processado por provedores externos']],
-  },
-};
-
-const PACKS = {
-  en: [
-    { id:'starter', slug:'starter', eyebrow:'START HERE', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
-      features:['11 curated architectural prompts','Essential modifiers (camera, lighting, materiality)','User Manual PDF','Rescue Manual PDF','Permanent file access'] },
-    { id:'professional', slug:'professional', eyebrow:'RECOMMENDED', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
-      features:['Everything in Starter','Library of 45 professional prompts','LOCK Method PDF','Professional Client Kit','Permanent file access'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MOST COMPLETE', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
-      features:['Everything in Professional Library','App Constructor access (12 months)','Cloud projects and favorites','New modules for 12 months','Content updates for 12 months'] },
-  ],
-  es: [
-    { id:'starter', slug:'starter', eyebrow:'EMPIEZA AQUÍ', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
-      features:['11 prompts arquitectónicos curados','Modificadores esenciales (cámara, iluminación, materialidad)','Manual de usuario PDF','Manual de rescate PDF','Acceso permanente a archivos'] },
-    { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
-      features:['Todo el Starter','Biblioteca de 45 prompts profesionales','Método LOCK PDF','Kit Profesional de Cliente','Acceso permanente a archivos'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MÁS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
-      features:['Todo el Professional Library','Acceso al App Constructor (12 meses)','Proyectos y favoritos en la nube','Nuevos módulos por 12 meses','Actualizaciones de contenido por 12 meses'] },
-  ],
-  pt: [
-    { id:'starter', slug:'starter', eyebrow:'COMECE AQUI', name:'Starter', featured:false, currentUsd:'USD 17', oldUsd:'USD 24', currentArs:'$33.000', oldArs:'$46.000', cta:'pack',
-      features:['11 prompts arquitetônicos curados','Modificadores essenciais (câmera, iluminação, materialidade)','Manual do usuário PDF','Manual de resgate PDF','Acesso permanente a arquivos'] },
-    { id:'professional', slug:'professional', eyebrow:'RECOMENDADO', name:'Professional Library', featured:false, currentUsd:'USD 39', oldUsd:'USD 55', currentArs:'$57.000', oldArs:'$80.000', cta:'pack',
-      features:['Tudo do Starter','Biblioteca de 45 prompts profissionais','Método LOCK PDF','Kit Profissional de Cliente','Acesso permanente a arquivos'] },
-    { id:'studio_pro', slug:'studio_pro', eyebrow:'MAIS COMPLETO', name:'Studio Pro', featured:true, currentUsd:'USD 69', oldUsd:'USD 89', currentArs:'$93.000', oldArs:'$130.000', cta:'access',
-      features:['Tudo do Professional Library','Acesso ao App Construtor (12 meses)','Projetos e favoritos na nuvem','Novos módulos por 12 meses','Atualizações de conteúdo por 12 meses'] },
-  ],
-};
-
-
-function formatClock(total) {
-  const hrs = String(Math.floor(total/3600)).padStart(2,'0');
-  const mins = String(Math.floor((total%3600)/60)).padStart(2,'0');
-  const secs = String(total%60).padStart(2,'0');
-  return `${hrs}:${mins}:${secs}`;
-}
-
-// ─── QUALITY TAGS WITH TRANSLATIONS ────────────────────────────────────────
-
-const Icon = React.memo(function Icon({name,size=16,color="currentColor",stroke=1.8}){
-  const common={width:size,height:size,viewBox:"0 0 24 24",fill:"none",stroke:color,strokeWidth:stroke,strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":true};
-  switch(name){
-    case "home": return <svg {...common}><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg>;
-    case "check": return <svg {...common}><path d="M20 6 9 17l-5-5"/></svg>;
-    case "globe": return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>;
-    case "shield": return <svg {...common}><path d="M12 3 20 7v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg>;
-    case "login": return <svg {...common}><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/></svg>;
-    case "pricing": return <svg {...common}><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 1 1 2.2-3.7L12 7z"/><path d="M12 7h4.5a2.5 2.5 0 1 0-2.2-3.7L12 7z"/></svg>;
-    case "builder": return <svg {...common}><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>;
-    case "bank": return <svg {...common}><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/></svg>;
-    case "favorites": return <svg {...common}><path d="m12 17.3-5.2 3 1.4-5.9L3.5 10l6.1-.5L12 4l2.4 5.5 6.1.5-4.7 4.4 1.4 5.9z"/></svg>;
-    case "action": return <svg {...common}><path d="m14 5 5 5"/><path d="m4 20 4.5-1 10-10-3.5-3.5-10 10z"/></svg>;
-    case "lock": return <svg {...common}><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></svg>;
-    case "blocks": return <svg {...common}><path d="M4 8.5 12 4l8 4.5-8 4.5z"/><path d="M4 15.5 12 20l8-4.5"/><path d="M4 12l8 4.5 8-4.5"/></svg>;
-    case "output": return <svg {...common}><path d="M5 12h10"/><path d="m11 6 6 6-6 6"/></svg>;
-    case "spark": return <svg {...common}><path d="m12 3 1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/></svg>;
-    case "result": return <svg {...common}><path d="M7 3h8l5 5v13H7z"/><path d="M15 3v5h5"/><path d="M10 13h6"/><path d="M10 17h6"/></svg>;
-    case "target": return <svg {...common}><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><path d="M12 2v3"/><path d="M12 19v3"/><path d="M2 12h3"/><path d="M19 12h3"/></svg>;
-    case "sliders": return <svg {...common}><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="11" cy="18" r="2"/></svg>;
-    case "copy": return <svg {...common}><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/></svg>;
-    default: return <svg {...common}><circle cx="12" cy="12" r="8"/></svg>;
-  }
-});
-
-
-
-
-const ImageCompareCard = React.memo(function ImageCompareCard({beforeSrc,afterSrc,title,subtitle,leftLabel="SKETCH",rightLabel="RENDER"}){
-  const [sliderPos, setSliderPos] = useState(50);
-  const containerRef = React.useRef(null);
-
-  const handleMove = useCallback((clientX) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    let pos = (x / rect.width) * 100;
-    if (pos < 0) pos = 0;
-    if (pos > 100) pos = 100;
-    setSliderPos(pos);
-  }, []);
-
-  const handleMouseMove = useCallback((e) => {
-    handleMove(e.clientX);
-  }, [handleMove]);
-
-  const handleTouchMove = useCallback((e) => {
-    if (e.touches && e.touches[0]) {
-      handleMove(e.touches[0].clientX);
-    }
-  }, [handleMove]);
-
-  return(
-    <div className="vps-compare-card" style={S.compareCardWrap}>
-      <div 
-        ref={containerRef}
-        onMouseMove={handleMouseMove}
-        onTouchMove={handleTouchMove}
-        style={S.compareMedia}
-      >
-        <img src={beforeSrc} alt={title} style={S.compareImg} loading="lazy"/>
-        <div 
-          style={{
-            ...S.compareOverlay,
-            opacity: 1,
-            clipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
-            WebkitClipPath: `inset(0 ${100 - sliderPos}% 0 0)`,
-            transition: "none"
-          }}
-        >
-          <img src={afterSrc} alt={title} style={S.compareImg} loading="lazy"/>
-        </div>
-        <div 
-          style={{
-            ...S.compareLine,
-            left: `${sliderPos}%`,
-            transition: "none"
-          }}
-        >
-          <span style={S.compareKnob}>↔</span>
-        </div>
-        <div style={{...S.compareLabel,left:12}}>{leftLabel}</div>
-        <div style={{...S.compareLabel,right:12,background:"rgba(255,152,0,0.92)",borderColor:"rgba(255,186,80,0.95)",color:"#111"}}>{rightLabel}</div>
+      <div className="announcement">
+        {t.topbar.map((item, index) => <span key={item}><b>{index === 0 ? "●" : "—"}</b>{item}</span>)}
       </div>
-      <div style={S.compareCopy}>
-        <div style={S.compareTitle}>{title}</div>
-        <div style={S.compareSubtitle}>{subtitle}</div>
-      </div>
-    </div>
-  );
-});
 
+      <header className="siteHeader">
+        <Logo />
+        <nav className={menu ? "open" : ""} aria-label="Principal">
+          {t.nav.map((item, index) => (
+            <a key={item} href={`#${navIds[index]}`} onClick={() => setMenu(false)}>{item}</a>
+          ))}
+        </nav>
+        <div className="headerTools">
+          <div className="langSwitch" aria-label="Idioma">
+            {(["es", "en", "pt"]).map((language) => (
+              <button
+                key={language}
+                className={lang === language ? "active" : ""}
+                aria-pressed={lang === language}
+                onClick={() => setLang(language)}
+              >
+                {language.toUpperCase()}
+              </button>
+            ))}
+          </div>
+          <a className="loginLink" href={promptBuilderUrl} target="_blank" rel="noreferrer">
+            {t.login} <span>↗</span>
+          </a>
+          <button className="menuButton" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label="Abrir menú">
+            {menu ? "×" : "☰"}
+          </button>
+        </div>
+      </header>
 
+      <section className="hero sectionShell">
+        <div className="heroCopy">
+          <span className="kicker">{t.eyebrow}</span>
+          <h1>{t.h1a}<br/><em>{t.h1b}</em></h1>
+          <p>{t.lead}</p>
+          <div className="heroActions">
+            <a className="button primary heroPrimary" href="#packs" onClick={() => track("view_packs", { source: "hero" })}>
+              {t.heroCta} <span>↓</span>
+            </a>
+            <a className="textButton" href="#results">{t.heroProof} <span>↗</span></a>
+          </div>
+          <a className="button secondary heroClientAccess" href={promptBuilderUrl} target="_blank" rel="noreferrer">
+            {t.login} <span>↗</span>
+          </a>
+          <small className="heroNote"><span>✓</span>{t.heroNote}</small>
+        </div>
 
-const PREVIEW_BLOCKS = {
-  en: {
-    eyebrow: "LIBRARY PREVIEW",
-    categories: [
-      { id: "spaces", label: "Spaces" },
-      { id: "styles", label: "Styles" },
-      { id: "materials", label: "Materials" },
-      { id: "camera", label: "Camera" },
-      { id: "lighting", label: "Lighting" }
-    ],
-    items: {
-      spaces: [
-        { code: "S-01", title: "Residential Living Room", desc: "Minimalist open layout, double height ceilings, floor-to-ceiling glass doors" },
-        { code: "S-02", title: "Brutalist Museum", desc: "Exposed concrete panels, skylights casting sharp geometric shadows" },
-        { code: "S-03", title: "Modern Bedroom", desc: "Warm wood paneling, indirect LED lighting, integrated king size bed" },
-        { code: "S-04", title: "Office Workspace", desc: "Biophilic design, acoustic ceiling baffles, collaborative desks" },
-        { code: "S-05", title: "Retail Store", desc: "Terracotta tile accents, arched display niches, terrazzo flooring" },
-        { code: "S-06", title: "Tiny House", desc: "Compact loft configuration, folding furniture, warm plywood finishes" }
-      ],
-      styles: [
-        { code: "ST-01", title: "Tadao Ando Minimalist", desc: "Symmetric concrete sheets, clean lines, serene natural light" },
-        { code: "ST-02", title: "Scandinavian Hygge", desc: "Light white oak, neutral wool rugs, soft pastel accents" },
-        { code: "ST-03", title: "Industrial Loft", desc: "Exposed brick walls, black iron framing, high timber joists" },
-        { code: "ST-04", title: "Mid-Century Modern", desc: "Teak wooden structures, organic shapes, brass hardware accents" },
-        { code: "ST-05", title: "Mediterranean Organic", desc: "Smoothed plaster walls, microcement floors, rounded corners" },
-        { code: "ST-06", title: "High-Tech Architecture", desc: "Steel trusses, visible HVAC ducts, metallic finishes" }
-      ],
-      materials: [
-        { code: "M-01", title: "Travertine Marble", desc: "Unfilled roman travertine, porous texture, beige tones" },
-        { code: "M-02", title: "Raw Concrete", desc: "Formwork pattern, matte grey texture, modular construction seams" },
-        { code: "M-03", title: "Brushed Brass", desc: "Golden metallic sheen, subtle linear brushing, warm highlights" },
-        { code: "M-04", title: "Fluted Glass", desc: "Ribbed vertical texture, semi-translucent light diffusion, black trim" },
-        { code: "M-05", title: "Terracotta Brick", desc: "Handmade clay bricks, uneven textures, thin cement grout lines" },
-        { code: "M-06", title: "Polished Microcement", desc: "Seamless floor covering, light grey cloud pattern, satin finish" }
-      ],
-      camera: [
-        { code: "C-01", title: "Architectural Eye-Level", desc: "Human height perspective, perfect vertical lines correction, 24mm lens" },
-        { code: "C-02", title: "Aerial Cenital", desc: "90-degree top view, orthographic layout representation, details nítidos" },
-        { code: "C-03", title: "Interior Editorial Shot", desc: "Wide angle lens, natural daylight balance, magazine look" },
-        { code: "C-04", title: "Close-up Detail", desc: "Macro focal depth, blurred background, highlighting material seams" },
-        { code: "C-05", title: "One-Point Perspective", desc: "Symmetrical axial alignment, centered frame composition" },
-        { code: "C-06", title: "Dusk Twilight Long Exposure", desc: "Soft warm ambient glow, blurred clouds, interior light traces" }
-      ],
-      lighting: [
-        { code: "L-01", title: "Golden Hour", desc: "Late afternoon sun, long warm shadows, golden highlights on walls" },
-        { code: "L-02", title: "Overcast Soft Light", desc: "Diffuse shadowless sky glow, natural ambient occlusion, realistic raw look" },
-        { code: "L-03", title: "Dramatic Cinematic", desc: "High contrast keys, side light rays, misty volume shadows" },
-        { code: "L-04", title: "Dusk Twilight Glow", desc: "Cool exterior blue hour light mixed with warm golden interior lamps" },
-        { code: "L-05", title: "Studio High-Key", desc: "Even bright presentation, crisp clean shadows, commercial render look" },
-        { code: "L-06", title: "Sunbeams", desc: "Sharp daylight volumetric rays passing through windows" }
-      ]
-    },
-    sectionTitle: "Explore the Prompt Block Library",
-    sectionSubtitle: "Click on the categories to discover the ready-made prompt blocks included in the packs.",
-    copyBtn: "Copy Block",
-    copied: "Copied!"
-  },
-  es: {
-    eyebrow: "VISTA PREVIA DE BIBLIOTECA",
-    categories: [
-      { id: "spaces", label: "Espacios" },
-      { id: "styles", label: "Estilos" },
-      { id: "materials", label: "Materiales" },
-      { id: "camera", label: "Cámara" },
-      { id: "lighting", label: "Iluminación" }
-    ],
-    items: {
-      spaces: [
-        { code: "S-01", title: "Sala Residencial", desc: "Distribución abierta minimalista, techos de doble altura, puertas vidriadas de piso a techo" },
-        { code: "S-02", title: "Museo Brutalista", desc: "Paneles de hormigón visto, claraboyas que proyectan sombras geométricas marcadas" },
-        { code: "S-03", title: "Dormitorio Moderno", desc: "Revestimiento de madera cálida, iluminación LED indirecta, cama King integrada" },
-        { code: "S-04", title: "Espacio de Oficina", desc: "Diseño biofílico, bafles acústicos de techo, escritorios colaborativos" },
-        { code: "S-05", title: "Tienda Comercial", desc: "Detalles de azulejos de terracota, nichos arqueados de exhibición, piso de terrazo" },
-        { code: "S-06", title: "Minicasa", desc: "Distribución compacta en loft, mobiliario plegable, acabados en contrachapado cálido" }
-      ],
-      styles: [
-        { code: "ST-01", title: "Minimalismo Tadao Ando", desc: "Placas simétricas de hormigón, líneas depuradas, luz natural serena" },
-        { code: "ST-02", title: "Nórdico Cálido", desc: "Roble blanco claro, alfombras de lana neutras, toques de color pastel suave" },
-        { code: "ST-03", title: "Loft Industrial", desc: "Paredes de ladrillo a la vista, marcos de hierro negro, vigas de madera altas" },
-        { code: "ST-04", title: "Moderno de Mitad de Siglo", desc: "Estructuras de madera de teca, formas orgánicas, acentos de herrajes de latón" },
-        { code: "ST-05", title: "Orgánico Mediterráneo", desc: "Paredes de yeso alisado, pisos de microcemento, esquinas redondeadas" },
-        { code: "ST-06", title: "Arquitectura High-Tech", desc: "Cerchas de acero, conductos de climatización expuestos, acabados metálicos" }
-      ],
-      materials: [
-        { code: "M-01", title: "Mármol Travertino", desc: "Travertino romano sin taponar, textura porosa, tonos beige" },
-        { code: "M-02", title: "Hormigón Visto", desc: "Patrón de encofrado, textura gris mate, costuras modulares" },
-        { code: "M-03", title: "Latón Cepillado", desc: "Brillo metálico dorado, cepillado lineal sutil, reflejos cálidos" },
-        { code: "M-04", title: "Vidrio Acanalado", desc: "Textura acanalada vertical, difusión de luz semitranslúcida, perfiles negros" },
-        { code: "M-05", title: "Ladrillo Terracota", desc: "Ladrillos de arcilla artesanales, texturas irregulares, juntas de cemento delgadas" },
-        { code: "M-06", title: "Microcemento Pulido", desc: "Revestimiento continuo, patrón de nubes gris claro, acabado satinado" }
-      ],
-      camera: [
-        { code: "C-01", title: "Nivel de Ojo Humano", desc: "Perspectiva a altura humana, corrección de verticales perfecta, lente de 24mm" },
-        { code: "C-02", title: "Aérea Cenital", desc: "Vista superior a 90 grados, representación ortogonal de la planta, detalles nítidos" },
-        { code: "C-03", title: "Toma Editorial de Interior", desc: "Lente gran angular, balance de luz diurna natural, estética de revista" },
-        { code: "C-04", title: "Detalle en Primer Plano", desc: "Profundidad focal macro, fondo difuminado, resaltando uniones de materiales" },
-        { code: "C-05", title: "Perspectiva de Un Punto", desc: "Alineación axial simétrica, composición de encuadre centrado" },
-        { code: "C-06", title: "Larga Exposición al Atardecer", desc: "Brillo cálido suave del atardecer, nubes difusas, trazas de luz interior" }
-      ],
-      lighting: [
-        { code: "L-01", title: "Hora Dorada", desc: "Sol de última hora de la tarde, sombras largas y cálidas, reflejos dorados en las paredes" },
-        { code: "L-02", title: "Día Nublado Suave", desc: "Luz difusa sin sombras marcadas, oclusión ambiental natural, aspecto fotorrealista crudo" },
-        { code: "L-03", title: "Cinematográfica Dramática", desc: "Luces clave de alto contraste, rayos laterales de luz, sombras volumétricas con niebla" },
-        { code: "L-04", title: "Atardecer Azulado", desc: "Luz exterior fresca de la hora azul combinada con lámparas interiores doradas y cálidas" },
-        { code: "L-05", title: "Iluminación de Estudio", desc: "Presentación brillante y uniforme, sombras limpias y nítidas, aspecto de render comercial" },
-        { code: "L-06", title: "Rayos de Sol Directos", desc: "Rayos volumétricos definidos de luz solar diurna atravesando ventanales" }
-      ]
-    },
-    sectionTitle: "Explorá la Biblioteca de Bloques",
-    sectionSubtitle: "Haz clic en las categorías para descubrir los bloques de prompt pre-diseñados incluidos en los packs.",
-    copyBtn: "Copiar Bloque",
-    copied: "¡Copiado!"
-  },
-  pt: {
-    eyebrow: "PRÉ-VISUALIZAÇÃO DA BIBLIOTECA",
-    categories: [
-      { id: "spaces", label: "Espaços" },
-      { id: "styles", label: "Estilos" },
-      { id: "materials", label: "Materiais" },
-      { id: "camera", label: "Câmera" },
-      { id: "lighting", label: "Iluminação" }
-    ],
-    items: {
-      spaces: [
-        { code: "S-01", title: "Sala Residencial", desc: "Layout aberto minimalista, pé-direito duplo, portas de vidro do piso ao teto" },
-        { code: "S-02", title: "Museu Brutalista", desc: "Painéis de concreto aparente, claraboias projetando sombras geométricas marcadas" },
-        { code: "S-03", title: "Dormitório Moderno", desc: "Painéis de madeira quente, iluminação LED indireta, cama king integrada" },
-        { code: "S-04", title: "Espaço de Escritório", desc: "Design biofílico, bafles acústicos no teto, mesas colaborativas" },
-        { code: "S-05", title: "Loja Comercial", desc: "Detalhes de ladrilho de terracota, nichos de exibição arqueados, piso de granilite" },
-        { code: "S-06", title: "Tiny House", desc: "Layout compacto de loft, móveis dobráveis, acabamentos em compensado quente" }
-      ],
-      styles: [
-        { code: "ST-01", title: "Minimalismo Tadao Ando", desc: "Placas simétricas de concreto, linhas limpas, luz natural serena" },
-        { code: "ST-02", title: "Nórdico Aconchegante", desc: "Carvalho branco claro, tapetes de lã neutros, detalhes em cores pastel suaves" },
-        { code: "ST-03", title: "Loft Industrial", desc: "Paredes de tijolo aparente, esquadrias de ferro preto, vigas altas de madeira" },
-        { code: "ST-04", title: "Moderno de Meados do Século", desc: "Estruturas de madeira teca, formas orgânicas, detalhes em latão" },
-        { code: "ST-05", title: "Orgânico Mediterrâneo", desc: "Paredes de gesso alisado, piso de microcimento, cantos arredondados" },
-        { code: "ST-06", title: "Arquitetura High-Tech", desc: "Treliças de aço, dutos de climatização visíveis, acabamentos metálicos" }
-      ],
-      materials: [
-        { code: "M-01", title: "Mármore Travertino", desc: "Travertino romano sem estuque, textura porosa, tons de bege" },
-        { code: "M-02", title: "Concreto Aparente", desc: "Padrão de fôrma, textura cinza fosca, juntas de construção modulares" },
-        { code: "M-03", title: "Latão Escovado", desc: "Brilho metálico dourado, escovado linear sutil, reflexos quentes" },
-        { code: "M-04", title: "Vidrio Canelado", desc: "Textura canelada vertical, difusão de luz semitranslúcida, perfis pretos" },
-        { code: "M-05", title: "Tijolo de Terracota", desc: "Tijolos de argila artesanais, texturas irregulares, juntas finas de cimento" },
-        { code: "M-06", title: "Microcimento Polido", desc: "Revestimento contínuo, padrão de nuvens cinza claro, acabamento acetinado" }
-      ],
-      camera: [
-        { code: "C-01", title: "Nível do Olho Humano", desc: "Perspectiva na altura humana, correção de verticais perfeita, lente 24mm" },
-        { code: "C-02", title: "Aérea Cenital", desc: "Vista superior de 90 graus, representação ortogonal da planta, detalhes nítidos" },
-        { code: "C-03", title: "Foto Editorial de Interior", desc: "Lente grande angular, balanço de luz diurna natural, visual de revista" },
-        { code: "C-04", title: "Detalhe em Primer Plano", desc: "Profundidade focal macro, fundo desfocado, destacando juntas de materiais" },
-        { code: "C-05", title: "Perspectiva de Um Ponto", desc: "Alinhamento axial simétrico, composição de enquadramento centralizado" },
-        { code: "C-06", title: "Longa Exposição no Crepúsculo", desc: "Brilho quente e suave do pôr do sol, nuvens difusas, traços de luz interna" }
-      ],
-      lighting: [
-        { code: "L-01", title: "Hora de Ouro", desc: "Sol do fim da tarde, sombras longas e quentes, reflexos dourados nas paredes" },
-        { code: "L-02", title: "Dia Nublado Suave", desc: "Luz difusa sem sombras marcadas, oclusão ambientar natural, visual fotorrealista cru" },
-        { code: "L-03", title: "Cinematográfica Dramática", desc: "Luzes principais de alto contraste, raios de luz laterais, sombras volumétricas com névoa" },
-        { code: "L-04", title: "Crepúsculo Azulado", desc: "Luz externa fresca da hora azul misturada com lâmpadas internas douradas e quentes" },
-        { code: "L-05", title: "Iluminação de Estúdio", desc: "Apresentação brilhante e uniforme, sombras limpas e nítidas, visual de render comercial" },
-        { code: "L-06", title: "Raios de Sol Diretos", desc: "Raios volumétricos definidos de luz solar diurna atravessando janelas" }
-      ]
-    },
-    sectionTitle: "Explore a Biblioteca de Blocos",
-    sectionSubtitle: "Clique nas categorias para descobrir os blocos de prompt pré-definidos incluídos nos pacotes.",
-    copyBtn: "Copiar Bloco",
-    copied: "Copiado!"
-  }
-};
+        <div className="heroVisual">
+          <div className="heroImage hoverSwap" tabIndex={0} aria-label={t.result}>
+            <img className="heroResult" src="/assets/veh-after.webp" alt={t.result} style={{width:"100%", height:"100%", objectFit:"cover"}} priority   />
+            <img className="heroSource" src="/assets/veh-before.webp" alt={t.source} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
+            <span className="resultLabel directedLabel">{t.result}</span>
+            <span className="resultLabel sourceLabel">{t.source}</span>
+            <div className="preservationRail">
+              {[t.locked, t.camera, t.prompt].map((item, index) => (
+                <span key={item}><b>0{index + 1}</b><i>✓</i>{item}</span>
+              ))}
+            </div>
+          </div>
+          <div className="heroSystemTag"><b>VPS / LOCK</b><span>ARCHITECTURE PRESERVATION SYSTEM</span></div>
+        </div>
+      </section>
 
-export default function LandingPage(){
-  const [lang,setLang]=useState("es");
-  const [activeCat, setActiveCat] = useState("spaces");
-  const [copiedIdx, setCopiedIdx] = useState(null);
-  const h=HOME[lang]||HOME.es;
-  const landing=LANDING_COPY[lang]||LANDING_COPY.es;
-  const extras=LANDING_EXTRAS[lang]||LANDING_EXTRAS.es;
-  const newCopy=NEW_COPY[lang]||NEW_COPY.es;
-  const packs=PACKS[lang]||PACKS.es;
-  const [openFaq,setOpenFaq]=useState(null);
-  const [currency,setCurrency]=useState("ars");
-  const [offerTime,setOfferTime]=useState(COUNTDOWN_START);
-  const [viewportWidth,setViewportWidth]=useState(typeof window!=="undefined"?window.innerWidth:1440);
+      <section className="proofBand" aria-label="Resumen del producto">
+        <div className="sectionShell">
+          {t.proofLabels.map(([number, label]) => (
+            <div key={label}><strong>{number}</strong><span>{label}</span></div>
+          ))}
+        </div>
+      </section>
 
-  useEffect(()=>{
-    const onResize=()=>setViewportWidth(window.innerWidth);
-    window.addEventListener("resize",onResize);
-    return ()=>window.removeEventListener("resize",onResize);
-  },[]);
+      <section className="problem sectionShell">
+        <div className="problemIntro">
+          <span className="kicker">{t.problemKicker}</span>
+          <h2>{t.problemTitle}</h2>
+          <p>{t.problemText}</p>
+        </div>
+        <div className="methodCompare">
+          <article className="generic">
+            <span>{t.generic}</span>
+            {t.genericItems.map((item) => <p key={item}><i>×</i>{item}</p>)}
+          </article>
+          <article className="controlled">
+            <span>{t.vps}</span>
+            {t.vpsItems.map((item) => <p key={item}><i>✓</i>{item}</p>)}
+          </article>
+        </div>
+      </section>
 
-  useEffect(()=>{
-    const id=setInterval(()=>{
-      setOfferTime(prev=>prev<=COUNTDOWN_RESET?COUNTDOWN_START:prev-1);
-    },1000);
-    return ()=>clearInterval(id);
-  },[]);
+      <section id="results" className="results">
+        <div className="sectionShell">
+          <div className="sectionIntro">
+            <span className="kicker">{t.resultsKicker}</span>
+            <h2>{t.resultsTitle}</h2>
+            <p>{t.resultsText}</p>
+          </div>
+          <div className="compareGrid">
+            <Compare before="/assets/case-1.webp" after="/assets/case-2.webp" label={t.exterior} beforeLabel={t.before} afterLabel={t.after} />
+            <Compare before="/assets/case-3.webp" after="/assets/case-4.webp" label={t.interior} beforeLabel={t.before} afterLabel={t.after} />
+            <Compare before="/assets/human-vehicle-before.webp" after="/assets/human-vehicle-after.webp" label={t.detailExterior} beforeLabel={t.before} afterLabel={t.after} />
+            <Compare before="/assets/camera-before.webp" after="/assets/camera-after.webp" label={t.detailInterior} beforeLabel={t.before} afterLabel={t.after} />
+          </div>
+        </div>
+      </section>
 
-  const isMobile=viewportWidth<960;
-  const isTablet=viewportWidth<1280;
-  const getDisplayedPrice = useCallback((pack)=>currency==="ars"?pack.currentArs:pack.currentUsd,[currency]);
-  const getDisplayedOldPrice = useCallback((pack)=>currency==="ars"?(pack.oldArs||pack.oldUsd):pack.oldUsd,[currency]);
-  const goToPacks = useCallback(()=>document.getElementById("vps-pricing")?.scrollIntoView({behavior:"smooth"}),[]);
-  const goToAccess = useCallback(()=> { window.location.pathname = "/app"; },[]);
-  const [payModal, setPayModal] = useState(null);
-  const openPayModal = useCallback((pack) => setPayModal(pack), []);
+      <section id="system" className="system sectionShell">
+        <div className="systemHeading">
+          <span className="kicker">{t.systemKicker}</span>
+          <h2>{t.systemTitle}</h2>
+          <p>{t.systemText}</p>
+        </div>
+        <div className="layerGrid">
+          {t.layers.map(([number, title, description]) => (
+            <article key={number}>
+              <span>{number}</span>
+              <div className="layerIcon" aria-hidden="true">{number === "01" ? "◎" : number === "02" ? "▣" : number === "03" ? "◐" : "↗"}</div>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-  return(
-    <>
-    {payModal && <PaymentModal pack={payModal} lang={lang} onClose={() => setPayModal(null)} />}
-    <div style={S.page}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
-        html,body,#root{margin:0;min-height:100%;background:#0d0d0f;}
-        *{box-sizing:border-box;}
-        :focus-visible{outline:2px solid #ff9800;outline-offset:2px;border-radius:4px;}
-        button:focus-visible,input:focus-visible{outline:2px solid #ff9800;outline-offset:2px;}
-        ::selection{background:rgba(255,152,0,.32);color:#111;}
-        .vps-grid{background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:28px 28px;background-position:-1px -1px;}
-        .vps-plate{position:relative;}
-        .vps-plate::before,.vps-plate::after{content:"";position:absolute;width:16px;height:16px;pointer-events:none;opacity:.55;z-index:2;}
-        .vps-plate::before{top:10px;left:10px;border-top:1.5px solid #ff9800;border-left:1.5px solid #ff9800;}
-        .vps-plate::after{bottom:10px;right:10px;border-bottom:1.5px solid #ff9800;border-right:1.5px solid #ff9800;}
-        .vps-btn,.vps-card-hover{transition:transform .24s cubic-bezier(.2,.8,.2,1), box-shadow .24s ease, border-color .24s ease, background .24s ease, color .24s ease, filter .24s ease;}
-        .vps-btn:hover,.vps-card-hover:hover{transform:translateY(-2px);}
-        .vps-btn:active,.vps-card-hover:active{transform:translateY(0);}
-        .vps-result-panel{animation:vpsFadeUp .6s cubic-bezier(.2,.8,.2,1) both;}
-        .vps-landing-card{animation:vpsFadeUp .7s cubic-bezier(.2,.8,.2,1) both;}
-        .vps-pricing-card{position:relative;}
-        .vps-pricing-card-inner-shine{position:absolute;inset:0;border-radius:inherit;overflow:hidden;pointer-events:none;}
-        .vps-pricing-card-inner-shine:before{content:"";position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(115deg,transparent 0%,rgba(255,152,0,.22) 42%,rgba(255,255,255,.10) 50%,transparent 60%);transform:translateX(-120%);transition:transform .7s cubic-bezier(.2,.8,.2,1);z-index:0;}
-        .vps-pricing-card:hover .vps-pricing-card-inner-shine:before{transform:translateX(120%);}
-        .vps-pricing-card:hover{filter:brightness(1.04);}
-        .vps-premium-card{animation:vpsPremiumGlow 3.8s ease-in-out infinite;}
-        .vps-access-line{animation:vpsSweep 2.8s ease-in-out infinite;}
-        .vps-compare-card:hover .vps-compare-overlay{opacity:1;}
-        .vps-compare-card:hover .vps-compare-line{left:100%;}
-        .vps-compare-card:hover .vps-compare-hint{opacity:1; transform:translate(-50%,0);}
-        @keyframes vpsFadeUp{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
-        @keyframes vpsPremiumGlow{0%,100%{box-shadow:0 22px 54px rgba(255,152,0,.16),0 16px 42px rgba(0,0,0,.34)}50%{box-shadow:0 28px 70px rgba(255,152,0,.26),0 18px 46px rgba(0,0,0,.42)}}
-        @keyframes vpsSweep{0%{transform:translateX(-120%);opacity:.2}50%{opacity:1}100%{transform:translateX(120%);opacity:.2}}
-        @media (prefers-reduced-motion: reduce){.vps-result-panel,.vps-landing-card,.vps-premium-card,.vps-access-line{animation:none!important}.vps-btn,.vps-card-hover{transition:none!important}}
-      `}</style>
-      <div className="vps-plate vps-grid" style={S.header}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",flexWrap:"wrap",gap:"10px"}}>
+      <section className="demo">
+        <div className="sectionShell demoGrid">
+          <div className="demoCopy">
+            <span className="kicker">{t.demoKicker}</span>
+            <h2>{t.demoTitle}</h2>
+            <p>{t.demoText}</p>
+            <small>{t.demoDisclaimer}</small>
+          </div>
+          <a className="builderPreview" href={promptBuilderUrl} target="_blank" rel="noreferrer" aria-label={t.login}>
+            <img
+              src="/assets/prompt-builder.webp"
+              alt="Vista de la nueva versión de VPS Prompt Builder"
+              width={1907}
+              height={880}
+              unoptimized
+              sizes="(max-width: 900px) 100vw, 62vw"
+            />
+          </a>
+        </div>
+      </section>
+
+      <section id="includes" className="includes sectionShell">
+        <div className="sectionIntro">
+          <span className="kicker">{t.includesKicker}</span>
+          <h2>{t.includesTitle}</h2>
+        </div>
+        <div className="deliverableGrid">
+          {t.deliverables.map(([title, description, type], index) => (
+            <article key={title} className={title === "PROMPT BUILDER APP" ? "promptBuilderDeliverable" : ""}>
+              <span>0{index + 1}</span>
+              <div className="fileIcon">{type}</div>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+        <div className="categories">
+          <span>{t.categoriesLabel}</span>
+          <div>{t.categories.map((category) => <b key={category}>{category}</b>)}</div>
+        </div>
+      </section>
+
+      <section className="audience">
+        <div className="sectionShell">
+          <div className="sectionIntro">
+            <span className="kicker">{t.audienceKicker}</span>
+            <h2>{t.audienceTitle}</h2>
+          </div>
+          <div className="audienceGrid">
+            {t.audiences.map(([title, description], index) => (
+              <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{description}</p></article>
+            ))}
+          </div>
+          <p className="toolsNote"><b>COMPATIBILITY NOTE</b>{t.tools}</p>
+        </div>
+      </section>
+
+      <section id="packs" className="packs sectionShell">
+        <div className="sectionIntro row">
           <div>
-            <div style={S.eyebrow}>{landing.eyebrow}</div>
-            <h1 style={S.brandTitle}><span style={S.brandWhite}>VISUALPROMPT</span> <span style={S.brandOrange}>STUDIO</span></h1>
-            <div style={S.sub}>{landing.benefits}</div>
+            <span className="kicker">{t.packsKicker}</span>
+            <h2>{t.packsTitle}</h2>
           </div>
-          <div style={S.langSwitch}>
-            {["en","es","pt"].map(l=>(
-              <button key={l} style={{...S.langBtn,...(lang===l?S.langBtnOn:{})}} onClick={()=>setLang(l)}>{l.toUpperCase()}</button>
-            ))}
+          <div className="pricingTools">
+            <span>{t.save}</span>
+            <div className="currencySwitch" aria-label="Moneda">
+              {(["USD", "ARS"]).map((item) => (
+                <button key={item} className={currency === item ? "active" : ""} aria-pressed={currency === item} onClick={() => setCurrency(item)}>{item}</button>
+              ))}
+            </div>
+            <small>{t.currency[currency]}</small>
           </div>
         </div>
-      </div>
 
-      <div style={S.salesShell}>
-          <div style={{...S.salesHero,gridTemplateColumns:"1fr"}}>
-            <div style={{...S.salesHeroCopy, backgroundImage:`radial-gradient(circle at 14% 10%,rgba(255,152,0,.20),transparent 30%), linear-gradient(135deg,rgba(9,10,12,.91) 0%,rgba(10,12,15,.88) 52%,rgba(10,12,15,.92) 100%), url(${DEMO_IMAGES.houseRender})`, backgroundSize:"cover", backgroundPosition:"center"}}>
-              <div style={S.heroGlow}></div>
-              <div style={S.salesHeroTop}>
-                <div style={S.salesPill}><Icon name="spark" size={14} color="#ff9800"/>{landing.eyebrow}</div>
-                <div style={{display: "flex", gap: "10px"}}>
-                  <button className="vps-btn" style={{...S.darkBtnGhost}} onClick={goToAccess}>{h.primary}</button>
-                  <button className="vps-btn" style={{...S.darkBtnGhost,...S.viewPacksBtn}} onClick={goToPacks}>{landing.viewPacks}</button>
-                </div>
-              </div>
-              <h2 style={S.salesTitle}>{landing.heroTitleA} <span style={S.salesTitleAccent}>{landing.heroTitleB}</span></h2>
-              <div style={S.salesHeroBody}>{landing.heroBody}</div>
-              <p style={S.salesText}>{landing.subtitle}</p>
-              <div style={S.salesActions}>
-                <button className="vps-btn" style={{...S.btnPri,...S.heroMainBtn}} onClick={goToPacks}>{landing.heroPrimary}</button>
-              </div>
-              <div style={S.heroStatsGrid}>
-                {extras.stats.map((s)=>(
-                  <div key={s[0]+s[1]} style={S.heroStatItem}>
-                    <div style={S.heroStatNumber}>{s[0]}</div>
-                    <div style={S.heroStatLabel}>{s[1]}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="packGrid">
+          <PackCard onBuyPack={handleBuyPack} id="starter" currency={currency} t={t} />
+          <PackCard onBuyPack={handleBuyPack} id="professional" currency={currency} t={t} />
+          <PackCard onBuyPack={handleBuyPack} id="studio" currency={currency} t={t} />
+        </div>
 
-          <div className="vps-landing-card" style={S.audienceBox}>
-            <div style={S.audienceTitle}>{extras.audienceTitle}</div>
-            <div style={S.audienceChips}>
-              {extras.audience.map((item)=><span key={item} style={S.audienceChip}>{item}</span>)}
-            </div>
-          </div>
+        <div className="confidenceBar">
+          {t.confidence.map(([label, description]) => <div key={label}><span>{label}</span><p>{description}</p></div>)}
+        </div>
 
-          <div style={S.sectionIntro}>
-            <div style={S.sectionEyebrow}>{extras.compareEyebrow}</div>
-          </div>
-          <div style={{...S.compareGrid,gridTemplateColumns:isMobile?"1fr":"repeat(2,minmax(0,1fr))"}}>
-            <ImageCompareCard beforeSrc={DEMO_IMAGES.houseSketch} afterSrc={DEMO_IMAGES.houseRender} title={landing.compareHouseTitle} subtitle={landing.compareHouseSubtitle} leftLabel="SKETCH" rightLabel="RENDER"/>
-            <ImageCompareCard beforeSrc={DEMO_IMAGES.bedSketch} afterSrc={DEMO_IMAGES.bedRender} title={landing.compareRoomTitle} subtitle={landing.compareRoomSubtitle} leftLabel="SKETCH" rightLabel="RENDER"/>
-            <ImageCompareCard beforeSrc="/assets/human-vehicle-before.webp" afterSrc="/assets/human-vehicle-after.webp" title={newCopy.compareHumanTitle} subtitle={newCopy.compareHumanSubtitle} leftLabel={newCopy.compareLabel1} rightLabel={newCopy.compareLabel2}/>
-            <ImageCompareCard beforeSrc="/assets/camera-before.webp" afterSrc="/assets/camera-after.webp" title={newCopy.compareCameraTitle} subtitle={newCopy.compareCameraSubtitle} leftLabel={newCopy.compareLabel1} rightLabel={newCopy.compareLabel2}/>
-          </div>
-
-          <div className="vps-landing-card" style={S.processSection}>
-            <div style={S.sectionEyebrow}>{extras.processEyebrow}</div>
-            <div style={S.sectionTitle}>{extras.processTitle}</div>
-            <div style={{...S.processGrid,gridTemplateColumns:isMobile?"1fr":"repeat(3,minmax(0,1fr))"}}>
-              {extras.steps.map((step)=>(
-                <div key={step[0]} style={S.processCard}>
-                  <div style={S.processIconWrap}><Icon name={step[3]} size={20} color="#ff9800"/></div>
-                  <div style={S.processNumber}>{step[0]}</div>
-                  <div style={S.processTitle}>{step[1]}</div>
-                  <div style={S.processText}>{step[2]}</div>
-                </div>
+        <div className="tableWrap">
+          <h3>{t.matrixTitle}</h3>
+          <table>
+            <thead><tr><th> </th><th>Starter</th><th className="recommended">Professional</th><th>Studio Pro</th></tr></thead>
+            <tbody>
+              {t.matrixRows.map((row, index) => (
+                <tr key={row} className={highlightedMatrixRows.has(index) ? "importantRow" : ""}>
+                  <th>{row}</th>
+                  {(index === 10 ? t.rescueLevels : matrix[index]).map((value, cell) => <td key={cell} className={cell === 1 ? "recommended" : ""}>{value}</td>)}
+                </tr>
               ))}
-            </div>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="author">
+        <div className="sectionShell authorGrid">
+          <div className="authorPortrait" aria-hidden="true">
+            <span>VPS</span>
+            <b>ARCHITECT<br/>BUILT</b>
+            <i>CONTROL / METHOD / VISUAL DIRECTION</i>
           </div>
-
-
-
-          <div className="vps-landing-card" style={S.benefitsSection}>
-            <div style={S.sectionEyebrow}>BENEFITS</div>
-            <div style={S.sectionTitle}>{extras.benefitTitle}</div>
-            <div style={{...S.benefitsGrid,gridTemplateColumns:isMobile?"1fr":"repeat(2,minmax(0,1fr))"}}>
-              {extras.benefits.map((b)=>(
-                <div key={b[1]} style={S.benefitCard}>
-                  <div style={S.benefitIcon}><Icon name={b[0]} size={20} color="#ff9800"/></div>
-                  <div style={S.benefitTitle}>{b[1]}</div>
-                  <div style={S.benefitText}>{b[2]}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div id="vps-pricing" className="vps-landing-card" style={S.pricingSection}>
-            <div style={S.pricingHead}>
-              <div>
-                <div style={S.salesPill}><Icon name="pricing" size={14} color="#ff9800"/>{landing.pricingEyebrow}</div>
-                <div style={S.pricingSectionTitle}>{landing.pricingTitle}</div>
-              </div>
-              <div style={S.currencyToggle}>
-                <button className="vps-btn" style={{...S.currencyBtn,...(currency==="usd"?S.currencyBtnOn:{})}} onClick={()=>setCurrency("usd")}>{landing.currencyUsd}</button>
-                <button className="vps-btn" style={{...S.currencyBtn,...(currency==="ars"?S.currencyBtnOn:{})}} onClick={()=>setCurrency("ars")}>{landing.currencyArs}</button>
-              </div>
-            </div>
-            {/* ── BANNER PRECIO DE LANZAMIENTO ── */}
-            <div style={{
-              display:"flex", alignItems:"center", gap:"12px", flexWrap:"wrap",
-              background:"linear-gradient(90deg,rgba(255,60,60,.18) 0%,rgba(255,120,0,.18) 50%,rgba(255,60,60,.18) 100%)",
-              border:"1.5px solid rgba(255,90,0,.45)",
-              borderRadius:"14px", padding:"14px 20px", marginBottom:"18px",
-              boxShadow:"0 8px 32px rgba(255,80,0,.16)",
-              animation:"vpsPremiumGlow 3s ease-in-out infinite"
-            }}>
-              <span style={{fontSize:"20px"}}>🔥</span>
-              <div style={{flex:1}}>
-                <div style={{fontFamily:MONO_FONT,fontSize:"9px",letterSpacing:"0.18em",fontWeight:900,color:"#ff7043",textTransform:"uppercase",marginBottom:"3px"}}>
-                  {lang==="en"?"LAUNCH PRICING — LIMITED TIME":lang==="pt"?"PREÇOS DE LANÇAMENTO — TEMPO LIMITADO":"PRECIO DE LANZAMIENTO — TIEMPO LIMITADO"}
-                </div>
-                <div style={{fontFamily:DISPLAY_FONT,fontSize:"15px",fontWeight:700,color:"#fff",lineHeight:1.2}}>
-                  {lang==="en"?"Introductory offer. Prices will increase after the initial launch period.":lang==="pt"?"Oferta introdutória. Os preços aumentarão após o período inicial de lançamento.":"Oferta introductoria. Los precios subirán al finalizar el período de lanzamiento."}
-                </div>
-              </div>
-              <div style={{textAlign:"right",flexShrink:0}}>
-                <div style={{fontFamily:MONO_FONT,fontSize:"9px",color:"#ff9b80",fontWeight:800,letterSpacing:"0.1em",marginBottom:"2px"}}>{lang==="en"?"SAVE UP TO":lang==="pt"?"ECONOMIZE ATÉ":"AHORRÁ HASTA"}</div>
-                <div style={{fontFamily:DISPLAY_FONT,fontSize:"26px",fontWeight:900,color:"#ff7043",lineHeight:1}}>USD 20</div>
-              </div>
-            </div>
-            <div style={{...S.pricingGrid,gridTemplateColumns:isMobile?"1fr":isTablet?"repeat(2,minmax(0,1fr))":"repeat(3,minmax(0,1fr))"}}>
-              {packs.map((pack)=>(
-                <div key={pack.id} className={`vps-card-hover vps-pricing-card ${pack.featured?"vps-premium-card":""}`} style={{...S.pricingCardDark,...(pack.featured?S.pricingFeaturedDark:{})}}>
-                  <div className="vps-pricing-card-inner-shine"></div>
-                  <div style={S.pricingTopGlow}></div>
-                  {pack.featured&&<div style={S.pricingBadge}>{pack.eyebrow}</div>}
-                  <div style={S.pricingEyebrowText}>{pack.eyebrow}</div>
-                  <div style={S.pricingNameDark}>{pack.name}</div>
-                  <div style={S.pricingPriceWrap}>
-                    <div style={S.pricingCurrent}>{getDisplayedPrice(pack)}</div>
-                    <div style={S.pricingOneTime}>/ único</div>
-                  </div>
-                  <div style={S.pricingOldLine}>{extras.oldPrefix} {getDisplayedOldPrice(pack)}</div>
-                  <ul style={S.pricingList}>
-                    {pack.features.map((item)=>(
-                      <li key={item} style={S.pricingListItem}><span style={S.pricingCheck}>✓</span><span>{item}</span></li>
-                    ))}
-                  </ul>
-                  <button className="vps-btn" style={pack.featured?{...S.btnPri,...S.pricingPremiumCta}:S.pricingButtonGhost} onClick={() => openPayModal(pack)}>
-                    {pack.cta==="access"?landing.accessButton:landing.packButton}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ── CONFIDENCE BAR ── */}
-          <div style={{display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(4,1fr)',gap:'14px'}}>
-            {newCopy.confidence.map(([label,text])=>(
-              <div key={label} style={S.confItem}>
-                <div style={S.confLabel}>{label}</div>
-                <div style={S.confText}>{text}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* ── COMPARISON TABLE ── */}
-          <div className="vps-landing-card" style={S.tableSection}>
-            <div style={S.sectionEyebrow}>{newCopy.tableEyebrow}</div>
-            <div style={S.sectionTitle}>{newCopy.tableTitle}</div>
-            <div style={{overflowX:'auto',marginTop:'18px'}}>
-              <table style={S.compareTable}>
-                <thead>
-                  <tr>
-                    {newCopy.tableHeaders.map((h,i)=>(
-                      <th key={h} style={{...S.tableHead,...(i===0?S.tableHeadFirst:{}),...(i===2?{color:'#ff9800'}:{})}}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {newCopy.tableRows.map((row,rIdx)=>(
-                    <tr key={rIdx} style={rIdx===newCopy.tableRows.length-1?S.tableRowLast:{}}>
-                      <td style={S.tableCellFeature}>{row[0]}</td>
-                      {[1,2,3].map(cIdx=>(
-                        <td key={cIdx} style={{...S.tableCell,...(cIdx===2?S.tableCellFeatured:{}),...(row[cIdx]==='✓'?S.tableCellCheck:row[cIdx]==='—'?S.tableCellDash:S.tableCellNum)}}>{row[cIdx]}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* ── FAQ ── */}
-          <div className="vps-landing-card" style={S.faqSection}>
-            <div style={S.sectionEyebrow}>{newCopy.faqEyebrow}</div>
-            <div style={S.sectionTitle}>{newCopy.faqTitle}</div>
-            <div style={{marginTop:'22px',display:'flex',flexDirection:'column',gap:'10px'}}>
-              {newCopy.faqs.map(([question,answer],idx)=>(
-                <div key={idx} style={{...S.faqItem,...(openFaq===idx?S.faqItemOpen:{})}}>
-                  <button style={S.faqQ} onClick={()=>setOpenFaq(openFaq===idx?null:idx)}>
-                    <span style={S.faqNum}>{String(idx+1).padStart(2,'0')}</span>
-                    <span style={S.faqQText}>{question}</span>
-                    <span style={{...S.faqIcon,...(openFaq===idx?S.faqIconOpen:{})}}>{openFaq===idx?'−':'+'}</span>
-                  </button>
-                  {openFaq===idx && <div style={S.faqA}>{answer}</div>}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="vps-landing-card" style={S.footerCtaBox}>
-            <div style={S.footerCtaKicker}>{extras.closeKicker}</div>
-            <div style={S.footerCtaTitle}><span>{extras.closeTitleA} </span><span style={S.salesTitleAccent}>{extras.closeTitleB}</span></div>
-            <div style={S.footerCtaText}>{extras.closeSub}</div>
-            <div style={S.footerPromiseRow}>
-              {extras.closeBullets.map((item)=><span key={item} style={S.footerPromise}><Icon name="check" size={14} color="#ff9800"/>{item}</span>)}
-            </div>
-            <button className="vps-btn" style={{...S.btnPri,...S.heroMainBtn,marginTop:"22px"}} onClick={goToPacks}>{landing.heroPrimary}</button>
+          <div>
+            <span className="kicker">{t.authorKicker}</span>
+            <h2>{t.authorTitle}</h2>
+            <p>{t.authorText}</p>
+            <div className="signature">VISUAL PROMPT STUDIO <span>{t.authorRole}</span></div>
           </div>
         </div>
-    </div>
-  </>
+      </section>
+
+      <section id="faq" className="faq sectionShell">
+        <div className="sectionIntro">
+          <span className="kicker">{t.faqKicker}</span>
+          <h2>{t.faqTitle}</h2>
+        </div>
+        <div className="faqList">
+          {t.faqs.map(([question, answer], index) => (
+            <details key={question} open={index === 0}>
+              <summary><span>{String(index + 1).padStart(2, "0")}</span>{question}<i>+</i></summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="closing">
+        <div className="sectionShell">
+          <span className="kicker">{t.closingKicker}</span>
+          <h2>{t.closingTitle}</h2>
+          <p>{t.closingText}</p>
+          <a className="button primary" href="#packs" onClick={() => track("view_packs", { source: "closing" })}>
+            {t.closingCta} <span>↑</span>
+          </a>
+        </div>
+      </section>
+
+      <footer>
+        <div className="footerMain">
+          <div><Logo/><p>{t.footer}</p></div>
+          <div className="footerMeta"><p>{t.footerPrivacy}</p><p>{t.footerTerms}</p></div>
+        </div>
+        <div className="footerBottom"><span>© 2026 VISUAL PROMPT STUDIO</span><span>BUILT FOR ARCHITECTURAL AI WORKFLOWS</span></div>
+      </footer>
+
+      <a className="mobileCta" href="#packs" onClick={() => track("view_packs", { source: "mobile_sticky" })}>
+        {t.mobileCta} <span>↓</span>
+      </a>
+    
+      {activePack && <PaymentModal pack={activePack} lang={lang} onClose={() => setActivePack(null)} />}
+    </main>
   );
 }
-
-const S={
-  page:{fontFamily:BODY_FONT,background:"#0a0b10",color:"#f3f3f3",padding:"28px 22px 56px",maxWidth:"1440px",margin:"0 auto",minHeight:"100vh",boxSizing:"border-box"},
-  header:{background:"linear-gradient(135deg,#13141a 0%,#0f1014 64%,#171923 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"13px",padding:"24px 26px 22px",marginBottom:"18px",boxShadow:"0 22px 70px rgba(0,0,0,0.34)",position:"relative",overflow:"hidden"},
-  eyebrow:{fontFamily:MONO_FONT,fontSize:"9.5px",letterSpacing:"0.18em",color:"#ff9800",marginBottom:"7px",textTransform:"uppercase"},
-  sub:{fontSize:"12.5px",color:"#d8d8d8",letterSpacing:"0.18em",fontWeight:700,textTransform:"uppercase"},
-  offerBar:{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"14px",background:"linear-gradient(90deg,rgba(255,152,0,.32) 0%, rgba(255,152,0,.14) 100%)",border:"1px solid rgba(255,152,0,.42)",borderRadius:"999px",padding:"14px 20px",marginBottom:"18px",fontSize:"14px",fontWeight:900,letterSpacing:"0.14em",textTransform:"uppercase",color:"#fff1dc",boxShadow:"0 14px 32px rgba(255,152,0,.16)"},
-  offerTime:{fontFamily:MONO_FONT,fontSize:"24px",fontWeight:900,color:"#ffb24b",letterSpacing:"0.08em",textShadow:"0 0 16px rgba(255,152,0,.25)"},
-  brandTitle:{fontFamily:DISPLAY_FONT,fontWeight:700,fontSize:"clamp(28px,4vw,42px)",lineHeight:1,margin:"0 0 8px",textTransform:"uppercase",letterSpacing:"0.06em",color:"#ffffff"},
-  brandWhite:{color:"#ffffff"},
-  brandOrange:{color:"#ff9800"},
-  langSwitch:{display:"flex",gap:"6px",background:"rgba(255,255,255,0.06)",padding:"5px",borderRadius:"999px",border:"1px solid rgba(255,255,255,0.12)"},
-  langBtn:{background:"transparent",border:"1px solid transparent",padding:"5px 11px",fontSize:"11px",fontWeight:700,cursor:"pointer",borderRadius:"999px",fontFamily:MONO_FONT,color:"#ffffff"},
-  langBtnOn:{background:"#ff9800",borderColor:"#ff9800",color:"#ffffff"},
-  tabBar:{display:"grid",gap:"6px",background:"#232323",border:"1px solid #474747",borderRadius:"16px",padding:"6px",marginBottom:"18px",boxShadow:"0 12px 34px rgba(0,0,0,0.18)"},
-  tab:{background:"transparent",border:"1px solid transparent",padding:"10px 16px",fontSize:"12px",fontWeight:700,color:"#d0d0d0",cursor:"pointer",fontFamily:"inherit",borderRadius:"12px",letterSpacing:"0.02em",display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"9px"},
-  tabOn:{color:"#111111",background:"#ffffff",border:"1px solid #ffffff",boxShadow:"0 10px 20px rgba(0,0,0,0.24)"},
-  tabIcon:{display:"inline-flex",alignItems:"center",justifyContent:"center"},
-  flash:{background:"#ff9800",color:"#ffffff",fontSize:"11.5px",padding:"8px 13px",marginBottom:"12px",borderRadius:"999px",display:"inline-block",boxShadow:"0 8px 20px rgba(236,136,0,0.25)",fontWeight:700},
-  row:{display:"flex",gap:"8px",alignItems:"center",flexWrap:"wrap"},
-  overviewGrid:{display:"grid",gridTemplateColumns:"repeat(4,minmax(0,1fr))",gap:"14px",marginBottom:"18px"},
-  overviewCard:{background:"linear-gradient(180deg,#1b1c1f 0%,#121315 100%)",border:"1px solid #2b2d31",borderRadius:"18px",padding:"16px 16px 15px",boxShadow:"0 16px 38px rgba(0,0,0,0.30)",position:"relative",overflow:"hidden"},
-  overviewHead:{display:"flex",alignItems:"center",gap:"9px",marginBottom:"8px"},
-  overviewIcon:{display:"inline-flex",alignItems:"center",justifyContent:"center",width:"30px",height:"30px",borderRadius:"10px",background:"rgba(255,152,0,0.10)",border:"1px solid rgba(255,152,0,0.18)"},
-  overviewLabel:{fontFamily:MONO_FONT,fontSize:"9px",letterSpacing:"0.16em",color:"#8f8f95",fontWeight:700},
-  overviewValue:{fontSize:"16px",fontWeight:800,color:"#ffffff",lineHeight:1.25,marginBottom:"6px"},
-  overviewMeta:{fontSize:"11px",color:"#b8b8bc",lineHeight:1.35},
-  dashboardGrid:{display:"grid",gridTemplateColumns:"minmax(0,1.58fr) minmax(380px,0.86fr)",gap:"20px",alignItems:"start"},
-  mainCol:{display:"flex",flexDirection:"column",gap:"0px"},
-  sideCol:{display:"block",alignSelf:"start"},
-  resultStickyWrap:{position:"sticky",top:"18px"},
-  toolbarNote:{fontSize:"12px",color:"#7a7a7a",marginTop:"2px",letterSpacing:"0.01em"},
-  btnPri:{background:"linear-gradient(180deg,#ffad33 0%,#ff9800 100%)",color:"#ffffff",border:"1px solid #ff9800",padding:"10px 17px",fontSize:"12.5px",fontWeight:700,cursor:"pointer",borderRadius:"12px",fontFamily:"inherit",boxShadow:"0 10px 24px rgba(236,136,0,0.22)"},
-  btnGh:{background:"#ffffff",color:"#2c2c2c",border:"1px solid #d9d9d9",padding:"10px 17px",fontSize:"12.5px",fontWeight:600,cursor:"pointer",borderRadius:"12px",fontFamily:"inherit"},
-  btnDg:{background:"#fff6eb",color:"#ec8800",border:"1px solid #ffa424",padding:"6px 10px",fontSize:"11px",fontWeight:700,cursor:"pointer",borderRadius:"8px",fontFamily:"inherit"},
-  box:{background:"#ffffff",color:"#111111",border:"1px solid #dfdfdf",borderRadius:"18px",padding:"18px",marginTop:"16px",boxShadow:"0 14px 38px rgba(0,0,0,0.16)",overflow:"hidden"},
-  recipeSection:{background:"linear-gradient(180deg,#45454b 0%,#34343a 100%)",border:"1px solid #606068",borderRadius:"18px",padding:"18px",marginTop:"16px",boxShadow:"0 18px 40px rgba(0,0,0,0.28)",overflow:"hidden"},
-  resultBox:{background:"linear-gradient(180deg,#17181b 0%,#101114 100%)",border:"2px solid #ff9800",borderRadius:"13px",padding:"22px",marginTop:"0px",boxShadow:"0 28px 64px rgba(255,152,0,0.18), 0 22px 52px rgba(0,0,0,0.40)",overflow:"hidden"},
-  boxLbl:{fontFamily:MONO_FONT,fontSize:"10px",letterSpacing:"0.12em",color:"#111111",fontWeight:800,marginBottom:"12px",display:"flex",alignItems:"center",gap:"7px",textTransform:"uppercase"},
-  acGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(158px,1fr))",gap:"8px"},
-  acBtn:{background:"#fbfbfb",border:"1px solid #dedede",borderRadius:"12px",padding:"10px 11px",cursor:"pointer",textAlign:"left",fontFamily:"inherit",transition:"all .15s ease"},
-  acBtnOn:{background:"#2c2c2c",borderColor:"#ff9800",boxShadow:"inset 0 0 0 1px #ff9800, 0 10px 24px rgba(0,0,0,0.16)"},
-  acCode:{display:"block",fontFamily:MONO_FONT,fontSize:"8.5px",color:"#ec8800",marginBottom:"4px",fontWeight:700,letterSpacing:"0.08em"},
-  acLbl:{display:"block",fontSize:"11.5px",fontWeight:700,color:"#2c2c2c",lineHeight:1.25},
-  enBox:{fontFamily:MONO_FONT,fontSize:"10.3px",background:"#f5f5f5",padding:"9px 11px",borderRadius:"10px",marginTop:"11px",lineHeight:1.55,color:"#2c2c2c",border:"1px solid #e2e2e2"},
-  prGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:"8px"},
-  prBtn:{background:"#fbfbfb",border:"1px solid #dedede",borderRadius:"12px",padding:"12px 10px",cursor:"pointer",fontFamily:"inherit",textAlign:"center"},
-  prBtnOn:{background:"#474747",borderColor:"#ff9800",boxShadow:"inset 0 0 0 1px #ff9800"},
-  prCode:{fontFamily:MONO_FONT,fontSize:"8.5px",color:"#474747",marginBottom:"4px",fontWeight:700},
-  prLbl:{fontSize:"11.5px",fontWeight:700,color:"#2c2c2c",lineHeight:1.25},
-  catGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:"14px",marginTop:"16px"},
-  catCard:{background:"#ffffff",color:"#111111",border:"1px solid #dedede",borderRadius:"16px",padding:"14px",boxShadow:"0 8px 26px rgba(0,0,0,0.06)"},
-  catHead:{display:"flex",alignItems:"center",gap:"8px",marginBottom:"10px",paddingBottom:"8px",borderBottom:"1px solid #efefef",color:"#111111"},
-  catCode:{fontFamily:MONO_FONT,fontWeight:800,fontSize:"13px",letterSpacing:"0.08em"},
-  catName:{fontFamily:BODY_FONT,fontWeight:900,fontSize:"12.5px",flex:1,letterSpacing:"0.04em",color:"#111111",textTransform:"uppercase"},
-  dice:{background:"#f5f5f5",border:"1px solid #d9d9d9",color:"#111111",width:"28px",height:"28px",borderRadius:"9px",cursor:"pointer",fontSize:"12px"},
-  dropBtn:{width:"100%",display:"flex",alignItems:"center",padding:"9px 10px",fontSize:"11px",fontFamily:MONO_FONT,border:"1.5px solid #d9d9d9",borderRadius:"10px",background:"#fbfbfb",color:"#2c2c2c",cursor:"pointer",textAlign:"left"},
-  dropList:{position:"absolute",top:"calc(100% + 6px)",left:0,right:0,background:"#ffffff",color:"#111111",border:"1.5px solid #2c2c2c",borderRadius:"14px",boxShadow:"0 18px 46px rgba(0,0,0,0.22)",zIndex:100,maxHeight:"300px",overflowY:"auto"},
-  dropItem:{display:"flex",alignItems:"stretch",borderBottom:"1px solid #f0f0f0"},
-  dropCodeBtn:{flex:1,display:"flex",alignItems:"flex-start",gap:"7px",padding:"9px 10px",background:"transparent",border:"none",cursor:"pointer",textAlign:"left",fontFamily:"inherit"},
-  dropClear:{padding:"5px 9px",fontSize:"9.5px",color:"#ec8800",background:"transparent",border:"none",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap",fontWeight:700},
-  dropStar:{background:"transparent",border:"none",cursor:"pointer",fontSize:"14px",color:"#8a8a8a",padding:"0 9px",lineHeight:1},
-  chip:{display:"inline-flex",alignItems:"center",background:"#f5f5f5",border:"1px solid #d9d9d9",borderRadius:"999px",padding:"3px 6px",gap:"4px"},
-  chipX:{background:"transparent",border:"none",cursor:"pointer",fontSize:"9px",color:"#ec8800",padding:"0 1px",lineHeight:1,fontWeight:700},
-  selBox:{background:"#f7f7f7",padding:"9px 10px",borderRadius:"12px",border:"1px solid #e6e6e6"},
-  selTop:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"3px"},
-  selCode:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:800},
-  selEn:{fontFamily:MONO_FONT,fontSize:"10.5px",color:"#2c2c2c",marginBottom:"3px",lineHeight:1.4},
-  selEs:{fontSize:"10px",color:"#474747",lineHeight:1.35},
-  star:{background:"transparent",border:"none",cursor:"pointer",fontSize:"14px",color:"#7a7a7a",padding:"0 2px"},
-  starSm:{background:"transparent",border:"none",cursor:"pointer",fontSize:"12px",color:"#7a7a7a",padding:"0 2px"},
-  starOn:{color:"#ff9800"},
-  qCount:{marginLeft:"4px",fontFamily:MONO_FONT,fontSize:"9.5px",background:"#2c2c2c",color:"#ffffff",padding:"2px 7px",borderRadius:"999px"},
-  qGrpLbl:{fontSize:"11.5px",fontWeight:800,color:"#2c2c2c",marginBottom:"7px",fontFamily:"Calibri, Arial, sans-serif",letterSpacing:"0.04em"},
-  tagCloud:{display:"flex",flexWrap:"wrap",gap:"6px"},
-  tagBtn:{background:"#fbfbfb",border:"1px solid #dedede",borderRadius:"10px",padding:"7px 9px",fontSize:"10px",cursor:"pointer",fontFamily:MONO_FONT,color:"#2c2c2c",textAlign:"left",lineHeight:1.25},
-  tagOn:{background:"#2c2c2c",borderColor:"#ff9800",color:"#ffffff"},
-  tagOpt:{background:"#fff4e6",borderColor:"#ff9800",color:"#ec8800"},
-  resultText:{fontFamily:MONO_FONT,fontSize:"12.5px",lineHeight:1.78,color:"#111111",background:"#ffffff",padding:"18px 18px",borderRadius:"16px",minHeight:"66px",userSelect:"text",border:"1px solid #ffd6a1",whiteSpace:"pre-wrap",boxShadow:"inset 0 0 0 1px rgba(255,152,0,0.08), 0 10px 22px rgba(0,0,0,0.08)"},
-  negativeText:{fontFamily:MONO_FONT,fontSize:"10.8px",lineHeight:1.65,color:"#6b2d1d",background:"#fff5eb",padding:"14px 15px",borderRadius:"12px",border:"1px solid #ffc57a",whiteSpace:"pre-wrap"},
-  translationText:{fontFamily:MONO_FONT,fontSize:"11px",lineHeight:1.65,color:"#f0f0f0",background:"#26272b",padding:"14px 15px",borderRadius:"14px",border:"1px solid #424248",whiteSpace:"pre-wrap"},
-  copyBtn:{background:"#ff9800",color:"#ffffff",border:"1px solid #ff9800",padding:"9px 16px",fontSize:"12px",fontWeight:800,borderRadius:"10px",cursor:"pointer",fontFamily:"inherit",boxShadow:"0 10px 24px rgba(255,152,0,0.24)"},
-  copyOn:{background:"#2c2c2c",borderColor:"#2c2c2c"},
-  search:{width:"100%",padding:"12px 14px",fontSize:"12.5px",border:"1.5px solid #d9d9d9",borderRadius:"14px",marginBottom:"14px",fontFamily:"inherit",background:"#ffffff",color:"#2c2c2c",boxSizing:"border-box"},
-  bankGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:"12px"},
-  bankCol:{background:"#ffffff",color:"#111111",border:"1px solid #dedede",borderRadius:"16px",overflow:"hidden",boxShadow:"0 8px 24px rgba(0,0,0,0.06)"},
-  bankHead:{fontFamily:"Calibri, Arial, sans-serif",fontSize:"11.5px",fontWeight:900,padding:"10px 12px",borderBottom:"2px solid",display:"flex",alignItems:"center",gap:"5px",letterSpacing:"0.04em",color:"#111111",background:"#ffffff"},
-  bankCnt:{marginLeft:"auto",fontFamily:MONO_FONT,fontSize:"9.5px",color:"#7a7a7a",fontWeight:400},
-  bankList:{maxHeight:"520px",overflowY:"auto",padding:"7px"},
-  bankItem:{padding:"8px",borderBottom:"1px solid #f0f0f0",borderRadius:"10px",color:"#111111"},
-  bankTop:{display:"flex",justifyContent:"space-between",alignItems:"center"},
-  bankCode:{background:"transparent",border:"none",cursor:"pointer",fontFamily:MONO_FONT,fontWeight:800,fontSize:"10px",padding:0,textAlign:"left",display:"flex",alignItems:"center",gap:"3px"},
-  addBtn:{width:"100%",background:"#fbfbfb",border:"1px dashed #a0a0a0",color:"#474747",padding:"8px",fontSize:"10.5px",cursor:"pointer",borderRadius:"10px",marginTop:"6px",fontFamily:"inherit"},
-  addIn:{padding:"7px 9px",fontSize:"10px",border:"1px solid #d9d9d9",borderRadius:"10px",marginBottom:"5px",fontFamily:"inherit",background:"#ffffff",color:"#2c2c2c",width:"100%",boxSizing:"border-box"},
-  addOk:{background:"#2c2c2c",color:"#ffffff",border:"none",padding:"6px 11px",fontSize:"10px",fontWeight:800,cursor:"pointer",borderRadius:"8px",fontFamily:"inherit"},
-  addCancel:{background:"transparent",color:"#474747",border:"1px solid #d0d0d0",padding:"6px 11px",fontSize:"10px",cursor:"pointer",borderRadius:"8px",fontFamily:"inherit"},
-  rmBtn:{background:"transparent",border:"none",color:"#ec8800",cursor:"pointer",fontSize:"10px",padding:"0 2px",fontWeight:800},
-  empty:{fontSize:"12.5px",color:"#474747",padding:"32px",textAlign:"center",background:"#ffffff",border:"1px dashed #d0d0d0",borderRadius:"16px"},
-  favLbl:{fontFamily:MONO_FONT,fontSize:"10px",letterSpacing:"0.1em",color:"#111111",fontWeight:800,margin:"18px 0 10px",textTransform:"uppercase"},
-  favCard:{background:"#ffffff",color:"#111111",border:"1px solid #dedede",borderRadius:"16px",padding:"14px",marginBottom:"10px",boxShadow:"0 8px 24px rgba(0,0,0,0.06)"},
-  recipeGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:"9px"},
-  recipeBtn:{background:"#4a4a4f",border:"1px solid #626268",borderRadius:"14px",padding:"11px 12px",cursor:"pointer",textAlign:"left",fontFamily:"inherit",boxShadow:"0 8px 22px rgba(0,0,0,0.18)"},
-  recipeBtnOn:{background:"#ff9800",borderColor:"#ff9800",boxShadow:"0 10px 26px rgba(236,136,0,0.25)"},
-  outputGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(155px,1fr))",gap:"8px"},
-  projectMiniCard:{background:"#f7f7f7",border:"1px solid #e2e2e2",borderRadius:"12px",padding:"10px",boxShadow:"0 6px 16px rgba(0,0,0,0.06)"},
-  modeBtn:{background:"#fbfbfb",border:"1px solid #dedede",borderRadius:"12px",padding:"10px 11px",cursor:"pointer",fontSize:"11.5px",fontWeight:800,color:"#2c2c2c",fontFamily:"inherit"},
-  modeBtnOn:{background:"#2c2c2c",borderColor:"#ff9800",color:"#ffffff",boxShadow:"inset 0 0 0 1px #ff9800"},
-
-  salesShell:{display:"flex",flexDirection:"column",gap:"18px"},
-  salesHero:{display:"grid",gap:"18px",alignItems:"stretch"},
-  salesHeroCopy:{background:"linear-gradient(135deg,#191a1d 0%,#101113 70%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"16px",padding:"42px",boxShadow:"0 34px 90px rgba(0,0,0,0.42)",position:"relative",overflow:"hidden",minHeight:"470px",display:"flex",flexDirection:"column",justifyContent:"center"},
-  salesPill:{display:"inline-flex",alignItems:"center",gap:"8px",fontFamily:MONO_FONT,fontSize:"10px",letterSpacing:"0.14em",fontWeight:800,color:"#f2f2f2",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.10)",borderRadius:"999px",padding:"7px 10px",textTransform:"uppercase"},
-  salesTitle:{fontFamily:DISPLAY_FONT,fontSize:"clamp(40px,5vw,74px)",lineHeight:0.94,letterSpacing:"-0.03em",color:"#ffffff",margin:"22px 0 12px",fontWeight:700,maxWidth:"980px"},
-  salesText:{fontSize:"16px",lineHeight:1.65,color:"#d6d6dc",margin:"0 0 24px",maxWidth:"760px"},
-  salesActions:{display:"flex",gap:"10px",flexWrap:"wrap",alignItems:"center"},
-  darkBtnGhost:{background:"rgba(255,255,255,0.06)",color:"#ffffff",border:"1px solid rgba(255,255,255,0.16)",padding:"10px 17px",fontSize:"12.5px",fontWeight:700,cursor:"pointer",borderRadius:"12px",fontFamily:"inherit"},
-  salesLoginCard:{background:"radial-gradient(circle at 10% 0%,rgba(255,152,0,.16),transparent 34%),linear-gradient(180deg,#171922 0%,#0f1117 100%)",border:"1px solid rgba(255,255,255,0.10)",borderRadius:"16px",padding:"28px",boxShadow:"0 28px 70px rgba(0,0,0,0.42)",position:"relative",overflow:"hidden"},
-  salesLoginIcon:{width:"54px",height:"54px",borderRadius:"18px",background:"linear-gradient(180deg,#ffbd58 0%,#ff9800 100%)",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:"16px",boxShadow:"0 16px 32px rgba(255,152,0,0.28)"},
-  salesLoginTitle:{fontFamily:DISPLAY_FONT,fontSize:"32px",lineHeight:1.02,color:"#ffffff",margin:"0 0 10px",fontWeight:900},
-  salesLoginText:{fontSize:"13.5px",lineHeight:1.62,color:"#d0d4dc",margin:"0 0 16px"},
-  salesInput:{width:"100%",boxSizing:"border-box",background:"#ffffff",border:"1px solid #d8d8d8",borderRadius:"12px",padding:"12px 13px",fontSize:"12.5px",marginBottom:"10px",fontFamily:"inherit",color:"#2c2c2c"},
-  salesLoginFoot:{fontFamily:MONO_FONT,fontSize:"10px",letterSpacing:"0.08em",color:"#a4a8b1",marginTop:"12px",textAlign:"center"},
-  salesFeatureGrid:{display:"grid",gap:"14px"},
-  salesFeatureCard:{background:"#ffffff",color:"#111111",border:"1px solid #dfdfdf",borderRadius:"13px",padding:"20px",boxShadow:"0 14px 34px rgba(0,0,0,0.14)"},
-  salesFeatureIcon:{width:"38px",height:"38px",borderRadius:"14px",background:"#fff5eb",border:"1px solid #ffd39f",display:"flex",alignItems:"center",justifyContent:"center",marginBottom:"13px"},
-  salesFeatureTitle:{fontSize:"15px",fontWeight:900,color:"#202020",marginBottom:"7px"},
-  salesFeatureText:{fontSize:"12.5px",lineHeight:1.55,color:"#565656"},
-  pricingSection:{background:"linear-gradient(180deg,#0f1117 0%,#0b0d12 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"24px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
-  pricingHead:{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"16px"},
-  pricingGrid:{display:"grid",gap:"14px"},
-  pricingCard:{background:"#ffffff",color:"#111111",border:"1px solid #dedede",borderRadius:"13px",padding:"20px",display:"flex",flexDirection:"column",gap:"12px",boxShadow:"0 12px 28px rgba(0,0,0,0.12)"},
-  pricingFeatured:{border:"2px solid #ff9800",boxShadow:"0 18px 44px rgba(255,152,0,0.20),0 12px 28px rgba(0,0,0,0.16)"},
-  pricingName:{fontSize:"13px",fontWeight:900,color:"#222222",letterSpacing:"0.04em",textTransform:"uppercase"},
-  pricingPrice:{fontSize:"34px",lineHeight:1,fontWeight:900,color:"#111111",letterSpacing:"-0.04em"},
-  pricingOld:{fontFamily:MONO_FONT,fontSize:"10.5px",fontWeight:800,color:"#ec8800",background:"#fff4e6",border:"1px solid #ffd39f",borderRadius:"999px",padding:"5px 8px",display:"inline-flex",width:"fit-content"},
-  pricingDesc:{fontSize:"12.5px",lineHeight:1.55,color:"#565656",minHeight:"88px"},
-  launchBox:{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"16px",flexWrap:"wrap",background:"#ffffff",color:"#111111",border:"1px solid #dfdfdf",borderRadius:"13px",padding:"22px",boxShadow:"0 16px 38px rgba(0,0,0,0.16)"},
-  launchTitle:{fontSize:"19px",fontWeight:900,color:"#111111",marginBottom:"5px"},
-  launchText:{fontSize:"13px",lineHeight:1.5,color:"#555555"},
-  scoreGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:"8px"},
-  scoreItem:{background:"#f7f7f7",border:"1px solid #e2e2e2",borderRadius:"14px",padding:"10px 12px",display:"flex",justifyContent:"space-between",gap:"10px",fontSize:"11.5px",alignItems:"center"},
-  scoreLabelText:{color:"#1f1f1f",fontWeight:700,flex:1},
-  scoreBadge:{display:"inline-flex",alignItems:"center",justifyContent:"center",minWidth:"76px",padding:"6px 10px",borderRadius:"999px",fontSize:"10px",fontWeight:800,letterSpacing:"0.03em",border:"1px solid transparent"},
-  scoreBadgeHigh:{background:"#fff1da",color:"#9a5a00",borderColor:"#ffc266"},
-  scoreBadgeMedium:{background:"#fff7e8",color:"#8a6510",borderColor:"#e7c98d"},
-  scoreBadgeLow:{background:"#efefef",color:"#3f3f46",borderColor:"#d6d6db"},
-  scoreBadgeMissing:{background:"#ffe6e1",color:"#a03d2b",borderColor:"#efb3a7"},
-  scoreBadgeNA:{background:"#f2f2f2",color:"#777777",borderColor:"#dddddd"},
-  scoreBadgeDefault:{background:"#f1f1f3",color:"#2c2c2c",borderColor:"#dddddf"},
-
-  heroGlow:{position:"absolute",right:"-18%",top:"-20%",width:"420px",height:"420px",borderRadius:"999px",background:"radial-gradient(circle,rgba(255,152,0,.18),transparent 64%)",filter:"blur(8px)",pointerEvents:"none"},
-  heroStatsGrid:{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(120px,1fr))",gap:"10px",marginTop:"26px",position:"relative",zIndex:1},
-  heroStatItem:{background:"rgba(255,255,255,.06)",border:"1px solid rgba(255,255,255,.12)",borderRadius:"16px",padding:"12px 13px",backdropFilter:"blur(8px)"},
-  heroStatNumber:{fontFamily:DISPLAY_FONT,fontSize:"22px",lineHeight:1,color:"#ffffff"},
-  heroStatLabel:{fontSize:"11.5px",lineHeight:1.25,color:"#bfc3cb",marginTop:"3px"},
-  accessTopLine:{height:"3px",width:"100%",background:"linear-gradient(90deg,transparent,#ff9800,transparent)",borderRadius:"999px",marginBottom:"18px",animation:"vpsPulse 2.8s ease-in-out infinite"},
-  accessKicker:{fontSize:"10px",letterSpacing:"0.13em",textTransform:"uppercase",fontWeight:800,color:"#ffb65e",marginBottom:"8px"},
-  audienceBox:{background:"linear-gradient(180deg,#11141a 0%,#0d0f14 100%)",border:"1px solid rgba(255,255,255,.08)",borderRadius:"14px",padding:"20px 22px",display:"flex",justifyContent:"space-between",alignItems:"center",gap:"18px",flexWrap:"wrap",boxShadow:"0 16px 40px rgba(0,0,0,.24)"},
-  audienceTitle:{fontFamily:DISPLAY_FONT,fontSize:"22px",lineHeight:1.16,color:"#ffffff",maxWidth:"660px"},
-  audienceChips:{display:"flex",gap:"8px",flexWrap:"wrap",justifyContent:"flex-end"},
-  audienceChip:{fontSize:"12px",fontWeight:800,color:"#f5f5f5",border:"1px solid rgba(255,255,255,.12)",background:"rgba(255,255,255,.04)",borderRadius:"999px",padding:"8px 11px"},
-  sectionIntro:{display:"flex",justifyContent:"space-between",alignItems:"flex-end",gap:"14px",flexWrap:"wrap",padding:"8px 2px 0"},
-  sectionEyebrow:{fontSize:"11px",fontWeight:900,letterSpacing:"0.16em",textTransform:"uppercase",color:"#ff9800"},
-  sectionTitle:{fontFamily:DISPLAY_FONT,fontSize:"clamp(26px,3vw,42px)",lineHeight:1.05,color:"#ffffff",marginTop:"7px"},
-  compareLine:{position:"absolute",left:"0%",top:0,bottom:0,width:"2px",background:"rgba(255,152,0,.95)",boxShadow:"0 0 24px rgba(255,152,0,.5)",transition:"left .55s ease",zIndex:4},
-  compareKnob:{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:"34px",height:"34px",display:"flex",alignItems:"center",justifyContent:"center",borderRadius:"999px",background:"#ff9800",color:"#111",fontWeight:900,fontSize:"14px",boxShadow:"0 8px 24px rgba(0,0,0,.35)"},
-  processSection:{background:"linear-gradient(180deg,#15171d 0%,#0d0f14 100%)",border:"1px solid rgba(255,255,255,.08)",borderRadius:"16px",padding:"24px",boxShadow:"0 18px 48px rgba(0,0,0,.26)"},
-  processGrid:{display:"grid",gap:"14px",marginTop:"18px"},
-  processCard:{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.10)",borderRadius:"13px",padding:"18px",minHeight:"150px"},
-  processNumber:{fontFamily:MONO_FONT,fontSize:"12px",fontWeight:900,color:"#ff9800",marginBottom:"18px"},
-  processTitle:{fontFamily:DISPLAY_FONT,fontSize:"21px",lineHeight:1.1,color:"#ffffff",marginBottom:"8px"},
-  processText:{fontSize:"13px",lineHeight:1.55,color:"#bfc3cb"},
-
-  salesHeroTop:{display:"flex",justifyContent:"space-between",alignItems:"center",gap:"12px",flexWrap:"wrap"},
-  salesTitleAccent:{color:"#ff9800"},
-  salesHeroBody:{fontFamily:DISPLAY_FONT,fontSize:"clamp(24px,3vw,34px)",lineHeight:1.1,color:"#ffffff",margin:"6px 0 14px",maxWidth:"800px"},
-  compareGrid:{display:"grid",gap:"16px"},
-  compareCardWrap:{background:"linear-gradient(180deg,#15171d 0%,#101217 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"14px",padding:"14px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
-  compareMedia:{position:"relative",borderRadius:"18px",overflow:"hidden",aspectRatio:"16 / 9",background:"#111"},
-  compareImg:{width:"100%",height:"100%",objectFit:"cover",display:"block"},
-  compareOverlay:{position:"absolute",inset:0,opacity:0,overflow:"hidden",transition:"opacity .45s ease",zIndex:2},
-  compareLabel:{position:"absolute",top:12,background:"rgba(11,12,15,0.75)",border:"1px solid rgba(255,255,255,0.18)",padding:"7px 10px",borderRadius:"999px",fontSize:"10px",fontWeight:800,letterSpacing:"0.12em",color:"#fff"},
-  compareHint:{position:"absolute",left:"50%",bottom:14,transform:"translate(-50%,8px)",opacity:0,transition:"all .3s ease",background:"rgba(0,0,0,.58)",border:"1px solid rgba(255,255,255,.18)",padding:"8px 12px",borderRadius:"999px",fontSize:"11px",fontWeight:700,color:"#fff",zIndex:6},
-  compareCopy:{padding:"14px 4px 4px"},
-  compareTitle:{display:"none"},
-  compareSubtitle:{fontSize:"12.5px",lineHeight:1.5,color:"#bfc3cb"},
-  pricingSectionTitle:{fontFamily:DISPLAY_FONT,fontSize:"clamp(24px,2.5vw,34px)",color:"#fff",lineHeight:1.08,marginTop:"14px"},
-  currencyToggle:{display:"inline-flex",gap:"6px",padding:"5px",borderRadius:"999px",background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.10)"},
-  currencyBtn:{background:"transparent",color:"#bfc3cb",border:"1px solid transparent",padding:"9px 14px",fontSize:"11px",fontWeight:800,borderRadius:"999px",cursor:"pointer",fontFamily:BODY_FONT,letterSpacing:"0.1em"},
-  currencyBtnOn:{background:"#ff9800",borderColor:"#ff9800",color:"#111111"},
-  pricingCardDark:{background:"radial-gradient(circle at 12% 0%,rgba(255,152,0,.08),transparent 32%),linear-gradient(180deg,#13151c 0%,#0d0f14 100%)",border:"1px solid rgba(255,255,255,0.10)",borderRadius:"14px",padding:"24px",display:"flex",flexDirection:"column",gap:"13px",boxShadow:"0 24px 64px rgba(0,0,0,0.36)",position:"relative",overflow:"visible"},
-  pricingFeaturedDark:{border:"1.5px solid #ff9800",background:"radial-gradient(circle at 15% 0%,rgba(255,152,0,.18),transparent 36%),linear-gradient(180deg,#171922 0%,#0e1015 100%)",boxShadow:"0 24px 70px rgba(255,152,0,0.22), 0 18px 46px rgba(0,0,0,.38)"},
-  pricingBadge:{position:"absolute",top:0,left:"50%",transform:"translate(-50%,-50%)",background:"#ff9800",color:"#111",padding:"6px 14px",borderRadius:"999px",fontSize:"10px",fontWeight:900,letterSpacing:"0.08em",textTransform:"uppercase",whiteSpace:"nowrap",zIndex:10},
-  pricingEyebrowText:{fontSize:"12px",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",color:"#ffb65e",marginTop:"4px"},
-  pricingNameDark:{fontFamily:DISPLAY_FONT,fontSize:"26px",lineHeight:1.05,color:"#fff"},
-  pricingCurrent:{fontFamily:DISPLAY_FONT,fontSize:"46px",lineHeight:1,color:"#fff",letterSpacing:"-0.04em"},
-  pricingOldLine:{fontSize:"13px",color:"#9da2ae",textDecoration:"line-through",minHeight:"18px",fontWeight:700},
-  pricingList:{listStyle:"none",padding:0,margin:"2px 0 8px",display:"flex",flexDirection:"column",gap:"10px",flex:1},
-  pricingListItem:{display:"flex",alignItems:"flex-start",gap:"10px",fontSize:"13px",lineHeight:1.45,color:"#d7dbe2"},
-  pricingCheck:{color:"#ff9800",fontWeight:900},
-  pricingButtonGhost:{background:"rgba(255,255,255,0.055)",color:"#ffffff",border:"1px solid rgba(255,255,255,0.14)",padding:"13px 16px",fontSize:"12.5px",fontWeight:800,cursor:"pointer",borderRadius:"14px",fontFamily:BODY_FONT},
-  viewPacksBtn:{background:"#ff9800",color:"#111111",border:"1px solid #ff9800",boxShadow:"0 10px 26px rgba(255,152,0,.22)"},
-  heroMainBtn:{padding:"15px 26px",fontSize:"14.5px",fontWeight:800,borderRadius:"14px"},
-  footerCtaBox:{background:"radial-gradient(circle at 50% 0%,rgba(255,152,0,.18),transparent 38%),linear-gradient(180deg,#15171f 0%,#0c0e13 100%)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:"16px",padding:"38px 28px",boxShadow:"0 24px 66px rgba(0,0,0,0.34)",textAlign:"center",position:"relative",overflow:"hidden"},
-  footerCtaTitle:{fontFamily:DISPLAY_FONT,fontSize:"clamp(34px,4vw,58px)",lineHeight:.98,color:"#fff",marginBottom:"14px",letterSpacing:"-0.035em"},
-  footerCtaText:{fontSize:"16px",lineHeight:1.65,color:"#c8cdd6",maxWidth:"860px",margin:"0 auto"},
-  accessHeaderRow:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"16px",marginBottom:"14px"},
-  accessTopLineGlow:{display:"block",width:"70%",height:"100%",background:"linear-gradient(90deg,transparent,rgba(255,255,255,.55),#ff9800,transparent)",borderRadius:"999px"},
-  accessPriceBox:{textAlign:"right",background:"rgba(255,255,255,.055)",border:"1px solid rgba(255,255,255,.10)",borderRadius:"18px",padding:"12px 14px",minWidth:"118px"},
-  accessPriceLabel:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,letterSpacing:"0.14em",color:"#ffb65e",marginBottom:"4px"},
-  accessPrice:{fontFamily:DISPLAY_FONT,fontSize:"28px",lineHeight:1,color:"#ffffff",letterSpacing:"-0.04em"},
-  accessOldPrice:{fontSize:"11px",color:"#9096a3",textDecoration:"line-through",marginTop:"4px"},
-  accessIncludedBox:{background:"rgba(255,255,255,.045)",border:"1px solid rgba(255,255,255,.10)",borderRadius:"18px",padding:"14px",margin:"0 0 16px"},
-  accessIncludedTitle:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,letterSpacing:"0.12em",textTransform:"uppercase",color:"#ffb65e",marginBottom:"10px"},
-  accessIncludedItem:{display:"flex",alignItems:"center",gap:"8px",fontSize:"12.5px",lineHeight:1.45,color:"#e2e5eb",margin:"7px 0"},
-  accessBtn:{padding:"14px 18px",fontSize:"13.5px",fontWeight:900,borderRadius:"15px"},
-  pricingPremiumCta:{padding:"13px 16px",fontSize:"13px",fontWeight:900,borderRadius:"14px",boxShadow:"0 14px 34px rgba(255,152,0,.28)"},
-  pricingTopGlow:{position:"absolute",top:0,left:"12%",right:"12%",height:"1px",background:"linear-gradient(90deg,transparent,rgba(255,152,0,.9),transparent)",opacity:.85},
-  pricingPriceWrap:{display:"flex",alignItems:"flex-end",gap:"8px",marginTop:"2px"},
-  pricingOneTime:{fontSize:"12px",color:"#9ca2ad",fontWeight:700,paddingBottom:"5px"},
-  footerCtaKicker:{fontFamily:MONO_FONT,fontSize:"11px",fontWeight:900,letterSpacing:"0.14em",color:"#ffb65e",textTransform:"uppercase",marginBottom:"14px"},
-  footerPromiseRow:{display:"flex",justifyContent:"center",gap:"10px",flexWrap:"wrap",marginTop:"20px"},
-  footerPromise:{display:"inline-flex",alignItems:"center",gap:"7px",background:"rgba(255,255,255,.055)",border:"1px solid rgba(255,255,255,.10)",borderRadius:"999px",padding:"9px 12px",fontSize:"12.5px",fontWeight:700,color:"#e6e8ed"},
-  benefitsSection:{background:"linear-gradient(180deg,#12141a 0%,#0d0f14 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"24px",boxShadow:"0 18px 46px rgba(0,0,0,0.22)"},
-  benefitsGrid:{display:"grid",gap:"14px",marginTop:"18px"},
-  benefitCard:{background:"linear-gradient(180deg,#16181f 0%,#101217 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"13px",padding:"18px",boxShadow:"0 12px 28px rgba(0,0,0,.18)"},
-  benefitIcon:{width:"44px",height:"44px",display:"flex",alignItems:"center",justifyContent:"center",borderRadius:"14px",background:"rgba(255,152,0,.10)",border:"1px solid rgba(255,152,0,.24)",marginBottom:"14px"},
-  benefitTitle:{fontFamily:DISPLAY_FONT,fontSize:"20px",lineHeight:1.08,color:"#ffffff",marginBottom:"8px"},
-  benefitText:{fontSize:"13px",lineHeight:1.58,color:"#c6cad2"},
-
-  catalogSection: {background:"linear-gradient(180deg,#15171d 0%,#0d0f14 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"24px",boxShadow:"0 18px 46px rgba(0,0,0,0.22)"},
-  catalogTabs: {display:"flex",justifyContent:"center",gap:"8px",flexWrap:"wrap",margin:"18px 0 24px"},
-  catalogTabBtn: {background:"rgba(255,255,255,0.04)",color:"#bfc3cb",border:"1px solid rgba(255,255,255,0.09)",padding:"10px 18px",fontSize:"12.5px",fontWeight:800,borderRadius:"999px",cursor:"pointer",fontFamily:BODY_FONT,transition:"all 0.25s ease"},
-  catalogTabBtnOn: {background:"#ff9800",borderColor:"#ff9800",color:"#111111",boxShadow:"0 10px 24px rgba(255,152,0,0.18)"},
-  catalogGrid: {display:"grid",gap:"16px",marginTop:"18px"},
-  catalogCard: {background:"radial-gradient(circle at 12% 0%,rgba(255,152,0,0.04),transparent 30%),linear-gradient(180deg,#16181f 0%,#101217 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"13px",padding:"20px",boxShadow:"0 12px 28px rgba(0,0,0,0.18)",position:"relative",overflow:"hidden",display:"flex",flexDirection:"column",justifyContent:"space-between",minHeight:"140px",transition:"border-color 0.3s ease"},
-  catalogCardHover: {borderColor:"rgba(255,152,0,0.4)"},
-  catalogCardTop: {display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px"},
-  catalogCardCode: {fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,color:"#ff9800",background:"rgba(255,152,0,0.08)",border:"1px solid rgba(255,152,0,0.25)",borderRadius:"4px",padding:"3px 6px",letterSpacing:"0.05em"},
-  catalogCardTitle: {fontFamily:DISPLAY_FONT,fontSize:"18.5px",lineHeight:1.1,color:"#ffffff",marginTop:"4px"},
-  catalogCardDesc: {fontSize:"12.5px",lineHeight:1.55,color:"#bfc3cb",margin:"8px 0 14px"},
-  catalogCopyBtn: {background:"rgba(255,152,0,0.08)",color:"#ffb65e",border:"1px solid rgba(255,152,0,0.22)",padding:"8px 12px",fontSize:"11px",fontWeight:800,borderRadius:"8px",cursor:"pointer",fontFamily:BODY_FONT,display:"flex",alignItems:"center",gap:"6px",width:"fit-content",transition:"all 0.25s ease"},
-  catalogCopyBtnOn: {background:"#ff9800",borderColor:"#ff9800",color:"#111111"},
-
-  confItem:{background:"linear-gradient(180deg,#13151c 0%,#0d0f13 100%)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:"14px",padding:"20px 16px",textAlign:"center",boxShadow:"0 14px 32px rgba(0,0,0,0.22)"},
-  confLabel:{fontFamily:MONO_FONT,fontSize:"9px",fontWeight:900,letterSpacing:"0.18em",textTransform:"uppercase",color:"#ff9800",marginBottom:"8px"},
-  confText:{fontSize:"12px",lineHeight:1.45,color:"#c8cdd6"},
-
-  tableSection:{background:"linear-gradient(180deg,#0f1117 0%,#0b0d12 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"26px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
-  compareTable:{width:"100%",borderCollapse:"collapse",minWidth:"560px"},
-  tableHead:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,letterSpacing:"0.10em",textTransform:"uppercase",color:"#9ca2ae",padding:"12px 14px",textAlign:"center",borderBottom:"1px solid rgba(255,255,255,0.10)"},
-  tableHeadFirst:{textAlign:"left",minWidth:"200px",color:"#c8cdd6"},
-  tableCell:{padding:"13px 14px",textAlign:"center",fontSize:"15px",fontWeight:900,borderBottom:"1px solid rgba(255,255,255,0.05)",color:"#bfc3cc"},
-  tableCellFeatured:{color:"#ff9800"},
-  tableCellFeature:{padding:"13px 14px",fontSize:"12.5px",lineHeight:1.35,color:"#d2d6e0",borderBottom:"1px solid rgba(255,255,255,0.05)"},
-  tableCellCheck:{color:"#5dd87a",fontSize:"17px"},
-  tableCellDash:{color:"rgba(255,255,255,0.18)"},
-  tableCellNum:{fontFamily:DISPLAY_FONT,fontSize:"18px",fontWeight:800,color:"#ffffff"},
-  tableRowLast:{background:"rgba(255,152,0,0.06)"},
-
-  faqSection:{background:"linear-gradient(180deg,#0f1117 0%,#0b0d12 100%)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:"16px",padding:"26px",boxShadow:"0 20px 52px rgba(0,0,0,0.30)"},
-  faqItem:{border:"1px solid rgba(255,255,255,0.08)",borderRadius:"13px",overflow:"hidden",background:"rgba(255,255,255,0.02)",transition:"border-color 0.2s ease"},
-  faqItemOpen:{borderColor:"rgba(255,152,0,0.38)",background:"rgba(255,152,0,0.03)"},
-  faqQ:{display:"flex",alignItems:"center",gap:"14px",width:"100%",padding:"17px 18px",background:"transparent",border:"none",color:"#edf0f4",cursor:"pointer",textAlign:"left",fontFamily:BODY_FONT,fontSize:"14px",fontWeight:700,lineHeight:1.3},
-  faqNum:{fontFamily:MONO_FONT,fontSize:"10px",fontWeight:900,color:"#ff9800",minWidth:"22px",flexShrink:0},
-  faqQText:{flex:1},
-  faqIcon:{fontSize:"22px",fontWeight:300,color:"#ff9800",lineHeight:1,transition:"transform 0.25s ease",flexShrink:0},
-  faqIconOpen:{transform:"rotate(45deg)"},
-  faqA:{padding:"2px 18px 18px 54px",fontSize:"13.5px",lineHeight:1.68,color:"#b4b9c5"}
-};
