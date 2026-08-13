@@ -422,9 +422,19 @@ function Compare({
   afterLabel,
 }) {
   const [value, setValue] = useState(50);
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+    const percent = (x / rect.width) * 100;
+    setValue(percent);
+  };
   return (
     <figure className="compareCard">
-      <div className="compareMedia">
+      <div 
+        className="compareMedia"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setValue(50)}
+      >
         <img src={after} alt={`${label}: ${afterLabel.toLowerCase()}`} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
         <div className="beforeLayer" style={{ clipPath: `inset(0 ${100 - value}% 0 0)` }}>
           <img src={before} alt={`${label}: ${beforeLabel.toLowerCase()}`} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
@@ -432,16 +442,8 @@ function Compare({
         <span className="compareTag left">{beforeLabel}</span>
         <span className="compareTag right">{afterLabel}</span>
         <span className="compareLine" style={{ left: `${value}%` }} aria-hidden="true"><i>↔</i></span>
-        <input
-          aria-label={`${label}: ${beforeLabel} / ${afterLabel}`}
-          type="range"
-          min="0"
-          max="100"
-          value={value}
-          onChange={(event) => setValue(Number(event.target.value))}
-        />
       </div>
-      <figcaption><span>{label}</span><b>DRAG / TOUCH</b></figcaption>
+      <figcaption><span>{label}</span><b>HOVER</b></figcaption>
     </figure>
   );
 }
