@@ -231,7 +231,7 @@ h1, h2, h3, p { margin-top: 0; }
 .hoverSwap { cursor: crosshair; outline: none; }
 .heroResult, .heroSource { transition: opacity .42s ease, transform .7s ease; }
 .heroResult { opacity: 1; }
-.heroSource { opacity: 0; transform: scale(1.015); filter: saturate(.72) contrast(.95); }
+.heroSource { position: absolute; inset: 0; opacity: 0; transform: scale(1.015); filter: saturate(.72) contrast(.95); }
 .hoverSwap:hover .heroSource, .hoverSwap:focus-visible .heroSource { opacity: 1; transform: scale(1); }
 .hoverSwap:hover .heroResult, .hoverSwap:focus-visible .heroResult { opacity: 0; }
 .sourceLabel { opacity: 0; }

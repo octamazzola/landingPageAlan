@@ -584,8 +584,8 @@ export default function LandingPage() {
 
         <div className="heroVisual">
           <div className="heroImage hoverSwap" tabIndex={0} aria-label={t.result}>
-            <img className="heroResult" src="/assets/veh-after.webp" alt={t.result} style={{width:"100%", height:"100%", objectFit:"cover"}} priority   />
-            <img className="heroSource" src="/assets/veh-before.webp" alt={t.source} style={{width:"100%", height:"100%", objectFit:"cover"}}   />
+            <img className="heroResult" src="/assets/veh-after.webp" alt={t.result} />
+            <img className="heroSource" src="/assets/veh-before.webp" alt={t.source} />
             <span className="resultLabel directedLabel">{t.result}</span>
             <span className="resultLabel sourceLabel">{t.source}</span>
             <div className="preservationRail">
