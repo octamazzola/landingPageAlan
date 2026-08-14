@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
 
 :root {
+  --font-geist-sans: 'Geist', Arial, Helvetica, sans-serif;
+  --font-geist-mono: 'Geist Mono', 'SFMono-Regular', Consolas, monospace;
   --orange: #ff9800;
   --orange-dark: #ec8800;
   --ink: #0b0d11;
@@ -464,30 +467,9 @@ h1, h2, h3, p { margin-top: 0; }
 .packHead i { font-style: normal; }
 .packCard h3 { margin: 31px 0 8px; font: 740 27px var(--font-geist-sans); letter-spacing: -.03em; }
 .packDescription { min-height: 36px; color: #9198a3; font-size: 11px; line-height: 1.5; }
-.price {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 12px;
-  background: rgba(255, 152, 0, 0.08);
-  border: 1px solid rgba(255, 152, 0, 0.22);
-  padding: 10px 16px;
-  border-radius: 12px;
-  width: fit-content;
-}
-
-.price strong {
-  font-size: 42px;
-  font-weight: 800;
-  letter-spacing: -.05em;
-  color: #fff;
-}
-
-.price del {
-  padding-bottom: 5px;
-  color: #747b85;
-  font-size: 14px;
-}
+.price { margin: 28px 0 4px; display: flex; gap: 13px; align-items: end; }
+.price strong { font: 800 40px var(--font-geist-sans); letter-spacing: -.05em; }
+.price del { padding-bottom: 5px; color: #747b85; font-size: 11px; }
 .packCard > small { color: #8b929d; font: 550 8px var(--font-geist-mono); }
 .packCard ul { margin: 22px 0; padding: 22px 0; display: grid; gap: 13px; flex: 1; border-top: 1px solid var(--line); list-style: none; }
 .packCard li { color: #bdc2ca; font-size: 11px; line-height: 1.45; }
