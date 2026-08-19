@@ -2,19 +2,22 @@
 import { useEffect, useState } from "react";
 
 
-const promptBuilderUrl = "https://fanciful-duckanoo-21065b.netlify.app/app#/prompt-builder";
+const shopifyLinks = {
+  starter: "https://visual-prompt-studio.myshopify.com/products/vps-starter",
+  professional: "https://visual-prompt-studio.myshopify.com/products/vps-professional-library",
+  studio: "https://visual-prompt-studio.myshopify.com/products/vps-studio-pro",
+};
 
 
 const prices = {
-  starter: { USD: ["USD 17", "USD 24"], ARS: ["$33.000", "$46.000"] },
-  professional: { USD: ["USD 39", "USD 55"], ARS: ["$57.000", "$80.000"] },
-  studio: { USD: ["USD 69", "USD 89"], ARS: ["$93.000", "$130.000"] },
+  starter: { USD: ["USD 18", "USD 25"], ARS: ["$35.000", "$49.000"] },
+  professional: { USD: ["USD 29", "USD 42"], ARS: ["$56.000", "$82.000"] },
+  studio: { USD: ["USD 52", "USD 72"], ARS: ["$100.000", "$139.000"] },
 } ;
 
 const copy = {
   es: {
     nav: ["Resultados", "El sistema", "Qué recibís", "Packs", "Preguntas"],
-    login: "Acceso clientes",
     topbar: ["Producto digital", "Guías ES / EN / PT", "Uso profesional"],
     eyebrow: "PROMPTS PROFESIONALES PARA ARQUITECTURA",
     h1a: "La IA puede mejorar tu render.",
@@ -55,14 +58,6 @@ const copy = {
       ["03", "Dirección visual", "Elegí materiales, luz, clima, atmósfera y lenguaje fotográfico."],
       ["04", "Salida", "Copiá un prompt maestro en inglés, ordenado y listo para generar."],
     ],
-    demoKicker: "PROBÁ LA LÓGICA DEL CONSTRUCTOR",
-    demoTitle: "No empezás desde una página en blanco.",
-    demoText: "Conocé la nueva interfaz del Prompt Builder. Studio Pro convierte decisiones visuales en un flujo más rápido, organizado y repetible.",
-    demoLabel: "Objetivo de visualización",
-    demoOptions: ["Fotorrealismo", "Preservación total", "Atmósfera editorial"],
-    demoCopy: "Copiar fragmento",
-    demoCopied: "Fragmento copiado",
-    demoDisclaimer: "Vista de la nueva versión. El constructor completo incluye variables, proyectos y favoritos.",
     includesKicker: "MIRÁ EXACTAMENTE QUÉ COMPRÁS",
     includesTitle: "Archivos y herramientas pensados para trabajar, consultar y volver a usar.",
     deliverables: [
@@ -74,7 +69,6 @@ const copy = {
       ["CAMERA_EFFECT", "Efectos ópticos y de cámara para ampliar la narrativa visual.", "FX"],
       ["LOCK + RESCUE", "Método de preservación y protocolo para detectar y corregir errores.", "PDF"],
       ["CLIENT KIT + FORMS", "Kit profesional y formularios editables de control y entrega.", "KIT"],
-      ["PROMPT BUILDER APP", "Constructor visual con proyectos, favoritos y 12 meses de acceso.", "APP"],
     ],
     categoriesLabel: "Categorías incluidas",
     categories: ["Fotorrealismo", "Interiores", "Fachadas", "Paisajismo", "Plantas", "Axonométricas", "Cortes", "Masterplans", "Urbanismo", "Humanización"],
@@ -94,20 +88,20 @@ const copy = {
     descriptions: {
       starter: "Para comenzar a estructurar prompts sin improvisar.",
       professional: "La biblioteca completa para uso profesional frecuente.",
-      studio: "La biblioteca profesional más el constructor visual.",
+      studio: "La biblioteca profesional más completa.",
     },
     features: {
       starter: ["CORE — 11 prompts esenciales", "Manual de inicio y ruta de uso", "RESCUE — versión rápida", "Licencia de uso profesional"],
       professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "Método LOCK + RESCUE completo", "Client Kit, formularios, manual y matriz", "Licencia de uso profesional"],
-      studio: ["Todo Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 meses"],
+      studio: ["Todo Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects"],
     },
     choose: { starter: "Comprar Starter", professional: "Elegir Professional Library", studio: "Acceder a Studio Pro" },
     oneTime: "Pago único",
-    studioTerm: "Pago único · 12 meses de app",
+    studioTerm: "Pago único",
     confidence: [["ENTREGA", "Acceso digital por email"], ["LICENCIA", "Uso en tus proyectos y trabajos para clientes"], ["ARCHIVOS", "Acceso permanente a las descargas"], ["PAGO", "Procesado por proveedores externos"]],
     matrixTitle: "Comparación rápida",
     rescueLevels: ["Versión rápida", "Versión completa", "Versión completa"],
-    matrixRows: ["Biblioteca CORE — 11 prompts esenciales", "Professional Prompts — 45 flujos avanzados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionales", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de inicio y ruta de uso", "Manual de usuario profesional", "Matriz de selección de prompts", "Método LOCK para preservar la arquitectura", "Manual RESCUE para corregir resultados", "Professional Client Kit", "Formularios editables de control y entrega", "Acceso a Prompt Builder App durante 12 meses", "Licencia de uso profesional", "Total de prompts operativos"],
+    matrixRows: ["Biblioteca CORE — 11 prompts esenciales", "Professional Prompts — 45 flujos avanzados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionales", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de inicio y ruta de uso", "Manual de usuario profesional", "Matriz de selección de prompts", "Método LOCK para preservar la arquitectura", "Manual RESCUE para corregir resultados", "Professional Client Kit", "Formularios editables de control y entrega", "Licencia de uso profesional", "Total de prompts operativos"],
     authorKicker: "CREADO DESDE LA PRÁCTICA",
     authorTitle: "Hecho por un arquitecto para resolver un problema de arquitectura.",
     authorText: "Visual Prompt Studio fue desarrollado desde la práctica profesional para aprovechar la potencia visual de la IA sin ceder el control del proyecto. El sistema traduce decisiones arquitectónicas —preservación, materialidad, luz, cámara y atmósfera— en una estructura que la IA puede interpretar mejor.",
@@ -120,8 +114,7 @@ const copy = {
       ["¿VPS genera las imágenes?", "No. VPS proporciona prompts, métodos y herramientas para trabajar con plataformas de IA."],
       ["¿Con qué herramientas funciona?", "La estructura está pensada para ChatGPT Images, Midjourney, Krea y modelos compatibles con prompts de texto. Cada plataforma puede interpretar la misma instrucción de forma diferente según su versión."],
       ["¿Necesito pagar otra plataforma?", "Sí, necesitás tu propia cuenta en la herramienta de IA que uses. VPS no incluye suscripciones de terceros."],
-      ["¿Qué pasa después de los 12 meses de Studio Pro?", "Los archivos que descargaste siguen siendo tuyos. Para continuar usando el constructor y recibir nuevas actualizaciones necesitás renovar el acceso."],
-      ["¿Cómo recibo el producto?", "Después del pago recibís por email el acceso correspondiente. Los packs incluyen archivos descargables; Studio Pro suma el acceso al constructor."],
+      ["¿Cómo recibo el producto?", "Después del pago recibís por email los archivos descargables de tu pack."],
       ["¿Puedo usarlo con trabajos para clientes?", "Sí. Podés aplicar los prompts en tus propios proyectos profesionales. Los archivos y textos de VPS no pueden revenderse, compartirse ni redistribuirse."],
     ],
     closingKicker: "MENOS PRUEBA Y ERROR. MÁS DIRECCIÓN.",
@@ -135,7 +128,6 @@ const copy = {
   },
   en: {
     nav: ["Results", "The system", "What you get", "Packs", "Questions"],
-    login: "Client access",
     topbar: ["Digital product", "ES / EN / PT guides", "Professional use"],
     eyebrow: "PROFESSIONAL PROMPTS FOR ARCHITECTURE",
     h1a: "AI can improve your render.",
@@ -176,14 +168,6 @@ const copy = {
       ["03", "Visual direction", "Choose materials, light, weather, atmosphere and photographic language."],
       ["04", "Output", "Copy a structured English master prompt ready to generate."],
     ],
-    demoKicker: "TRY THE BUILDER LOGIC",
-    demoTitle: "You never start from a blank page.",
-    demoText: "Explore the new Prompt Builder interface. Studio Pro turns visual decisions into a faster, organized and repeatable workflow.",
-    demoLabel: "Visualization goal",
-    demoOptions: ["Photorealism", "Total preservation", "Editorial atmosphere"],
-    demoCopy: "Copy excerpt",
-    demoCopied: "Excerpt copied",
-    demoDisclaimer: "New-version preview. The complete builder includes variables, projects and favorites.",
     includesKicker: "SEE EXACTLY WHAT YOU BUY",
     includesTitle: "Files and tools designed to work, consult and reuse.",
     deliverables: [
@@ -195,7 +179,6 @@ const copy = {
       ["CAMERA_EFFECT", "Optical and camera effects that expand visual storytelling.", "FX"],
       ["LOCK + RESCUE", "Preservation method and protocol to detect and correct errors.", "PDF"],
       ["CLIENT KIT + FORMS", "Professional kit and editable control and delivery forms.", "KIT"],
-      ["PROMPT BUILDER APP", "Visual builder with projects, favorites and 12 months of access.", "APP"],
     ],
     categoriesLabel: "Included categories",
     categories: ["Photorealism", "Interiors", "Facades", "Landscape", "Plans", "Axonometrics", "Sections", "Masterplans", "Urbanism", "Humanization"],
@@ -215,20 +198,20 @@ const copy = {
     descriptions: {
       starter: "Start structuring prompts without improvising.",
       professional: "The complete library for frequent professional use.",
-      studio: "The professional library plus the visual builder.",
+      studio: "The most complete professional library.",
     },
     features: {
       starter: ["CORE — 11 essential prompts", "Start manual and usage route", "RESCUE — quick version", "Professional-use license"],
       professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "LOCK Method + complete RESCUE", "Client Kit, forms, manual and matrix", "Professional-use license"],
-      studio: ["Everything in Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 months"],
+      studio: ["Everything in Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects"],
     },
     choose: { starter: "Buy Starter", professional: "Choose Professional Library", studio: "Access Studio Pro" },
     oneTime: "One-time payment",
-    studioTerm: "One-time payment · 12 months of app",
+    studioTerm: "One-time payment",
     confidence: [["DELIVERY", "Digital access by email"], ["LICENSE", "Use in your projects and client work"], ["FILES", "Permanent access to downloads"], ["PAYMENT", "Processed by external providers"]],
     matrixTitle: "Quick comparison",
     rescueLevels: ["Quick version", "Complete version", "Complete version"],
-    matrixRows: ["CORE Library — 11 essential prompts", "Professional Prompts — 45 advanced workflows", "Humanization Library — 30 prompts", "Humanization Extension — 10 additional prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Start manual and usage route", "Professional user manual", "Prompt-selection matrix", "LOCK Method for architecture preservation", "RESCUE Manual for correcting results", "Professional Client Kit", "Editable control and delivery forms", "12-month Prompt Builder App access", "Professional-use license", "Total operational prompts"],
+    matrixRows: ["CORE Library — 11 essential prompts", "Professional Prompts — 45 advanced workflows", "Humanization Library — 30 prompts", "Humanization Extension — 10 additional prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Start manual and usage route", "Professional user manual", "Prompt-selection matrix", "LOCK Method for architecture preservation", "RESCUE Manual for correcting results", "Professional Client Kit", "Editable control and delivery forms", "Professional-use license", "Total operational prompts"],
     authorKicker: "BUILT FROM PRACTICE",
     authorTitle: "Made by an architect to solve an architectural problem.",
     authorText: "Visual Prompt Studio was developed through professional practice to use AI's visual power without giving up project control. The system translates architectural decisions — preservation, materials, light, camera and atmosphere — into a structure AI can interpret more clearly.",
@@ -241,8 +224,7 @@ const copy = {
       ["Does VPS generate the images?", "No. VPS provides prompts, methods and tools for working with AI platforms."],
       ["Which tools does it work with?", "The structure is designed for ChatGPT Images, Midjourney, Krea and text-prompt compatible models. Each platform may interpret the same instruction differently depending on its version."],
       ["Do I need another paid platform?", "Yes, you need your own account with the AI tool you use. VPS does not include third-party subscriptions."],
-      ["What happens after 12 months of Studio Pro?", "Downloaded files remain yours. You need to renew access to keep using the builder and receive new updates."],
-      ["How do I receive the product?", "After payment, you receive the relevant access by email. Packs include downloadable files; Studio Pro adds builder access."],
+      ["How do I receive the product?", "After payment, you receive the downloadable files for your pack by email."],
       ["Can I use it for client work?", "Yes. You may apply the prompts to your own professional projects. VPS files and texts may not be resold, shared or redistributed."],
     ],
     closingKicker: "LESS TRIAL AND ERROR. MORE DIRECTION.",
@@ -256,7 +238,6 @@ const copy = {
   },
   pt: {
     nav: ["Resultados", "O sistema", "O que inclui", "Pacotes", "Perguntas"],
-    login: "Acesso clientes",
     topbar: ["Produto digital", "Guias ES / EN / PT", "Uso profissional"],
     eyebrow: "PROMPTS PROFISSIONAIS PARA ARQUITETURA",
     h1a: "A IA pode melhorar seu render.",
@@ -297,14 +278,6 @@ const copy = {
       ["03", "Direção visual", "Escolha materiais, luz, clima, atmosfera e linguagem fotográfica."],
       ["04", "Saída", "Copie um prompt mestre em inglês, estruturado e pronto para gerar."],
     ],
-    demoKicker: "TESTE A LÓGICA DO CONSTRUTOR",
-    demoTitle: "Você nunca começa de uma página em branco.",
-    demoText: "Conheça a nova interface do Prompt Builder. O Studio Pro transforma decisões visuais em um fluxo mais rápido, organizado e repetível.",
-    demoLabel: "Objetivo da visualização",
-    demoOptions: ["Fotorrealismo", "Preservação total", "Atmosfera editorial"],
-    demoCopy: "Copiar trecho",
-    demoCopied: "Trecho copiado",
-    demoDisclaimer: "Vista da nova versão. O construtor completo inclui variáveis, projetos e favoritos.",
     includesKicker: "VEJA EXATAMENTE O QUE VOCÊ COMPRA",
     includesTitle: "Arquivos e ferramentas pensados para trabalhar, consultar e reutilizar.",
     deliverables: [
@@ -316,7 +289,6 @@ const copy = {
       ["CAMERA_EFFECT", "Efeitos ópticos e de câmera para ampliar a narrativa visual.", "FX"],
       ["LOCK + RESCUE", "Método de preservação e protocolo para detectar e corrigir erros.", "PDF"],
       ["CLIENT KIT + FORMS", "Kit profissional e formulários editáveis de controle e entrega.", "KIT"],
-      ["PROMPT BUILDER APP", "Construtor visual com projetos, favoritos e 12 meses de acesso.", "APP"],
     ],
     categoriesLabel: "Categorias incluídas",
     categories: ["Fotorrealismo", "Interiores", "Fachadas", "Paisagismo", "Plantas", "Axonométricas", "Cortes", "Masterplans", "Urbanismo", "Humanização"],
@@ -336,20 +308,20 @@ const copy = {
     descriptions: {
       starter: "Comece a estruturar prompts sem improvisar.",
       professional: "A biblioteca completa para uso profissional frequente.",
-      studio: "A biblioteca profissional mais o construtor visual.",
+      studio: "A biblioteca profissional mais completa.",
     },
     features: {
       starter: ["CORE — 11 prompts essenciais", "Manual de início e rota de uso", "RESCUE — versão rápida", "Licença de uso profissional"],
       professional: ["CORE 11 + Professional Prompts 45", "Humanization Library — 30 prompts", "Método LOCK + RESCUE completo", "Client Kit, formulários, manual e matriz", "Licença de uso profissional"],
-      studio: ["Tudo da Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects", "Prompt Builder App — 12 meses"],
+      studio: ["Tudo da Professional Library", "Humanization Extension — 10 prompts", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects"],
     },
     choose: { starter: "Comprar Starter", professional: "Escolher Professional Library", studio: "Acessar Studio Pro" },
     oneTime: "Pagamento único",
-    studioTerm: "Pagamento único · 12 meses de app",
+    studioTerm: "Pagamento único",
     confidence: [["ENTREGA", "Acesso digital por e-mail"], ["LICENÇA", "Uso em seus projetos e trabalhos para clientes"], ["ARQUIVOS", "Acesso permanente aos downloads"], ["PAGAMENTO", "Processado por provedores externos"]],
     matrixTitle: "Comparação rápida",
     rescueLevels: ["Versão rápida", "Versão completa", "Versão completa"],
-    matrixRows: ["Biblioteca CORE — 11 prompts essenciais", "Professional Prompts — 45 fluxos avançados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionais", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de início e rota de uso", "Manual profissional do usuário", "Matriz de seleção de prompts", "Método LOCK para preservar a arquitetura", "Manual RESCUE para corrigir resultados", "Professional Client Kit", "Formulários editáveis de controle e entrega", "Acesso ao Prompt Builder App por 12 meses", "Licença de uso profissional", "Total de prompts operacionais"],
+    matrixRows: ["Biblioteca CORE — 11 prompts essenciais", "Professional Prompts — 45 fluxos avançados", "Humanization Library — 30 prompts", "Humanization Extension — 10 prompts adicionais", "Vehicle Insertion — 15 prompts", "Architectural Camera Effects — 10 prompts", "Manual de início e rota de uso", "Manual profissional do usuário", "Matriz de seleção de prompts", "Método LOCK para preservar a arquitetura", "Manual RESCUE para corrigir resultados", "Professional Client Kit", "Formulários editáveis de controle e entrega", "Licença de uso profissional", "Total de prompts operacionais"],
     authorKicker: "CRIADO A PARTIR DA PRÁTICA",
     authorTitle: "Feito por um arquiteto para resolver um problema de arquitetura.",
     authorText: "O Visual Prompt Studio foi desenvolvido a partir da prática profissional para usar o poder visual da IA sem abrir mão do controle do projeto. O sistema traduz decisões arquitetônicas — preservação, materiais, luz, câmera e atmosfera — em uma estrutura que a IA pode interpretar melhor.",
@@ -362,8 +334,7 @@ const copy = {
       ["O VPS gera as imagens?", "Não. O VPS fornece prompts, métodos e ferramentas para trabalhar com plataformas de IA."],
       ["Com quais ferramentas funciona?", "A estrutura foi pensada para ChatGPT Images, Midjourney, Krea e modelos compatíveis com prompts de texto. Cada plataforma pode interpretar a mesma instrução de forma diferente conforme sua versão."],
       ["Preciso pagar outra plataforma?", "Sim, você precisa de sua própria conta na ferramenta de IA utilizada. O VPS não inclui assinaturas de terceiros."],
-      ["O que acontece após 12 meses de Studio Pro?", "Os arquivos baixados continuam seus. Para continuar usando o construtor e receber novas atualizações é necessário renovar o acesso."],
-      ["Como recebo o produto?", "Após o pagamento, você recebe o acesso correspondente por e-mail. Os pacotes incluem arquivos para download; o Studio Pro adiciona acesso ao construtor."],
+      ["Como recebo o produto?", "Após o pagamento, você recebe os arquivos para download do seu pacote por e-mail."],
       ["Posso usar em trabalhos para clientes?", "Sim. Você pode aplicar os prompts em seus próprios projetos profissionais. Os arquivos e textos do VPS não podem ser revendidos, compartilhados ou redistribuídos."],
     ],
     closingKicker: "MENOS TENTATIVA E ERRO. MAIS DIREÇÃO.",
@@ -391,12 +362,11 @@ const matrix = [
   ["", "", ""],
   ["—", "✓", "✓"],
   ["—", "✓", "✓"],
-  ["—", "—", "✓"],
   ["✓", "✓", "✓"],
   ["11", "72", "127"],
 ];
 
-const highlightedMatrixRows = new Set([0, 1, 2, 3, 4, 5, 13, 15]);
+const highlightedMatrixRows = new Set([0, 1, 2, 3, 4, 5, 14]);
 
 function track(event, data = {}) {
   if (typeof window === "undefined") return;
@@ -449,7 +419,6 @@ function Compare({
 }
 
 function PackCard({
-  onBuyPack,
   id,
   currency,
   t
@@ -471,12 +440,11 @@ function PackCard({
       <ul>{t.features[id].map((feature) => <li key={feature}><span>✓</span>{feature}</li>)}</ul>
       <a
         className={`button ${featured ? "primary" : "secondary"}`}
-        onClick={(e) => {
-        e.preventDefault();
-        onBuyPack(id);
-        track("select_pack", { pack: id, currency });
-        track("begin_checkout", { pack: id, currency });
-      }}
+        href={shopifyLinks[id]}
+        onClick={() => {
+          track("select_pack", { pack: id, currency });
+          track("begin_checkout", { pack: id, currency });
+        }}
         target="_blank"
         rel="noreferrer"
         
@@ -488,25 +456,8 @@ function PackCard({
 }
 
 import "./landing.css";
-import PaymentModal from "./PaymentModal";
 
 export default function LandingPage() {
-  const [activePack, setActivePack] = useState(null);
-  const handleBuyPack = (packId) => {
-    // Map internal id to the object format expected by PaymentModal
-    const pricesObj = prices[packId];
-    const packObj = {
-      slug: packId === "studio" ? "studio_pro" : packId,
-      name: packId === "studio" ? "Studio Pro" : packId === "professional" ? "Professional Library" : "Starter",
-      eyebrow: copy[lang].labels[packId],
-      currentUsd: pricesObj.USD[0],
-      oldUsd: pricesObj.USD[1],
-      currentArs: pricesObj.ARS[0],
-      oldArs: pricesObj.ARS[1],
-      features: copy[lang].features[packId]
-    };
-    setActivePack(packObj);
-  };
 
   const [lang, setLang] = useState("es");
   const [currency, setCurrency] = useState("USD");
@@ -556,9 +507,7 @@ export default function LandingPage() {
               </button>
             ))}
           </div>
-          <a className="loginLink" href={promptBuilderUrl} target="_blank" rel="noreferrer">
-            {t.login} <span>↗</span>
-          </a>
+
           <button className="menuButton" onClick={() => setMenu(!menu)} aria-expanded={menu} aria-label="Abrir menú">
             {menu ? "×" : "☰"}
           </button>
@@ -576,9 +525,7 @@ export default function LandingPage() {
             </a>
             <a className="textButton" href="#results">{t.heroProof} <span>↗</span></a>
           </div>
-          <a className="button secondary heroClientAccess" href={promptBuilderUrl} target="_blank" rel="noreferrer">
-            {t.login} <span>↗</span>
-          </a>
+
           <small className="heroNote"><span>✓</span>{t.heroNote}</small>
         </div>
 
@@ -658,26 +605,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="demo">
-        <div className="sectionShell demoGrid">
-          <div className="demoCopy">
-            <span className="kicker">{t.demoKicker}</span>
-            <h2>{t.demoTitle}</h2>
-            <p>{t.demoText}</p>
-            <small>{t.demoDisclaimer}</small>
-          </div>
-          <a className="builderPreview" href={promptBuilderUrl} target="_blank" rel="noreferrer" aria-label={t.login}>
-            <img
-              src="/assets/prompt-builder.webp"
-              alt="Vista de la nueva versión de VPS Prompt Builder"
-              width={1907}
-              height={880}
-              unoptimized
-              sizes="(max-width: 900px) 100vw, 62vw"
-            />
-          </a>
-        </div>
-      </section>
+
 
       <section id="includes" className="includes sectionShell">
         <div className="sectionIntro">
@@ -686,7 +614,7 @@ export default function LandingPage() {
         </div>
         <div className="deliverableGrid">
           {t.deliverables.map(([title, description, type], index) => (
-            <article key={title} className={title === "PROMPT BUILDER APP" ? "promptBuilderDeliverable" : ""}>
+            <article key={title}>
               <span>0{index + 1}</span>
               <div className="fileIcon">{type}</div>
               <h3>{title}</h3>
@@ -733,9 +661,9 @@ export default function LandingPage() {
         </div>
 
         <div className="packGrid">
-          <PackCard onBuyPack={handleBuyPack} id="starter" currency={currency} t={t} />
-          <PackCard onBuyPack={handleBuyPack} id="professional" currency={currency} t={t} />
-          <PackCard onBuyPack={handleBuyPack} id="studio" currency={currency} t={t} />
+          <PackCard id="starter" currency={currency} t={t} />
+          <PackCard id="professional" currency={currency} t={t} />
+          <PackCard id="studio" currency={currency} t={t} />
         </div>
 
         <div className="confidenceBar">
@@ -812,7 +740,6 @@ export default function LandingPage() {
         {t.mobileCta} <span>↓</span>
       </a>
     
-      {activePack && <PaymentModal pack={activePack} lang={lang} onClose={() => setActivePack(null)} />}
     </main>
   );
 }
