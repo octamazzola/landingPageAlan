@@ -10,9 +10,9 @@ const shopifyLinks = {
 
 
 const prices = {
-  starter: { USD: ["USD 18", "USD 25"], ARS: ["$35.000", "$49.000"] },
-  professional: { USD: ["USD 29", "USD 42"], ARS: ["$56.000", "$82.000"] },
-  studio: { USD: ["USD 52", "USD 72"], ARS: ["$100.000", "$139.000"] },
+  starter: ["USD 18", "USD 25"],
+  professional: ["USD 29", "USD 42"],
+  studio: ["USD 52", "USD 72"],
 } ;
 
 const copy = {
@@ -83,7 +83,7 @@ const copy = {
     packsKicker: "ELEGÍ TU NIVEL DE CONTROL",
     packsTitle: "Empezá con una base o incorporá el sistema completo.",
     save: "Hasta 29% de ahorro",
-    currency: { USD: "Pago internacional en USD", ARS: "Pago local en pesos argentinos" },
+    currency: "Pago internacional en USD",
     labels: { starter: "BASE ESENCIAL", professional: "RECOMENDADO", studio: "EXPERIENCIA COMPLETA" },
     descriptions: {
       starter: "Para comenzar a estructurar prompts sin improvisar.",
@@ -193,7 +193,7 @@ const copy = {
     packsKicker: "CHOOSE YOUR LEVEL OF CONTROL",
     packsTitle: "Start with the essentials or add the complete system.",
     save: "Save up to 29%",
-    currency: { USD: "International payment in USD", ARS: "Local payment in Argentine pesos" },
+    currency: "International payment in USD",
     labels: { starter: "ESSENTIAL BASE", professional: "RECOMMENDED", studio: "COMPLETE EXPERIENCE" },
     descriptions: {
       starter: "Start structuring prompts without improvising.",
@@ -303,7 +303,7 @@ const copy = {
     packsKicker: "ESCOLHA SEU NÍVEL DE CONTROLE",
     packsTitle: "Comece com a base ou incorpore o sistema completo.",
     save: "Economize até 29%",
-    currency: { USD: "Pagamento internacional em USD", ARS: "Pagamento local em pesos argentinos" },
+    currency: "Pagamento internacional em USD",
     labels: { starter: "BASE ESSENCIAL", professional: "RECOMENDADO", studio: "EXPERIÊNCIA COMPLETA" },
     descriptions: {
       starter: "Comece a estruturar prompts sem improvisar.",
@@ -420,10 +420,9 @@ function Compare({
 
 function PackCard({
   id,
-  currency,
   t
 }) {
-  const price = prices[id][currency];
+  const price = prices[id];
   const featured = id === "professional";
   const title = id === "professional" ? "Professional Library" : id === "studio" ? "Studio Pro" : "Starter";
 
@@ -442,8 +441,8 @@ function PackCard({
         className={`button ${featured ? "primary" : "secondary"}`}
         href={shopifyLinks[id]}
         onClick={() => {
-          track("select_pack", { pack: id, currency });
-          track("begin_checkout", { pack: id, currency });
+          track("select_pack", { pack: id });
+          track("begin_checkout", { pack: id });
         }}
         target="_blank"
         rel="noreferrer"
@@ -460,7 +459,7 @@ import "./landing.css";
 export default function LandingPage() {
 
   const [lang, setLang] = useState("es");
-  const [currency, setCurrency] = useState("USD");
+
   const [menu, setMenu] = useState(false);
   const t = copy[lang] ;
 
@@ -651,19 +650,14 @@ export default function LandingPage() {
           </div>
           <div className="pricingTools">
             <span>{t.save}</span>
-            <div className="currencySwitch" aria-label="Moneda">
-              {(["USD", "ARS"]).map((item) => (
-                <button key={item} className={currency === item ? "active" : ""} aria-pressed={currency === item} onClick={() => setCurrency(item)}>{item}</button>
-              ))}
-            </div>
-            <small>{t.currency[currency]}</small>
+            <small>{t.currency}</small>
           </div>
         </div>
 
         <div className="packGrid">
-          <PackCard id="starter" currency={currency} t={t} />
-          <PackCard id="professional" currency={currency} t={t} />
-          <PackCard id="studio" currency={currency} t={t} />
+          <PackCard id="starter" t={t} />
+          <PackCard id="professional" t={t} />
+          <PackCard id="studio" t={t} />
         </div>
 
         <div className="confidenceBar">
